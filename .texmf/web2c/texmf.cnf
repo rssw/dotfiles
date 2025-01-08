@@ -1,0 +1,19 @@
+% The tree containing the runtime files closely related to the specific
+% program version used:
+TEXMFMAIN = $SELFAUTODIR/texmf
+% The main distribution tree:
+TEXMFDIST = $SELFAUTODIR/texmf-dist
+% A place for local additions to a "standard" texmf tree.
+% This tree is not used for local configuration maintained by
+% texconfig, it uses TEXMFCONFIG below.
+TEXMFLOCAL = $SELFAUTODIR/texmf-local
+% TEXMFSYSVAR, where texconfig-sys stores variable runtime data.
+TEXMFSYSVAR = $SELFAUTODIR/texmf-var
+% TEXMFSYSCONFIG, where texconfig-sys stores configuration data.
+TEXMFSYSCONFIG = $SELFAUTODIR/texmf-config
+% User texmf trees are allowed as follows.
+TEXMFHOME = $HOME/.texmf
+% TEXMFVAR, where texconfig stores variable runtime data.
+TEXMFVAR = $HOME/.texmf-var
+% TEXMFCONFIG, where texconfig stores configuration data.
+TEXMFCONFIG = $HOME/.texmf-config

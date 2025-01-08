@@ -1,0 +1,20 @@
+always-display-description true
+cache-file "~/.cache/newsbeuter/db"
+cookie-cache "~/.cache/newsbeuter/cookie"
+refresh-on-startup yes
+save-path "~/downloads/podcasts"
+error-log "~/.local/share/newsbeuter/error.log"
+download-path "~/downloads/podcasts"
+player "mpv"
+
+urls-source "ocnews"
+ocnews-url "https://nextcloud.doronbehar.com/"
+ocnews-login "admin"
+ocnews-passwordeval "gopass show -f software/desktop/nextcloud/newsboat"
+
+# colors
+include "~/.config/newsbeuter/colors"
+
+browser "xdg-open"
+
+

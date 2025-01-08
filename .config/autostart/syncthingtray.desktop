@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Syncthing Tray
+GenericName=Syncthing Tray
+Comment=Tray application for Syncthing
+Exec=syncthingtray --wait
+Icon=syncthingtray
+Terminal=false
+Type=Application
+Categories=Network
+
+[Desktop Action open-webui]
+Name=Open web UI
+Exec=syncthingtray --webui

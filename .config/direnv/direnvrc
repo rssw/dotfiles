@@ -1,0 +1,24 @@
+# Taken from http://stackoverflow.com/a/592649/4935114
+_command_exists () {
+	type "$1" &> /dev/null ;
+}
+
+use_lua(){
+	if _command_exists lua; then
+		unset LUA_PATH
+		unset LUA_CPATH
+		eval "$(luarocks path --no-bin)"
+		source ~/.shell/lua
+		# Make LUA_PATH and LUA_CPATH env vars have ./?.lua and ./?/init.lua at the
+		# beginning
+		lual
+		lual so
+	else
+		log_warning No \'luarocks\' command is available in use_lua\'s PATH
+	fi
+}
+
+# https://github.com/nix-community/nix-direnv
+source ~/.config/direnv/nix/direnvrc
+
+# vim:ft=sh

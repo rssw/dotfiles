@@ -1,0 +1,91 @@
+# Created by https://www.gitignore.io/api/vim
+
+### Vim ###
+# swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+# auto-generated tag files
+tags
+
+# End of https://www.gitignore.io/api/vim
+
+# Ignore python's rope files
+/.vim/.ropeproject
+tags-ja
+
+# Created by https://www.gitignore.io/api/tags
+
+### Tags ###
+# Ignore tags created by etags, ctags, gtags (GNU global) and cscope
+TAGS
+.TAGS
+!TAGS/
+tags
+.tags
+!tags/
+gtags.files
+GTAGS
+GRTAGS
+GPATH
+GSYMS
+
+### Code Query
+
+c_family.db
+java_family.db
+ruby_family.db
+python_family.db
+javascript_family.db
+c_tags
+java_tags
+ruby_tags
+python_tags
+javascript_tags
+c_cscope.files
+java_cscope.files
+ruby_cscope.files
+python_cscope.files
+javascript_cscope.files
+c_cscope.out
+java_cscope.out
+ruby_cscope.out
+python_cscope.out
+javascript_cscope.out
+
+# End of https://www.gitignore.io/api/tags
+
+# Created by https://www.gitignore.io/api/git
+
+### Git ###
+*.orig
+
+# End of https://www.gitignore.io/api/git
+
+
+### Ignore all the README files created by pandoc for viewing offline documentation ###
+README.html
+
+### Ignore YouCompleteMe compile commands created by cmake and other generators ###
+compile_commands.json
+
+### Ignore cmake build directory usually found in this location
+/build/
+
+### Ignore direnv nix files, if a rare project will wish them to be tracked, we'll `add -f` them
+.direnv/
+.envrc
+shell.nix
+
+### Always ignore python venv
+/venv/
+
+### Ignore clangd automatically generated files.
+.cache/clangd
+.clangd/

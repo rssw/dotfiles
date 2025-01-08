@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<QALCULATE version="5.4.0">
+  <category>
+    <title>Large Numbers</title>
+    <variable>
+      <title>Mole as a number - not as a unit</title>
+      <names>rs:mole_n</names>
+      <value>6.022140760*10^23</value>
+    </variable>
+  </category>
+  <category>
+    <title>Special Numbers</title>
+    <variable>
+      <title>Caesium 133 hyperfine transition frequency difference</title>
+      <names>rs:Nu_Cs</names>
+      <value>9192631770 Hz</value>
+    </variable>
+  </category>
+</QALCULATE>

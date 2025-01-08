@@ -1,0 +1,9 @@
+text/html; w3m %s -I %{charset} -T text/html -dump; copiousoutput
+application/vnd.openxmlformats-officedocument.wordprocessingml.document; pandoc %s --from=docx --to=plain | fribidi | less
+application/msword; antiword %s | less;
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; xlsx2csv -d tab %s | less;
+application/pdf; gio open %s
+image/*; gio open %s; test=test -n "$DISPLAY"
+video/*; mpv '%s'; test=test -n "$DISPLAY"
+# Ascii videos
+video/*; mpv -cache 8192 -vo caca -quiet %s; needsterminal
