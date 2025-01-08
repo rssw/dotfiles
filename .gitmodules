@@ -10,3 +10,291 @@
 [submodule ".zsh/powerlevel10k"]
 	url = https://github.com/romkatv/powerlevel10k
 	path = .zsh/powerlevel10k
+[submodule ".tmux/fzf-url"]
+	path = .tmux/fzf-url
+	url = git@github.com:wfxr/tmux-fzf-url.git
+[submodule ".pandoc/s5"]
+	path = .pandoc/s5
+	url = git@github.com:CodeGnome/s5.git
+[submodule ".config/direnv/nix"]
+	path = .config/direnv/nix
+	url = git@github.com:nix-community/nix-direnv
+[submodule ".config/ranger/devicons"]
+	path = .config/ranger/devicons
+	url = git@github.com:alexanderjeurissen/ranger_devicons
+[submodule ".urxvt/bundle/font-size"]
+	path = .urxvt/bundle/font-size
+	url = git@github.com:majutsushi/urxvt-font-size
+[submodule ".config/nvim/pack/filetype/opt/editorconfig/tests/plugin/spec/plugin_tests"]
+	path = .config/nvim/pack/filetype/opt/editorconfig/tests/plugin/spec/plugin_tests
+	url = git@github.com:editorconfig/editorconfig-plugin-tests.git
+[submodule ".config/nvim/pack/filetype/opt/editorconfig/tests/core/tests"]
+	path = .config/nvim/pack/filetype/opt/editorconfig/tests/core/tests
+	url = git@github.com:editorconfig/editorconfig-core-test.git
+[submodule ".config/nvim/pack/git/start/fugitive"]
+	path = .config/nvim/pack/git/start/fugitive
+	url = git@github.com:tpope/vim-fugitive
+[submodule ".config/nvim/pack/filetype/start/csv"]
+	path = .config/nvim/pack/filetype/start/csv
+	url = git@github.com:chrisbra/csv.vim
+[submodule ".config/nvim/pack/tmux/start/syntax"]
+	path = .config/nvim/pack/tmux/start/syntax
+	url = git@github.com:zaiste/tmux.vim
+[submodule ".config/nvim/pack/functional/opt/pathogen"]
+	path = .config/nvim/pack/functional/opt/pathogen
+	url = git@github.com:tpope/vim-pathogen
+[submodule ".config/nvim/pack/tmux/start/navigator"]
+	path = .config/nvim/pack/tmux/start/navigator
+	url = git@github.com:christoomey/vim-tmux-navigator
+[submodule ".config/nvim/pack/filetype/opt/android"]
+	path = .config/nvim/pack/filetype/opt/android
+	url = git@github.com:hsanson/vim-android
+[submodule ".config/nvim/pack/functional/start/eunuch"]
+	path = .config/nvim/pack/functional/start/eunuch
+	url = git@github.com:doronbehar/vim-eunuch
+[submodule ".config/nvim/pack/editing/start/searchindex"]
+	path = .config/nvim/pack/editing/start/searchindex
+	url = git@github.com:google/vim-searchindex
+[submodule ".config/nvim/pack/functional/start/window-swap"]
+	path = .config/nvim/pack/functional/start/window-swap
+	url = git@github.com:wesQ3/vim-windowswap
+[submodule ".config/nvim/pack/editing/start/stay"]
+	path = .config/nvim/pack/editing/start/stay
+	url = git@github.com:kopischke/vim-stay
+[submodule ".config/nvim/pack/filetype/start/tex"]
+	path = .config/nvim/pack/filetype/start/tex
+	url = git@github.com:lervag/vimtex
+[submodule ".config/nvim/pack/editing/start/push"]
+	path = .config/nvim/pack/editing/start/push
+	url = git@github.com:glts/vim-push
+[submodule ".config/nvim/pack/functional/opt/tabular"]
+	path = .config/nvim/pack/functional/opt/tabular
+	url = git@github.com:godlygeek/tabular
+[submodule ".config/nvim/pack/textobj/start/uri"]
+	path = .config/nvim/pack/textobj/start/uri
+	url = git@github.com:jceb/vim-textobj-uri
+[submodule ".config/nvim/pack/textobj/start/user"]
+	path = .config/nvim/pack/textobj/start/user
+	url = git@github.com:kana/vim-textobj-user
+[submodule ".config/nvim/pack/looks/start/qf_resize"]
+	path = .config/nvim/pack/looks/start/qf_resize
+	url = git@github.com:blueyed/vim-qf_resize
+[submodule ".config/nvim/pack/editing/start/repeat"]
+	path = .config/nvim/pack/editing/start/repeat
+	url = git@github.com:tpope/vim-repeat
+[submodule ".config/nvim/pack/filetype/opt/scriptease"]
+	path = .config/nvim/pack/filetype/opt/scriptease
+	url = git@github.com:tpope/vim-scriptease
+[submodule ".config/nvim/pack/git/start/rooter"]
+	path = .config/nvim/pack/git/start/rooter
+	url = git@github.com:airblade/vim-rooter
+[submodule ".config/nvim/pack/editing/start/bbye"]
+	path = .config/nvim/pack/editing/start/bbye
+	url = git@github.com:moll/vim-bbye
+[submodule ".config/nvim/pack/functional/opt/transpose"]
+	path = .config/nvim/pack/functional/opt/transpose
+	url = git@github.com:salsifis/vim-transpose
+[submodule ".config/nvim/pack/functional/opt/dirdiff"]
+	path = .config/nvim/pack/functional/opt/dirdiff
+	url = git@github.com:will133/vim-dirdiff
+[submodule ".config/nvim/pack/filetype/start/mediawiki"]
+	path = .config/nvim/pack/filetype/start/mediawiki
+	url = git@github.com:chikamichi/mediawiki.vim
+[submodule ".config/nvim/pack/looks/start/signify"]
+	path = .config/nvim/pack/looks/start/signify
+	url = git@github.com:mhinz/vim-signify
+[submodule ".config/nvim/pack/textobj/start/quotes"]
+	path = .config/nvim/pack/textobj/start/quotes
+	url = git@github.com:beloglazov/vim-textobj-quotes
+[submodule ".config/nvim/pack/functional/start/togglelist"]
+	path = .config/nvim/pack/functional/start/togglelist
+	url = git@github.com:milkypostman/vim-togglelist
+[submodule ".config/nvim/pack/looks/opt/css-color"]
+	path = .config/nvim/pack/looks/opt/css-color
+	url = git@github.com:ap/vim-css-color
+[submodule ".config/nvim/pack/functional/opt/ghost"]
+	path = .config/nvim/pack/functional/opt/ghost
+	url = git@github.com:raghur/vim-ghost
+[submodule ".config/nvim/pack/filetype/start/orgmode"]
+	path = .config/nvim/pack/filetype/start/orgmode
+	url = git@github.com:jceb/vim-orgmode
+[submodule ".config/nvim/pack/editing/start/nerdcommenter"]
+	path = .config/nvim/pack/editing/start/nerdcommenter
+	url = git@github.com:scrooloose/nerdcommenter
+[submodule ".config/nvim/pack/editing/start/gundo"]
+	path = .config/nvim/pack/editing/start/gundo
+	url = git@github.com:sjl/gundo.vim
+[submodule ".config/nvim/pack/textobj/start/underscore"]
+	path = .config/nvim/pack/textobj/start/underscore
+	url = git@github.com:lucapette/vim-textobj-underscore
+[submodule ".config/nvim/pack/git/start/rhubarb"]
+	path = .config/nvim/pack/git/start/rhubarb
+	url = git@github.com:tpope/vim-rhubarb
+[submodule ".config/nvim/pack/git/start/fugitive-gitlab"]
+	path = .config/nvim/pack/git/start/fugitive-gitlab
+	url = git@github.com:shumphrey/fugitive-gitlab.vim
+[submodule ".config/nvim/pack/filetype/start/neomutt"]
+	path = .config/nvim/pack/filetype/start/neomutt
+	url = git@github.com:neomutt/neomutt.vim
+[submodule ".config/nvim/pack/filetype/start/AnsiEsc"]
+	path = .config/nvim/pack/filetype/start/AnsiEsc
+	url = git@github.com:vim-scripts/AnsiEsc.vim
+[submodule ".config/nvim/pack/editing/start/sandwich"]
+	path = .config/nvim/pack/editing/start/sandwich
+	url = git@github.com:machakann/vim-sandwich
+[submodule ".config/nvim/pack/functional/opt/vader"]
+	path = .config/nvim/pack/functional/opt/vader
+	url = git@github.com:junegunn/vader.vim
+[submodule ".config/nvim/pack/editing/start/sleuth"]
+	path = .config/nvim/pack/editing/start/sleuth
+	url = git@github.com:tpope/vim-sleuth
+[submodule ".config/nvim/pack/filetype/start/nftables"]
+	path = .config/nvim/pack/filetype/start/nftables
+	url = git@github.com:nfnty/vim-nftables
+[submodule ".config/nvim/pack/filetype/start/syncthing"]
+	path = .config/nvim/pack/filetype/start/syncthing
+	url = git@github.com:brgmnn/vim-syncthing
+[submodule ".config/nvim/pack/filetype/start/jsonc"]
+	path = .config/nvim/pack/filetype/start/jsonc
+	url = git@github.com:neoclide/jsonc.vim
+[submodule ".config/nvim/pack/editing/start/closetag"]
+	path = .config/nvim/pack/editing/start/closetag
+	url = git@github.com:alvan/vim-closetag
+[submodule ".config/nvim/pack/filetype/start/jinja"]
+	path = .config/nvim/pack/filetype/start/jinja
+	url = git@github.com:lepture/vim-jinja
+[submodule ".config/nvim/pack/filetype/start/rust"]
+	path = .config/nvim/pack/filetype/start/rust
+	url = git@github.com:rust-lang/rust.vim
+[submodule ".config/nvim/pack/filetype/start/toml"]
+	path = .config/nvim/pack/filetype/start/toml
+	url = git@github.com:cespare/vim-toml
+[submodule ".config/nvim/pack/filetype/start/solidity"]
+	path = .config/nvim/pack/filetype/start/solidity
+	url = git@github.com:tomlion/vim-solidity
+[submodule ".config/nvim/pack/functional/start/dispatch"]
+	path = .config/nvim/pack/functional/start/dispatch
+	url = git@github.com:tpope/vim-dispatch
+[submodule ".config/nvim/pack/functional/start/dispatch-neovim"]
+	path = .config/nvim/pack/functional/start/dispatch-neovim
+	url = git@github.com:radenling/vim-dispatch-neovim
+[submodule ".config/nvim/pack/functional/start/direnv"]
+	path = .config/nvim/pack/functional/start/direnv
+	url = git@github.com:direnv/direnv.vim
+[submodule ".config/nvim/pack/looks/start/colorizer.lua"]
+	path = .config/nvim/pack/looks/start/colorizer.lua
+	url = git@github.com:norcalli/nvim-colorizer.lua
+[submodule ".config/nvim/pack/functional/opt/firenvim"]
+	path = .config/nvim/pack/functional/opt/firenvim
+	url = git@github.com:glacambre/firenvim
+[submodule ".config/nvim/pack/filetype/start/jsx-typescript"]
+	path = .config/nvim/pack/filetype/start/jsx-typescript
+	url = git@github.com:peitalin/vim-jsx-typescript
+[submodule ".config/nvim/pack/functional/start/lf"]
+	path = .config/nvim/pack/functional/start/lf
+	url = git@github.com:thezeroalpha/vim-lf
+[submodule ".config/nvim/pack/filetype/start/asciidoctor"]
+	path = .config/nvim/pack/filetype/start/asciidoctor
+	url = git@github.com:habamax/vim-asciidoctor
+[submodule ".config/nvim/pack/filetype/start/Docekrfile"]
+	path = .config/nvim/pack/filetype/start/Docekrfile
+	url = git@github.com:ekalinin/Dockerfile.vim
+[submodule ".config/nvim/pack/filetype/start/jsonnet"]
+	path = .config/nvim/pack/filetype/start/jsonnet
+	url = git@github.com:google/vim-jsonnet
+[submodule ".config/nvim/pack/filetype/start/json5"]
+	path = .config/nvim/pack/filetype/start/json5
+	url = git@github.com:gutenye/json5.vim
+[submodule ".config/nvim/pack/filetype/start/vala"]
+	path = .config/nvim/pack/filetype/start/vala
+	url = git@github.com:arrufat/vala.vim
+[submodule ".config/nvim/pack/functional/start/dap"]
+	path = .config/nvim/pack/functional/start/dap
+	url = git@github.com:mfussenegger/nvim-dap
+[submodule ".config/nvim/pack/functional/start/dap-python"]
+	path = .config/nvim/pack/functional/start/dap-python
+	url = git@github.com:mfussenegger/nvim-dap-python
+[submodule ".config/nvim/pack/functional/start/dap-ui"]
+	path = .config/nvim/pack/functional/start/dap-ui
+	url = git@github.com:rcarriga/nvim-dap-ui
+[submodule ".config/nvim/pack/functional/start/dap-go"]
+	path = .config/nvim/pack/functional/start/dap-go
+	url = git@github.com:leoluz/nvim-dap-go
+[submodule ".config/nvim/pack/functional/start/sved"]
+	path = .config/nvim/pack/functional/start/sved
+	url = git@github.com:peterbjorgensen/sved
+[submodule ".config/nvim/pack/editing/start/lexima"]
+	path = .config/nvim/pack/editing/start/lexima
+	url = git@github.com:doronbehar/lexima.vim
+[submodule ".config/nvim/pack/filetype/start/nix"]
+	path = .config/nvim/pack/filetype/start/nix
+	url = git@github.com:doronbehar/vim-nix
+[submodule ".config/nvim/pack/functional/start/lspconfig"]
+	path = .config/nvim/pack/functional/start/lspconfig
+	url = git@github.com:neovim/nvim-lspconfig
+[submodule ".config/nvim/pack/functional/opt/treesitter"]
+	path = .config/nvim/pack/functional/opt/treesitter
+	url = git@github.com:nvim-treesitter/nvim-treesitter
+[submodule ".config/nvim/pack/functional/opt/treesitter-textobjects"]
+	path = .config/nvim/pack/functional/opt/treesitter-textobjects
+	url = git@github.com:nvim-treesitter/nvim-treesitter-textobjects
+[submodule ".config/nvim/pack/functional/start/cmp"]
+	path = .config/nvim/pack/functional/start/cmp
+	url = git@github.com:hrsh7th/nvim-cmp
+[submodule ".config/nvim/pack/completion/start/nvim-lsp"]
+	path = .config/nvim/pack/completion/start/nvim-lsp
+	url = git@github.com:hrsh7th/cmp-nvim-lsp
+[submodule ".config/nvim/pack/completion/start/path"]
+	path = .config/nvim/pack/completion/start/path
+	url = git@github.com:hrsh7th/cmp-path
+[submodule ".config/nvim/pack/completion/start/cmdline"]
+	path = .config/nvim/pack/completion/start/cmdline
+	url = git@github.com:hrsh7th/cmp-cmdline
+[submodule ".config/nvim/pack/completion/start/vsnip"]
+	path = .config/nvim/pack/completion/start/vsnip
+	url = git@github.com:hrsh7th/cmp-vsnip
+[submodule ".config/nvim/pack/functional/start/vsnip"]
+	path = .config/nvim/pack/functional/start/vsnip
+	url = git@github.com:hrsh7th/vim-vsnip
+[submodule ".config/nvim/pack/functional/start/friendly-snippets"]
+	path = .config/nvim/pack/functional/start/friendly-snippets
+	url = git@github.com:rafamadriz/friendly-snippets
+[submodule ".config/nvim/pack/completion/start/treesitter"]
+	path = .config/nvim/pack/completion/start/treesitter
+	url = git@github.com:ray-x/cmp-treesitter
+[submodule ".config/nvim/pack/completion/start/lsp-signature-help"]
+	path = .config/nvim/pack/completion/start/lsp-signature-help
+	url = git@github.com:hrsh7th/cmp-nvim-lsp-signature-help
+[submodule ".config/nvim/pack/completion/start/zsh"]
+	path = .config/nvim/pack/completion/start/zsh
+	url = git@github.com:tamago324/cmp-zsh
+[submodule ".config/nvim/pack/functional/opt/fzf-lua"]
+	path = .config/nvim/pack/functional/opt/fzf-lua
+	url = git@github.com:ibhagwan/fzf-lua
+[submodule ".config/nvim/pack/looks/start/lualine"]
+	path = .config/nvim/pack/looks/start/lualine
+	url = git@github.com:nvim-lualine/lualine.nvim
+[submodule ".config/nvim/pack/functional/start/localvimrc"]
+	path = .config/nvim/pack/functional/start/localvimrc
+	url = git@github.com:embear/vim-localvimrc
+[submodule ".config/nvim/pack/looks/opt/sonokai"]
+	path = .config/nvim/pack/looks/opt/sonokai
+	url = git@github.com:sainnhe/sonokai
+[submodule ".config/nvim/pack/git/start/fubitive"]
+	path = .config/nvim/pack/git/start/fubitive
+	url = git@github.com:tommcdo/vim-fubitive
+[submodule ".config/nvim/pack/completion/start/vsnip-integ"]
+	path = .config/nvim/pack/completion/start/vsnip-integ
+	url = git@github.com:hrsh7th/vim-vsnip-integ
+[submodule ".config/nvim/pack/filetype/start/bitbake"]
+	path = .config/nvim/pack/filetype/start/bitbake
+	url = git@github.com:kergoth/vim-bitbake
+[submodule ".config/nvim/pack/filetype/start/pydoc"]
+	path = .config/nvim/pack/filetype/start/pydoc
+	url = git@github.com:somini/pydoc.vim
+[submodule ".config/nvim/pack/functional/start/suda"]
+	path = .config/nvim/pack/functional/start/suda
+	url = git@github.com:lambdalisue/suda.vim
+[submodule ".config/nvim/pack/functional/start/info"]
+	path = .config/nvim/pack/functional/start/info
+	url = git@gitlab.com:HiPhish/info.vim.git
