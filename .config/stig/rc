@@ -1,0 +1,15 @@
+# Poll every 10 seconds
+set tui.poll 10
+
+# connection
+set connect.password:eval gopass show -f software/common/transmission
+set connect.user transmission
+
+# Default columns in torrent lists
+set columns.torrents name ratio rate-up rate-down
+
+# Use a different binding for marking all torrents
+unbind --context torrent 'alt-space'
+bind A mark --toggle --all
+unbind --context torrent 'alt-enter'
+bind ctrl-o tab lsf

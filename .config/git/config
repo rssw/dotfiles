@@ -1,0 +1,200 @@
+[init]
+	# Don't be woke.
+	defaultBranch = master
+[user]
+	email = doron.behar@gmail.com
+	name = Doron Behar
+[core]
+	editor =
+	pager = less -r
+	whitespace = -space-before-tab,-indent-with-non-tab,-blank-at-eol,-blank-at-eof
+	precomposeunicode = true
+	quotePath = false
+[credential]
+	helper = cache --timeout=300
+[credential "https://github.com"]
+	username = doronbehar
+[credential "https://bitbucket.com"]
+	username = doronbehar
+[credential "https://gitlab.com"]
+	username = doronbehar
+[credential "https://review.jami.net/"]
+	username = doronbehar
+[difftool "nvim-fugitive"]
+	cmd = nvim -c "Gdiff" "$MERGED"
+[difftool "nvimdiff"]
+	cmd = nvim -d "$MERGED" "$LOCAL"
+[diff]
+	tool = nvimdiff
+	mnemonicprefix = true
+	submodule = log
+[mergetool "nvimdiff"]
+	cmd = nvim -d -O \"$BASE\" \"$REMOTE\" \"$LOCAL\" \"$MERGED\"
+[mergetool "nvim-fugitive"]
+	cmd = nvim -c "Gmerge" "$MERGED"
+[merge]
+	tool = nvimdiff
+	conflictstyle = diff3
+	stat = true
+	summary = true
+	renameLimit = 4000
+[alias]
+	# general
+	co = checkout
+	cp = cherry-pick
+	cmt = commit
+	st = status
+	br = branch
+	ls = ls-files
+	rst = reset
+	# merge and diff tools
+	m = mergetool
+	d = difftool
+	dc = difftool --cached
+	diffc = diff --cached
+	# log
+	l = log --decorate --graph
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	grog = log --graph --abbrev-commit --decorate --all \n--format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
+	logg = "!f() { \
+		git --no-pager log --graph --decorate $@ --color=always | \
+		env LESS='' less -R -S;\
+	}; f"
+	# special
+	commend = commit --amend --no-edit
+	shorty = status --short --branch
+	# ChatGPT constructed this :) It constructs a list of # <commiter>, ordered
+	# by the number of changed lines per author. The arguments are the files of
+	# interest. Without any arguments, it will work on all of the repo
+	stat-cmt = "!f() { \
+		git log \
+			--pretty=\"%ae <%an>\" \
+			-- \"$@\" \
+			| sort \
+			| uniq -c \
+			| sort -nr; \
+	}; f"
+	stat-diff = "!f() { \
+		git log \
+			--pretty=\"%ae <%an>\" \
+			--numstat \
+			-- \"$@\" \
+			| awk ' \
+				/^[0-9]/ {added+=$1; deleted+=$2} /^[^0-9]/ { \
+					if (author) { \
+						committers[author]+=added+deleted \
+					}; \
+					added=0; \
+					deleted=0; \
+					author=$0 \
+				} \
+				END { \
+					for (a in committers) print committers[a], a \
+				} \
+			' \
+			| sort -nr; \
+	}; f"
+	# git-repo
+	lab = repo lab
+	hub = repo hub
+	# forward and backwards in a commit log
+	fwd = "!f() { \
+		git log --reverse --pretty=%H ${1:-master} | \
+		grep -A 1 $(git rev-parse HEAD) | \
+		tail -n1 | \
+		xargs git checkout;\
+	}; f"
+	prev = checkout HEAD~1
+	# retrieve a git ignore list from gitignore.io/api
+	ignore = "!f() { \
+		curl -L -s https://www.gitignore.io/api/$@;\
+	}; f"
+	wdiff = diff --word-diff
+	# my version for send-email which utilizes password from passwordstore
+	send-mail = "!f() { \
+		git send-email --smtp-pass=\"$(gopass show -f software/desktop/gmail-mutt)\" ${GIT_SEND_MAIL_TO:+--to=${GIT_SEND_MAIL_TO}} $@;\
+	}; f"
+[pager]
+	stash = false
+[push]
+	default = simple
+[url "ssh://git@codeberg.org/"]
+	pushInsteadOf = https://codeberg.org/
+[url "ssh://git@github.com/"]
+	pushInsteadOf = https://github.com/
+	pushInsteadOf = "gh:"
+[url "https://github.com/"]
+	insteadOf = "gh:"
+[url "https://gitlab.com/"]
+	insteadOf = "gl:"
+[url "ssh://git@gitlab.com/"]
+	pushInsteadOf = https://gitlab.com/
+	pushInsteadOf = "gl:"
+[url "ssh://git@gitlab.gnome.org/"]
+	pushInsteadOf = https://gitlab.gnome.org/
+[url "ssh://git@invent.kde.org/"]
+	pushInsteadOf = https://invent.kde.org/
+[url "https://bitbucket.org/"]
+	insteadOf = "bb:"
+[url "ssh://git@bitbucket.org/"]
+	pushInsteadOf = https://bitbucket.org/
+	pushInsteadOf = "bb:"
+[url "https://aur.archlinux.org/"]
+	insteadOf = "aur:"
+[url "ssh://aur@aur.archlinux.org/"]
+	pushInsteadOf = https://aur.archlinux.org/
+	pushInsteadOf = "aur:"
+[url "ssh://doronbehar@review.jami.net/"]
+	pushInsteadOf = https://review.jami.net/
+[status]
+	submodulesummary = true
+	showUntrackedFiles = all
+	relativePaths = true
+[sendemail]
+	smtpEncryption = tls
+	smtpServer = smtp.gmail.com
+	smtpUser = doron.behar
+	from = doron.behar@gmail.com
+	smtpServerPort = 587
+	suppresscc = author
+[imap]
+	folder = "[Gmail]/Drafts"
+	host = imaps://imap.gmail.com
+	user = doron.behar@gmail.com
+	port = 993
+	sslverify = false
+[apply]
+	ignorewhitespace = change
+	whitespace = fix
+# Local configuration:
+[include]
+	path = ~/.local/share/git/config
+	# fzf based shortcuts using git-fzf (https://gitlab.com/doronbehar/git-fzf)
+	path = ~/repos/git-fzf/handy-aliases.gitconfig
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[diff-so-fancy]
+	stripLeadingSymbols = false
+[protocol]
+	version = 2
+[pull]
+	rebase = true
+[checkout]
+	defaultRemote = origin
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f

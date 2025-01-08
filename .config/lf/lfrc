@@ -1,0 +1,138 @@
+# interpreter for shell commands (needs to be POSIX compatible)
+set shell zsh
+
+# Do as explained here: https://github.com/gokcehan/lf/wiki/Tips#split-words-by-default-in-zsh
+set shellopts '-e:--shwordsplit'
+set ifs "\n"
+
+# leave some space at the top and the bottom of the screen
+set scrolloff 10
+
+# rename current file without overwrite
+cmd rename %[ -e $1 ] && printf "file exists" || mv $f $1
+# Unmap the default binding
+map r
+# Rename the file with a completely different name
+map rc push :rename<space>
+# Edit the current filename
+map ra ${{
+	# get 'basename' of the selection
+	filename="${f##*/}"
+	# quote it so we won't deal with quotes in the lf -remote command
+	filename="$(printf '%q' "$filename")"
+	filename="${filename// /<space>}"
+	lf -remote "send $id push :rename<space>$filename"
+}}
+# Edit filename before the extension
+map re ${{
+	# get 'basename' of the selection
+	filename="${f##*/}"
+	# quote it so we won't deal with quotes in the lf -remote command
+	filename="$(printf '%q' "$filename")"
+	filename="${filename// /<space>}"
+	lf -remote "send $id push :rename<space>$filename<a-b><c-b>"
+}}
+# map builtin delete command
+map <delete> delete
+# better asynchronious search
+map / $lf -remote "send $id select $(printf '%q' $(all_files=(./*(ND)); printf '%s\n' ${all_files[@]} | fzf))"
+map i $bat --paging=always $f
+# Add delete with sudo command
+cmd Delete !{{
+	echo $fs | xargs -d$'\n' sudo rm -r
+}}
+# Add paste with sudo command
+cmd SudoPaste !{{
+	lf -remote 'load' | while read file; do
+		if [ ! -n "${mode+1}" ]; then
+			mode="$file"
+			continue
+		fi
+		files+=("$file")
+	done
+	if [[ "$mode" == copy ]]; then
+		sudo cp -Rgi $files .
+	elif [[ "$mode" == move ]]; then
+		sudo mv -gi $files .
+	fi
+	# get 'basename' of the selection
+	filename="${files[1]##*/}"
+	# quote it so we won't deal with quotes in the lf -remote command
+	filename="$(printf '%q' "$filename")"
+	# need to reload before selecting
+	lf -remote "send $id reload"
+	lf -remote "send $id select $filename"
+}}
+# paste and select the file pasted
+cmd Paste %{{
+	lf -remote 'load' | while read file; do
+		if [ ! -n "${mode+1}" ]; then
+			mode="$file"
+			continue
+		fi
+		if [ -f "${file}" ]; then
+			# get 'basename' of the selection
+			filename="${file##*/}"
+			# quote it so we won't deal with quotes in the lf -remote command
+			filename="$(printf '%q' "$filename")"
+			break
+		fi
+	done
+	lf -remote "send $id paste"
+	lf -remote "send $id select $filename"
+}}
+# Link files
+cmd Link %{{
+	cat ~/.local/share/lf/files | while read file; do
+		if [ ! -n "${mode+1}" ]; then
+			mode="$file"
+			continue
+		fi
+		files+=("$file")
+	done
+	if [[ "${#files[@]}" == 0 ]]; then
+		lf -remote "send $id echo no files to link"
+		exit 0
+	fi
+	# symbolicly copy mode is indicating a soft link
+	if [[ "$mode" == copy ]]; then
+		ln -sr $files -t .
+	# while a move mode is indicating a hard link
+	elif [[ "$mode" == move ]]; then
+		ln $files -t .
+	fi
+	# get 'basename' of the selection
+	filename="${files[1]##*/}"
+	# quote it so we won't deal with quotes in the lf -remote command
+	filename="$(printf '%q' "$filename")"
+	# need to reload before selecting
+	lf -remote "send $id reload"
+	lf -remote "send $id select $filename"
+}}
+map P :Link
+# `mkdir` and `touch` mappings
+map ad push $mkdir<space>""<left>
+map af push $touch<space>""<left>
+
+# `L` for previewing text files with less and bat
+# map L $bat --theme=ansi-dark --paging=never --color=always $f | less
+map L $pistol $f | less
+
+# use a different mapping to redraw, the default '<c-l>' clashes with tmux and vim navigations
+map ; redraw
+
+map | push !cat<space>$f<space>|<space>
+
+set dirfirst false
+set drawbox true
+set hidden true
+set globsearch true
+set tabstop 4
+set previewer pistol
+
+cmap <up> cmd-history-prev
+cmap <down> cmd-history-next
+cmap <c-right> cmd-word
+cmap <c-left> cmd-word-back
+
+# vim: ft=lf

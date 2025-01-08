@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=mpd-mpris
+Comment=MPD mpris daemon
+Exec=/run/current-system/sw/bin/mpd-mpris
+Type=Application
+Terminal=false
+NoDisplay=true

@@ -1,0 +1,270 @@
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+
+[colors]
+background = #222
+background-alt = #444
+foreground = #dfdfdf
+foreground-alt = #dddddd
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+[bar/default]
+monitor = ${env:POLYBAR_MONITOR:HDMI1}
+width = 100%
+height = 25
+;offset-x = 1%
+;offset-y = 1%
+radius = 6.0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-size = 0
+;border-color = #00000000
+
+padding-left = 2
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = "Hack Nerd Font Mono:size=10"
+font-1 = "Material Design Icons:size=11"
+font-2 = "DejaVu Sans:size=11"
+font-3 = "Hack Nerd Font Mono:size=12"
+
+modules-left = mpd
+modules-center = xwindow
+modules-right = ${env:POLYBAR_MODULES_RIGHT:volume filesystem-home xkeyboard wlan eth eth-usb}
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+bottom = true
+
+[module/mpd]
+type = internal/mpd
+
+host = ${env:MPD_HOST_ADDR:127.0.0.1}
+password = ${env:MPD_HOST_PWD}
+
+format-online = ${env:POLYBAR_MPD_FORMAT:%{T2}<toggle>%{T-} <label-time> <label-song>}
+label-offline = %{T2}󰎊%{T-} mpd is offline
+
+icon-play = 󰐊
+icon-pause = 󰏤
+icon-stop = 󰓛
+icon-prev = 󰑟
+icon-next = 󰈑
+icon-seekb = 󰓖
+icon-seekf = 󰓘
+icon-random = 󰒝
+icon-repeat = 󰓦
+icon-consume = 󰒿
+
+bar-progress-width = 30
+bar-progress-indicator = |
+bar-progress-fill = ─
+bar-progress-empty = ─
+
+label-song = %{T3}%title%%{T-}
+label-song-maxlen = 50
+label-song-ellipsis = true
+
+[module/xwindow]
+type = internal/xwindow
+label-font = 3
+label = %{F#ff9900}%title:0:30:...% %{F-}
+
+[module/volume]
+type = internal/pulseaudio
+
+format-volume = <label-volume> %{T2}<bar-volume>%{T-} %{T1}󰟥:<icon-port>%{T-}
+label-font = 2
+label-volume = %{T2}󰕾%{T-}
+label-volume-foreground = ${root.foreground}
+
+icon-headphones = 󰋋
+icon-speaker = 󱀞
+icon-hdmi = 󰽟
+icon-bluetooth-headset = 󰋋󰂯
+icon-bluetooth-handsfree = 󰋎󰂯
+icon-bluetooth-speaker = 󱀞󰂯
+icon-bluetooth-headphones = 󰋋󰂯
+icon-bluetooth-portable = 󰋎󰂯
+icon-bluetooth-car = 󰄍󰂯
+icon-bluetooth-hifi = 󰥠󰂯
+icon-bluetooth-phone = 󰠕
+
+format-muted-foreground = ${colors.foreground-alt}
+format-muted = <label-muted> <bar-volume> %{T2}󰟥:<icon-port>
+label-muted = %{T2}󰖁
+label-muted-underline = ${colors.secondary}
+
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 1
+bar-volume-fill = ─
+bar-volume-fill-font = 1
+bar-volume-empty = ─
+bar-volume-empty-font = 1
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+[module/filesystem-home]
+type = internal/fs
+interval = 25
+
+mount-0 = ${env:HOME}
+
+label-mounted = %{T2}󰨆 %{F#0a81f5}󰋜%{T1}%{F-}: %percentage_used%%
+label-mounted-underline = ${colors.secondary}
+
+[module/filesystem-root]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+
+label-mounted = %{T2}󰨆 %{F#0a81f5}/%{T1}%{F-}: %percentage_used%%
+label-mounted-underline = ${colors.primary}
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+format-prefix = "%{T2}󰌌 "
+format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-underline = ${colors.secondary}
+
+label-active-font = 1
+label-layout = %layout%
+label-layout-underline = ${colors.secondary}
+
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-background = ${colors.secondary}
+label-indicator-underline = ${colors.secondary}
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = "%{T4}󰘚%{T-} "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #4bffdc
+label = %percentage_used%%%{T-}
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = "%{T2}󰍛 "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #f90000
+label = %{T-}%percentage:2%%
+
+[module/wlan]
+type = internal/network
+interface = wlan0
+interval = 3.0
+
+format-connected = %{T2}<ramp-signal>%{T-} <label-connected>
+format-connected-underline = #9f78e1
+label-connected = %essid% %{T2}󰖈%{T-} %local_ip%
+
+format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+ramp-signal-0 = 󰤯
+ramp-signal-1 = 󰤟
+ramp-signal-2 = 󰤢
+ramp-signal-3 = 󰤥
+ramp-signal-4 = 󰤨
+ramp-signal-foreground = ${colors.foreground-alt}
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 2
+warn-temperature = 70
+
+format = %{T4}<ramp>%{T-} <label>
+format-underline = #f50a4d
+format-warn = <ramp> <label-warn>
+format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.secondary}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-3 = 
+ramp-foreground = ${colors.foreground-alt}
+
+[module/eth]
+type = internal/network
+interface = enp0s25
+interval = 3.0
+
+format-connected-underline = #55aa55
+format-connected-prefix = "%{T2}󰖈 "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %{T-}%local_ip%
+
+format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+[module/eth-usb]
+type = internal/network
+interface = usb0
+interval = 3.0
+unknown-as-up = true
+
+format-connected-underline = #55aa55
+format-connected-prefix = "%{T2} "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %{T-}%local_ip%
+
+format-disconnected = 
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini

@@ -1,0 +1,12 @@
+macro index,pager y "<save-message>$mbox<enter><enter>" "Archive message"
+macro index,pager d "<save-message>$trash<enter><enter>" "Trash message"
+## Mailboxes navigation
+macro index gi "<sidebar-open><change-folder>$spoolfile<enter>" "Go to inbox"
+macro index gt "<sidebar-open><change-folder>$record<enter>" "Go to sent mail"
+# Different from gmail's web gui's keyboard shortcuts      "
+macro index gp "<sidebar-open><change-folder>$postponed<enter>" "Go to drafts"
+macro index ga "<sidebar-open><change-folder>$mbox<enter>" "Go to all mail"
+# Not available in gmail's web gui's keyboard shortcuts.   "
+macro index gd "<sidebar-open><change-folder>$trash<enter>" "Go to Trash"
+
+# vim:ft=muttrc

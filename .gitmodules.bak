@@ -1,0 +1,190 @@
+[submodule ".tmux"]
+	path = .tmux
+	url = https://github.com/doronbehar/.tmux
+[submodule ".config/nvim"]
+	path = .config/nvim
+	url = https://github.com/doronbehar/.config_nvim
+[submodule ".config/git"]
+	path = .config/git
+	url = https://github.com/doronbehar/.config_git
+[submodule ".config/pulse"]
+	path = .config/pulse
+	url = https://github.com/doronbehar/.config_pulse
+[submodule ".config/ranger"]
+	path = .config/ranger
+	url = https://github.com/doronbehar/.config_ranger
+[submodule ".config/vimfx"]
+	path = .config/vimfx
+	url = https://github.com/doronbehar/.config_vimfx
+[submodule ".config/vifm"]
+	path = .config/vifm
+	url = https://github.com/doronbehar/.config_vifm
+[submodule ".ncmpc"]
+	path = .ncmpc
+	url = https://github.com/doronbehar/.ncmpc
+[submodule ".ncmpcpp"]
+	path = .ncmpcpp
+	url = https://github.com/doronbehar/.ncmpcpp
+[submodule ".config/tox"]
+	path = .config/tox
+	url = https://github.com/doronbehar/.config_tox
+[submodule ".gnupg"]
+	path = .gnupg
+	url = https://github.com/doronbehar/.gnupg
+[submodule ".calcurse"]
+	path = .calcurse
+	url = https://github.com/doronbehar/.calcurse
+[submodule ".config/lyvi"]
+	path = .config/lyvi
+	url = https://github.com/doronbehar/.config_lyvi
+[submodule ".local/share/applications"]
+	path = .local/share/applications
+	url = https://github.com/doronbehar/.local_share_applications
+[submodule ".config/newsbeuter"]
+	path = .config/newsbeuter
+	url = https://github.com/doronbehar/.config_newsbeuter
+[submodule ".config/youtube-viewer"]
+	path = .config/youtube-viewer
+	url = https://github.com/doronbehar/.config_youtube-viewer
+[submodule ".mutt"]
+	path = .mutt
+	url = https://github.com/doronbehar/.mutt
+[submodule ".config/rtv"]
+	path = .config/rtv
+	url = https://github.com/doronbehar/.config_rtv
+[submodule ".cpan/CPAN"]
+	path = .cpan/CPAN
+	url = https://github.com/doronbehar/.cpan_CPAN
+[submodule ".config/beets"]
+	path = .config/beets
+	url = https://github.com/doronbehar/.config_beets
+[submodule ".w3m"]
+	path = .w3m
+	url = https://github.com/doronbehar/.w3m
+[submodule ".config/bugwarrior"]
+	path = .config/bugwarrior
+	url = https://github.com/doronbehar/.config_bugwarrior
+[submodule ".config/profanity"]
+	path = .config/profanity
+	url = https://github.com/doronbehar/.config_profanity
+[submodule ".config/htop"]
+	path = .config/htop
+	url = https://github.com/doronbehar/.config_htop
+[submodule ".config/stig"]
+	path = .config/stig
+	url = https://github.com/doronbehar/.config_stig
+[submodule "zsh-completions"]
+	path = .zsh/comp/community
+	url = https://github.com/zsh-users/zsh-completions
+[submodule ".ssh"]
+	path = .ssh
+	url = https://github.com/doronbehar/.ssh
+[submodule ".config/mpDris2"]
+	path = .config/mpDris2
+	url = https://github.com/doronbehar/.config_mpDris2
+[submodule ".pandoc"]
+	path = .pandoc
+	url = https://github.com/doronbehar/.pandoc
+[submodule ".texmf"]
+	path = .texmf
+	url = https://github.com/doronbehar/.texmf
+[submodule ".mplayer"]
+	path = .mplayer
+	url = https://github.com/doronbehar/.mplayer
+[submodule ".config/octave"]
+	path = .config/octave
+	url = https://github.com/doronbehar/.config_octave
+[submodule ".config/trizen"]
+	path = .config/trizen
+	url = https://github.com/doronbehar/.config_trizen
+[submodule ".nyx"]
+	path = .nyx
+	url = https://github.com/doronbehar/.nyx
+[submodule ".config/polybar"]
+	path = .config/polybar
+	url = https://github.com/doronbehar/.config_polybar
+[submodule ".config/systemd/user"]
+	path = .config/systemd/user
+	url = https://github.com/doronbehar/.config_systemd_user
+[submodule ".config/pip"]
+	path = .config/pip
+	url = https://github.com/doronbehar/.config_pip
+[submodule ".zsh-system-clipboard"]
+	path = .zsh/zle/system-clipboard
+	url = https://github.com/kutsan/zsh-system-clipboard
+[submodule ".luarocks"]
+	path = .luarocks
+	url = https://github.com/doronbehar/.luarocks
+[submodule ".config/letsencrypt"]
+	path = .config/letsencrypt
+	url = https://github.com/doronbehar/.config_letsencrypt
+[submodule ".zsh-syntax-highlighting"]
+	path = .zsh/zle/syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting
+[submodule ".config/msmtp"]
+	path = .config/msmtp
+	url = https://github.com/doronbehar/.config_msmtp
+[submodule ".config/mpv"]
+	path = .config/mpv
+	url = https://github.com/doronbehar/.config_mpv
+[submodule ".ipython"]
+	path = .ipython
+	url = https://github.com/doronbehar/.ipython
+[submodule ".urxvt"]
+	path = .urxvt
+	url = https://github.com/doronbehar/.urxvt
+[submodule ".config/lf"]
+	path = .config/lf
+	url = https://github.com/doronbehar/.config_lf
+[submodule ".config/gopass"]
+	path = .config/gopass
+	url = https://github.com/doronbehar/.config_gopass
+[submodule ".config/alacritty"]
+	path = .config/alacritty
+	url = https://github.com/doronbehar/.config_alacritty.git
+[submodule ".config/sxiv"]
+	path = .config/sxiv
+	url = https://github.com/doronbehar/.config_sxiv
+[submodule ".config/coc"]
+	path = .config/coc
+	url = https://github.com/doronbehar/.config_coc
+[submodule ".config/nixpkgs"]
+	path = .config/nixpkgs
+	url = https://github.com/doronbehar/.config_nixpkgs
+[submodule ".config/nix"]
+	path = .config/nix
+	url = https://github.com/doronbehar/.config_nix
+[submodule ".config/direnv"]
+	path = .config/direnv
+	url = https://github.com/doronbehar/.config_direnv
+[submodule ".zsh/powerlevel10k"]
+	path = .zsh/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k
+[submodule ".config/pistol"]
+	path = .config/pistol
+	url = https://github.com/doronbehar/.config_pistol
+[submodule ".mozilla/native-messaging-hosts"]
+	path = .mozilla/native-messaging-hosts
+	url = https://github.com/doronbehar/.mozilla_native-messaging-hosts
+[submodule ".local/share/qalculate/definitions"]
+	path = .local/share/qalculate/definitions
+	url = https://github.com/doronbehar/.local_share_qalculate_definitions
+[submodule ".zsh/zle/fzf/tab"]
+	path = .zsh/zle/fzf/tab
+	url = https://github.com/doronbehar/fzf-tab
+	branch = fzf-orig-monkeyPatch
+[submodule ".mlterm"]
+	path = .mlterm
+	url = https://github.com/doronbehar/.mlterm
+[submodule ".config/gh"]
+	path = .config/gh
+	url = https://github.com/doronbehar/.config_gh
+[submodule ".config/autostart"]
+	path = .config/autostart
+	url = https://github.com/doronbehar/.config_autostart
+[submodule ".config/nix-init"]
+	path = .config/nix-init
+	url = https://github.com/doronbehar/.config_nix-init
+[submodule ".config/qalculate"]
+	path = .config/qalculate
+	url = https://github.com/doronbehar/.config_qalculate

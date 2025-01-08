@@ -1,0 +1,1 @@
+../devicons/devicons_linemode.py

@@ -1,0 +1,1 @@
+setlocal path+=$GOPATH/src

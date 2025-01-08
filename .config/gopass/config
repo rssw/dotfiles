@@ -1,0 +1,7 @@
+[mounts]
+	path = /home/doron/.password-store
+[core]
+	autoclip: true
+	autopush = true
+	autosync = true
+	autoimport: true

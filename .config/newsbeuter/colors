@@ -1,0 +1,5 @@
+color listnormal	white black
+color listfocus		white black reverse bold
+color info			white black reverse
+color background	white black
+color article		white black

@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# USES:
+# - zenity: https://gitlab.gnome.org/GNOME/zenity
+# - lf: https://github.com/gokcehan/lf
+# - OPTIONAL - for rotations
+#   * jpegtran: from libjpeg: http://libjpeg.sourceforge.net/
+#   * mogrify: from imagemagick: https://www.imagemagick.org/
+
+rotate() {
+	degree="$1"
+	tr '\n' '\0' | xargs -0 realpath | sort | uniq | while read file; do
+		case "$(file -b -i "$file")" in
+		image/jpeg*) jpegtran -rotate "$degree" -copy all -outfile "$file" "$file" ;;
+		*)           mogrify  -rotate "$degree" "$file" ;;
+		esac
+	done
+}
+
+case "$1" in
+	"Delete")
+		files_list=()
+		while IFS=$'\n' read file; do
+			files_list+=("$file")
+		done
+		selected_files=($(zenity --list \
+			--title "sxiv Delete Confirmation" \
+			--text "Selecting none will delete all" \
+			--column Files --width=700 --height=350 \
+			--multiple --separator=$'\n' "${files_list[@]}"))
+		# if zenity's dialog was canceled
+		if (( $? )); then
+			echo canceling
+			exit 1
+		fi
+		if [ ${#selected_files[@]} -lt 1 ]; then
+			# echo zenity didn\'t cancel but no files were selected, removing all
+			selected_files=("${files_list[@]}")
+		fi
+		for file in "${selected_files[@]}"; do
+			rm "$file"
+		done
+		;;
+	"C-x")
+		while read file; do
+			lf -remote "send select '$file'"
+			lf -remote "send toggle"
+		done
+		;;
+	"C-comma")  rotate 270 ;;
+	"C-period") rotate  90 ;;
+	"C-slash")  rotate 180 ;;
+esac
