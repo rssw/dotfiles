@@ -1,3 +1,14 @@
 #!/bin/sh
 
-$EDITOR +Info\ "$*"
+# Default to vim if EDITOR is not set
+EDITOR=${EDITOR:-vim}
+
+# Check if editor is installed
+if ! command -v "$EDITOR" > /dev/null 2>&1; then
+    echo "Error: Editor '$EDITOR' is not installed." >&2
+    exit 1
+fi
+
+# Open files with the editor
+exec "$EDITOR" +Info "$@"
+

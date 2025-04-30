@@ -1,0 +1,44 @@
+#!/bin/sh
+me="$(basename "$0")"
+
+# {{{ Getting the text from /dev/stdin
+if [[ -d "${XDG_RUNTIME_DIR}" ]]; then
+	CONFIGURED_RUNTIME_DIR="${XDG_RUNTIME_DIR}"
+else
+	CONFIGURED_RUNTIME_DIR="/tmp"
+fi
+export STDIN=$(mktemp --tmpdir="${CONFIGURED_RUNTIME_DIR}" ${me}.XXXXXXXX)
+cat /dev/stdin > "${STDIN}"
+# }}}
+
+# {{{ Editor
+CONFIGURED_EDITOR=${INFO_PRINT_EDITOR:-${EDITOR:-${VISUAL:-vi}}}
+# }}}
+
+# {{{ saving the file or displaying it in an appropriate program according to the environment.
+if [[ -z "$TMUX" ]]; then
+	if [[ -z ${XAUTHORITY} ]]; then
+		export COUNTER="${CONFIGURED_RUNTIME_DIR}/counter"
+		if [[ ! -f "${COUNTER}" ]]; then
+			export COUNT=1
+			echo "${COUNT}" > "${COUNTER}"
+			chmod go-rwx,u=rw "${COUNTER}"
+		fi
+		cat "${STDIN}" > "${CONFIGURED_FALLBACK_FILE}"
+		COUNT="$(cat ${COUNTER})"
+		export COUNT=$((COUNT + 1))
+		echo "${COUNT}" > "${COUNTER}"
+	else
+		XTERM="$(which xterm)"
+		URXVT="$(which urxvt)"
+		CONFIGURED_X_TERMINAL_EMULATOR=${INFO_PRINT_X_TERMINAL_EMULATOR:-${URXVT:-${XTERM}}}
+		if [[ -z ${CONFIGURED_X_TERMINAL_EMULATOR} ]]; then
+			echo "Error: \`info-print\` is running inside an X session but no terminal emulator is installed on this machine. set the environmental variable \`INFO_PRINT_X_TERMINAL_EMULATOR\` to your favorite terminal emulator to fix this." > "${CONFIGURED_FALLBACK_FILE}"
+			exit 2
+		fi
+		"${CONFIGURED_X_TERMINAL_EMULATOR}" -e "${CONFIGURED_EDITOR}" "${STDIN}"
+	fi
+else
+	tmux new-window -n "info-print" "${CONFIGURED_EDITOR} ${STDIN}"
+fi
+# }}}

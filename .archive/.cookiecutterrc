@@ -1,0 +1,7 @@
+default_context:
+    full_name: "Jacques Rossouw"
+    email: "jacques@rossouw.nz"
+    github_username: "rssw"
+cookiecutters_dir: "~/repos"
+
+# vim: ft=yaml

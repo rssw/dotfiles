@@ -3,7 +3,7 @@
 # {{{1 Default IFS
 export DEFAULT_IFS="$IFS"
 
-# {{{1 HOST - from some reason this is not exported by deafult
+# {{{1 HOST - from some reason this is not exported by default
 export HOST
 
 # {{{1 SSH_ORIGINAL_TERM - used by my ssh configs - part of the environment that's set
@@ -11,14 +11,14 @@ export SSH_ORIGINAL_TERM="$TERM"
 
 # {{{1 Misc
 # translate-shell
-export HOME_LANG=he
-export TARGET_LANG=he
+export HOME_LANG=en
+export TARGET_LANG=en
 # Pistol (https://github.com/doronbehar/pistol)
-export PISTOL_CHROMA_STYLE=monokai
+#export PISTOL_CHROMA_STYLE=monokai
 # GCC
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 # Go
-export GOPATH=$HOME/.go
+#export GOPATH=$HOME/.go
 
 # {{{1 `insert2PATH`: function to insert (in the beginning) of $PATH a directory only if it doesn't exist already.
 insert2PATH(){
@@ -28,10 +28,14 @@ insert2PATH(){
 	fi
 }
 
-insert2PATH "$HOME/.local/bin"
-insert2PATH "$HOME/.bin"
-if [[ -d "$HOME/.nix-profile/bin" ]]; then
-	insert2PATH "$HOME/.nix-profile/bin"
+insert2PATH "$HOME/src/dotfiles/.local/bin"
+insert2PATH "$HOME/src/dotfiles/.bin"
+insert2PATH "$HOME/bin"
+if [[ -d "$HOME/src/dotfiles/.nix-profile/bin" ]]; then
+	insert2PATH "$HOME/src/dotfiles/.nix-profile/bin"
+fi
+if [[ -d "/usr/local/go/bin" ]]; then
+	insert2PATH "/usr/local/go/bin"
 fi
 
 # {{{1 `_command_exists`: Show if a command exists
@@ -74,14 +78,14 @@ export VISUAL="$EDITOR"
 export PAGER="less"
 export LESS="-X -x4 -r -i"
 export LESSHISTFILE="${HOME}/.local/share/less-history"
-export INFO_PRINT_COMMAND="${HOME}/.bin/info-print"
+export INFO_PRINT_COMMAND="${HOME}/src/dotfiles/.bin/info-print"
 
 # - {{{1 FZF
 export FZF_DEFAULT_OPTS="--history=$HOME/.local/share/fzf/history"
 
 # - {{{1 local environmental variables
-if [[ -f "$HOME/.local/share/zsh/env/${HOST}" ]]; then
-	source "$HOME/.local/share/zsh/env/${HOST}"
+if [[ -f "$HOME/src/dotfiles/.local/share/zsh/env/${HOST}" ]]; then
+	source "$HOME/src/dotfiles/.local/share/zsh/env/${HOST}"
 fi
 
 if [[ "$OSTYPE" == "msys" ]]; then

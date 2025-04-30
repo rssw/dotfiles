@@ -1,7 +1,0 @@
-default_context:
-    full_name: "Doron Behar"
-    email: "me@doronbehar.com"
-    github_username: "doronbehar"
-cookiecutters_dir: "~/repos"
-
-# vim: ft=yaml
