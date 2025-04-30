@@ -1,0 +1,15 @@
+create .zshrc, source src/dotfiles/.zshrc
+link:
+- dotfiles to ~
+- dotdirs to ~
+
+install:
+- neovim (uninstall vi, vim. link neovim to vi / vim)
+- pandoc (install?)
+
+review:
+- .shell/
+
+install and setup taskwarrior
+update .credentials to pull data from bitwarden.  install bw cli and update scripts with new approach
+install mutt

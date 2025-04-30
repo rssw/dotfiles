@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/src/dotfiles/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 #!/bin/zsh
 
 # To profile startup
@@ -234,13 +241,13 @@ bindkey -M vicmd "^V" edit-command-line
 source ${ZDOTDIR:-$HOME}/.zsh/zle/fzf/tab/fzf-tab.plugin.zsh
 zstyle ':fzf-tab:*' continuous-trigger ""
 zstyle ':fzf-tab:*' switch-group 'ctrl-n' 'ctrl-m'
-zstyle ':fzf-tab:complete:(j(u|s)f|systemctl-)*:*' fzf-preview 'env words="$words" $HOME/.zsh/zle/fzf/previewers/systemctl'
+zstyle ':fzf-tab:complete:(j(u|s)f|systemctl-)*:*' fzf-preview 'env words="$words" ${HOME:-$ZDOTDIR}/.zsh/zle/fzf/previewers/systemctl'
 # give a preview of commandline arguments when completing `kill`
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
 zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
 	'[[ $group == "Completing process ID" ]] && pstree -a $word'
 zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
-zstyle ':fzf-tab:complete:git*' fzf-preview 'env words="$words" word=${word%% } $HOME/.zsh/zle/fzf/previewers/git'
+zstyle ':fzf-tab:complete:git*' fzf-preview 'env words="$words" word=${word%% } ${HOME:-$ZDOTDIR}/.zsh/zle/fzf/previewers/git'
 zstyle ':fzf-tab:complete:git*' fzf-flags --preview-window=right:55%:wrap
 zstyle ':fzf-tab:complete:git*' fzf-min-height 10000
 bindkey -M viins "^ " fzf-complete-macro
@@ -305,3 +312,9 @@ unset i
 
 # {{{1 modeline
 # vim:ft=zsh:foldmethod=marker
+
+autoload -Uz bracketed-paste-magic
+zle -N bracketed-paste bracketed-paste-magic
+
+# To customize prompt, run `p10k configure` or edit ~/src/dotfiles/.p10k.zsh.
+[[ ! -f ~/src/dotfiles/.p10k.zsh ]] || source ~/src/dotfiles/.p10k.zsh
