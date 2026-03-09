@@ -38,13 +38,18 @@ Mail
   - ~/.local/share/mutt/private.rc
 
 Post-install
-- guided local setup: ~/bin/setup-local-machine
-- checklist: ~/bin/post-install-checklist
+- guided local setup: setup-local-machine
+- checklist: post-install-checklist
 - GitHub auth: gh auth login
 
 Verification
 - repo verification: ./verify-bootstrap.sh
 - bootstrap dry-run: ./bootstrap.sh --dry-run
+
+Scripts
+- local-only scripts belong in ~/bin
+- shared repo scripts are installed at ~/bin/shared
+- both are on PATH, with ~/bin first
 
 Where to edit
 - shell docs: ~/.shell/README.md

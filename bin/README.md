@@ -2,8 +2,16 @@ Tracked home-bin scripts live here.
 
 Goal:
 - keep personal command-line helpers in the repo
-- expose them via `~/bin` on installed machines
+- expose them via `~/bin/shared` on installed machines
 - separate portable scripts from private or machine-specific ones
+
+Directory model:
+- `~/bin`
+  - local-only scripts for one machine
+  - not managed by this repo
+- `~/bin/shared`
+  - symlink to tracked repo `bin/`
+  - shared scripts intended to exist on installed machines
 
 Current status:
 - safe, generic scripts can live here directly
@@ -11,5 +19,6 @@ Current status:
 - environment helper scripts now include `post-install-checklist`, `setup-local-machine`, and `dotfiles-help`
 
 Planned install behavior:
-- link `~/bin` to `DOTFILES_DIR/bin`
+- create `~/bin` if missing and keep it for local-only scripts
+- link `~/bin/shared` to `DOTFILES_DIR/bin`
 - keep `DOTFILES_DIR/.bin` for repo-internal helper commands

@@ -53,10 +53,10 @@ insert2PATH(){
 	fi
 }
 
+insert2PATH "$HOME/bin"
+insert2PATH "$HOME/bin/shared"
 insert2PATH "$DOTFILES_DIR/.local/bin"
 insert2PATH "$DOTFILES_DIR/.bin"
-insert2PATH "$DOTFILES_DIR/bin"
-insert2PATH "$HOME/bin"
 if [[ -d "$DOTFILES_DIR/.nix-profile/bin" ]]; then
 	insert2PATH "$DOTFILES_DIR/.nix-profile/bin"
 fi

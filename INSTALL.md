@@ -56,7 +56,7 @@ against throwaway `HOME` directories so the current machine is not modified.
 After bootstrap, run the lightweight checklist:
 
 ```sh
-~/bin/post-install-checklist
+post-install-checklist
 ```
 
 This reports which local files still need customization and reminds you about
@@ -65,7 +65,7 @@ manual steps such as GitHub auth and a test mail send.
 For a quick orientation to the installed environment, run:
 
 ```sh
-~/bin/dotfiles-help
+dotfiles-help
 ```
 
 This prints the house keybindings, config layering, and the main local files to
@@ -74,7 +74,7 @@ edit after install.
 If you want a simple guided helper for the most common local values, run:
 
 ```sh
-~/bin/setup-local-machine
+setup-local-machine
 ```
 
 This writes machine-local Git, `msmtp`, and optional mutt/neomutt config files
@@ -157,7 +157,7 @@ The bootstrap currently links these root-level entries into `HOME`:
 
 - shell startup and shared shell layers: `.bashrc`, `.shell`, `.zlogin`, `.zsh`, `.zshenv`, `.zshrc`
 - editor and terminal workflow: `.config`, `.tmux`, `.tmux.conf`, `.vim`, `.vimrc`, `.p10k.zsh`, `.terminfo`
-- supporting data and helpers: `.bin`, `bin`, `.infokey`, `.inputrc`, `.pam_environment`
+- supporting data and helpers: `.bin`, `bin` (installed as `~/bin/shared`), `.infokey`, `.inputrc`, `.pam_environment`
 
 Why these remain in the deployment target:
 
@@ -177,8 +177,9 @@ Why these remain in the deployment target:
   - local terminal capability entries used by terminal/tmux/editor workflows
   - retained because terminal compatibility is part of the target environment
 - `.bin` and `bin`
-  - repo helper scripts and user-facing CLI helpers
-  - retained as part of the deployment toolchain and shell workflow
+  - `.bin` holds repo-internal helper scripts
+  - `bin` holds shared user-facing CLI helpers and is linked to `~/bin/shared`
+  - `~/bin` itself remains available for machine-local scripts
 
 These tracked root-level entries are currently outside the deployment target
 footprint and should be treated as legacy or niche until reviewed further:
@@ -208,7 +209,7 @@ Bootstrap now seeds a few machine-local files when they are missing:
 
 These are intended for identity, account settings, and secret lookup commands.
 They are not linked from the repo and should be customized per machine.
-You can either edit them manually or generate them with `~/bin/setup-local-machine`.
+You can either edit them manually or generate them with `setup-local-machine`.
 
 ## Mail model
 

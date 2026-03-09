@@ -300,7 +300,8 @@ link_root_entries() {
         done
         ;;
       bin)
-        link_one "$entry_source_path" "$HOME_DIR/bin"
+        ensure_dir "$HOME_DIR/bin"
+        link_one "$entry_source_path" "$HOME_DIR/bin/shared"
         ;;
       *)
         link_one "$entry_source_path" "$HOME_DIR/$name"
