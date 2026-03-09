@@ -3,18 +3,55 @@ _command_exists () {
 	type "$1" &> /dev/null ;
 }
 
+_lual_direnv() {
+	modification_mode=${1:-lua}
+	case "$modification_mode" in
+		lua)
+			path_to_modify=${LUA_PATH-}
+			local_suffix="./?.lua;./?/init.lua"
+			;;
+		so)
+			path_to_modify=${LUA_CPATH-}
+			local_suffix="./?.so"
+			;;
+		*)
+			log_error "unsupported modification mode: $modification_mode"
+			return 1
+			;;
+	esac
+
+	case ";${path_to_modify};" in
+		*";./?.${modification_mode};"*)
+			new_path=$path_to_modify
+			;;
+		*)
+			if [ -n "$path_to_modify" ]; then
+				new_path="$local_suffix;$path_to_modify"
+			else
+				new_path="$local_suffix"
+			fi
+			;;
+	esac
+
+	if [ "$modification_mode" = lua ]; then
+		export LUA_PATH="$new_path"
+	else
+		export LUA_CPATH="$new_path"
+	fi
+	log_status "updated LUA_${modification_mode}" 
+}
+
 use_lua(){
-	if _command_exists lua; then
+	if _command_exists lua && _command_exists luarocks; then
 		unset LUA_PATH
 		unset LUA_CPATH
 		eval "$(luarocks path --no-bin)"
-		source ~/.shell/lua
 		# Make LUA_PATH and LUA_CPATH env vars have ./?.lua and ./?/init.lua at the
 		# beginning
-		lual
-		lual so
+		_lual_direnv
+		_lual_direnv so
 	else
-		log_warning No \'luarocks\' command is available in use_lua\'s PATH
+		log_warning "lua or luarocks is not available in use_lua PATH"
 	fi
 }
 

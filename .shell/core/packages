@@ -1,0 +1,17 @@
+# Standard shell module: package-aware command normalization.
+
+# Debian-family package name normalization.
+if _command_exists fdfind && ! _command_exists fd; then
+	alias fd='fdfind'
+fi
+
+# Prefer nala's UX only when it is installed.
+if _command_exists nala; then
+	alias apt='nala'
+fi
+
+if _command_exists fastfetch; then
+	alias ff='fastfetch'
+fi
+
+# vim: ft=sh

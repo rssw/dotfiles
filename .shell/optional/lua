@@ -2,9 +2,7 @@ if ! _command_exists lua; then
 	return
 fi
 
-# {{{1 `lual` toggle the presedence of local paths in $LUA_PATH
-lual(){
-	# if the $1 is "so" we modify the LUA_CPATH instead
+lual() {
 	local IFS=";"
 	local modification_mode="${1:-lua}"
 	local path_to_modify
@@ -30,7 +28,7 @@ lual(){
 			modified_path+=("$pth")
 		fi
 		pth_index=$((pth_index + 1))
-	done <<< "${path_to_modify+${path_to_modify}${IFS}}" # we append an extra $IFS so we'll get the last element as well
+	done <<< "${path_to_modify+${path_to_modify}${IFS}}"
 	if [[ -z "$paths_to_move" ]]; then
 		echo lual: warning: original PATH did not contain a local path - ./\?.$modification_mode >&2
 		paths_to_move+=("./?.${modification_mode}")
@@ -53,9 +51,8 @@ lual(){
 	fi
 }
 
-# {{{1 `luai` lua wrapper with inspect library callable by var `i`
-luai(){
+luai() {
 	lua -e "i=require('pl.import_into')().pretty.write" -i "$@"
 }
 
-# {{{1 vim: ft=sh
+# vim: ft=sh

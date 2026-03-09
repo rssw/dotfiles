@@ -1,3 +1,15 @@
+" Main Neovim entrypoint for the portable terminal-first setup.
+"
+" This file owns editor-wide defaults such as UI behavior, search, folds,
+" indentation, backup paths, package loading, and host overlay loading.
+" Most keymaps and plugin-specific behavior live under `plugin/`.
+"
+" Common edits:
+" - global editor defaults: edit the matching section in this file
+" - keymaps: edit files under `plugin/`
+" - host-only overrides: edit `host-specific/`
+" - plugin set: edit `pack/` and related runtime config
+
 " {{{1 Uncategorized
 " Make any buffer able to be hidden even if not saved
 set hidden

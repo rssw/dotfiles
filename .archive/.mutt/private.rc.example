@@ -1,0 +1,21 @@
+# Copy to `~/.local/share/mutt/private.rc` and customize locally.
+
+# Basic sendmail path for mutt/neomutt using msmtp.
+# Intended use: interactive mail client identity layered on top of msmtp.
+set sendmail = "/usr/bin/msmtp"
+set use_from = yes
+set realname = "Your Name"
+set from = "admin@example.com"
+
+# Optional mailbox defaults.
+# set folder = "~/Mail"
+# set spoolfile = "+INBOX"
+# set record = "+Sent"
+# set postponed = "+Drafts"
+# set mbox = "+Archive"
+# set trash = "+Trash"
+
+# Optional contacts helper.
+# set query_command = "khard email -p %s"
+
+# vim:ft=muttrc

@@ -1,0 +1,8 @@
+# Standard shell module: core fzf tuning.
+if ! _command_exists fzf; then
+	return
+fi
+
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }--layout=reverse --inline-info"
+
+# vim: ft=sh

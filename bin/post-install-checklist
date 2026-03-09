@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -eu
+
+HOME_DIR=${HOME:?HOME must be set}
+
+print_item() {
+  status=$1
+  shift
+  printf '%s %s\n' "$status" "$*"
+}
+
+check_file() {
+  target_path=$1
+  description=$2
+
+  if [ ! -e "$target_path" ]; then
+    print_item "[ ]" "$description: missing ($target_path)"
+    return
+  fi
+
+  if grep -Eq 'example\.com|Your Name|you@example\.com|smtp\.example\.com|admin@example\.com' "$target_path" 2>/dev/null; then
+    print_item "[ ]" "$description: still needs customization ($target_path)"
+  else
+    print_item "[x]" "$description: looks customized ($target_path)"
+  fi
+}
+
+printf 'Post-install checklist\n\n'
+
+printf 'Local config files\n'
+check_file "$HOME_DIR/.local/share/git/config" "Git local identity"
+check_file "$HOME_DIR/.config/msmtp/config" "msmtp mail transport config"
+check_file "$HOME_DIR/.local/share/mutt/private.rc" "mutt/neomutt local mail config"
+
+printf '\nManual follow-up\n'
+print_item "[ ]" "Run 'gh auth login' if this machine should use GitHub CLI auth"
+print_item "[ ]" "Confirm your secret lookup command works for msmtp password retrieval"
+print_item "[ ]" "Verify backend mail path: 'printf test | msmtp --debug --from=default your-address@example.com'"
+print_item "[ ]" "Verify interactive mail path if used: launch mutt/neomutt and confirm sendmail/from settings"
+print_item "[ ]" "Send a test admin-notification email using your intended script path"
+print_item "[ ]" "Open a new shell and verify prompt, shell history, tmux, and Neovim load cleanly"
+
+printf '\nNotes\n'
+print_item "[-]" "This command is a checklist, not a secret manager"
+print_item "[-]" "Customize local files in place; do not commit machine-local secrets back into the repo"

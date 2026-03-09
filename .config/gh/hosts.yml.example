@@ -1,0 +1,5 @@
+# Optional local auth state for GitHub CLI.
+#
+# Copy to `~/.config/gh/hosts.yml` only when you want to pre-seed a machine with
+# login metadata. In most cases, let `gh auth login` create this file locally.
+{}

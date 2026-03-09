@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Bash compatibility profile for the dotfiles repo.
+#
+# This file intentionally reuses the shared environment from `.zshenv` and the
+# categorized shell modules under `/.shell/`. Bash is a fallback shell here,
+# not a separately customized environment.
+#
+# Common edits:
+# - shared PATH/editor behavior belongs in `.zshenv`
+# - aliases/functions belong in `/.shell/core/`, `/.shell/optional/`, or `/.shell/local/`
+# - machine-local login behavior belongs in `.zlogin` or local override files
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -17,15 +28,20 @@ export HISTFILE="$HOME/.local/share/bash-history"
 shopt -s checkwinsize
 
 if [ -z "$DOTFILES_DIR" ]; then
-	DOTFILES_DIR="$HOME"
+	# Prefer an editable source checkout when present; otherwise assume the files
+	# are installed into HOME via symlinks.
+	if [ -d "$HOME/src/dotfiles" ]; then
+		DOTFILES_DIR="$HOME/src/dotfiles"
+	else
+		DOTFILES_DIR="$HOME"
+	fi
 fi
 
 source "$DOTFILES_DIR/.zshenv"
 # shell common functions and aliases
-for i in $DOTFILES_DIR/.shell/*; do
-	source "$i"
-done
-unset i
+source_config_dir "$DOTFILES_DIR/.shell/core"
+source_config_dir "$DOTFILES_DIR/.shell/optional"
+source_config_dir "$DOTFILES_DIR/.shell/local"
 source "$DOTFILES_DIR/.zlogin"
 
 if [ "$OSTYPE" == "msys" ]; then

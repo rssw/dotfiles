@@ -1,5 +1,7 @@
-# Set this variable is it will be used by some other commands and it shouldn't
-# be needed to run this command again and again every time..
+# Standard shell module: colorized command output and readable defaults.
+# Dependencies are detected per command so this file is safe on minimal hosts.
+
+# Set this once so other helpers can reuse it.
 TPUT_COLORS="$(tput colors)"
 
 # {{{1 colored cat: src-highlite or bat
@@ -16,7 +18,6 @@ fi
 
 # {{{1 ls
 if _command_exists ls; then
-	# I'm a human
 	alias ls='ls --color=auto --human'
 	alias cls='ls --color=always --human'
 fi
@@ -50,7 +51,7 @@ if _command_exists pacman; then
 	alias cpacman='pacman --color=always'
 fi
 
-# {{{1 auracle (the best AUR helper)
+# {{{1 auracle
 if _command_exists auracle; then
 	alias aur=auracle
 	alias caur=auracle\ --color=always

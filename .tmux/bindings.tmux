@@ -1,3 +1,16 @@
+# Portable tmux keymap for the standard terminal workflow.
+#
+# House rules:
+# - `Ctrl-h/j/k/l` moves focus between adjacent panes and matches Neovim split movement.
+# - `Alt-h/l` switches higher-level containers (tmux windows here, Neovim buffers there).
+# - `Alt-Arrow` resizes the current pane and is mirrored in Neovim for split resizing.
+# - Native tmux prefix commands still exist as fallback where useful.
+#
+# Common edits:
+# - prefix key: edit the first section below
+# - pane/window movement: edit the Windows Navigation and Panes Navigation sections
+# - resize behavior: edit the Panes Manipulation section
+
 # {{{ change prefix-key:
 set-option -g prefix C-s
 unbind-key C-b

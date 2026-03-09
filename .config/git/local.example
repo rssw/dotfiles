@@ -1,0 +1,40 @@
+# Copy or adapt this file to ~/.local/share/git/config for per-machine settings.
+#
+# Keep identity, credentials, mail settings, and machine-specific includes here.
+
+[user]
+	name = Your Name
+	email = you@example.com
+
+#[credential "https://github.com"]
+#	username = your-github-user
+#[credential "https://gitlab.com"]
+#	username = your-gitlab-user
+#[credential "https://bitbucket.com"]
+#	username = your-bitbucket-user
+
+#[alias]
+#	send-mail = "!f() { \
+#		git send-email --smtp-pass=\"$(gopass show -f path/to/secret)\" ${GIT_SEND_MAIL_TO:+--to=${GIT_SEND_MAIL_TO}} $@;\
+#	}; f"
+
+#[sendemail]
+#	smtpEncryption = tls
+#	smtpServer = smtp.example.com
+#	smtpUser = your-user
+#	from = you@example.com
+#	smtpServerPort = 587
+#	suppresscc = author
+
+#[imap]
+#	folder = Drafts
+#	host = imaps://imap.example.com
+#	user = you@example.com
+#	port = 993
+#	sslverify = true
+
+#[include]
+#	path = ~/repos/git-fzf/handy-aliases.gitconfig
+
+#[url "ssh://your-user@review.example.com/"]
+#	pushInsteadOf = https://review.example.com/
