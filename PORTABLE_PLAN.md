@@ -63,7 +63,9 @@ This file is the planning checkpoint for the session. It should hold enough cont
 
 ### Mail and scripts
 
-- `~/bin` integration remains in scope, but actual script review/import happens after the core dotfiles are working
+- local-only scripts should live in `~/bin`
+- shared tracked scripts should be exposed via `~/bin/shared`
+- actual script review/import happens after the core dotfiles are working
 - Mailutils / Mailu support remains in scope, but active debugging of mail sending is deferred
 - `msmtp` should be the backend mail transport for scripts and notifications
 - `mutt` should remain an optional interactive mail client layered on top
