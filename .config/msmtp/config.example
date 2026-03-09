@@ -1,0 +1,22 @@
+# Copy to `~/.config/msmtp/config` and customize per machine.
+
+defaults
+	auth on
+	tls on
+	tls_trust_file /etc/ssl/certs/ca-certificates.crt
+	logfile ~/.local/share/mailutils/msmtp.log
+
+# Example account using a local secret lookup command.
+# Replace values and secret retrieval to match your environment.
+# Intended use: backend/script mail delivery. Keep secret lookup local.
+account primary
+	host smtp.example.com
+	port 587
+	from admin@example.com
+	user admin@example.com
+	auth plain
+	passwordeval secret-tool lookup service smtp account admin@example.com
+
+account default : primary
+
+# vim:ft=msmtp

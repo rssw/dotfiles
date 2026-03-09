@@ -2,15 +2,13 @@ if ! _command_exists wego; then
 	return
 fi
 
-# {{{1 `wego` wrapper that uses api key from gopass
 if _command_exists gopass || _command_exists secret-tool; then
-	wego(){
+	wego() {
 		command wego -owm-api-key "$(secret-tool lookup wego owm-api-key 2>/dev/null || gopass show -f api/openweathermap)"
 	}
 fi
 
-# {{{1 `wegol` wego location updater - for caching purposes
-wegol(){
+wegol() {
 	local location="$(ssh phone termux-location | jq --raw-output '. | "\(.latitude)" + "," + "\(.longitude)"')"
 	echo "$location" > ~/.location.txt
 	sed -i 's/\(location=\)\(.*\)/\1'"$location"'/g' ~/.wegorc

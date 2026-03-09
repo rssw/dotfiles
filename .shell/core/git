@@ -3,20 +3,18 @@ if ! _command_exists git; then
 fi
 
 # {{{1 `cdg` cd into git repository (even if it's a submodule).
-cdg(){
+cdg() {
 	if [ -d .git ]; then
 		cd .git
 	elif [ -f .git ]; then
-		cd $(sed 's/gitdir: //g' .git)
+		cd "$(sed 's/gitdir: //g' .git)"
 	elif [ -f config ]; then
-		# We are in a git dir already, and we would like to switch back to the work tree
 		if [[ "${PWD##*/}" == ".git" ]]; then
-			# This is it
 			cd ../
 			return
 		else
 			worktree="$(grep worktree config)"
-			cd ${worktree##* }
+			cd "${worktree##* }"
 			return
 		fi
 		echo cdg: could not identify current directory as a Git repository, bare or not
@@ -24,7 +22,7 @@ cdg(){
 }
 
 # {{{1 `gitclone` git clone and cd into it
-gitclone(){
+gitclone() {
 	if git clone "$@"; then
 		cd "${1##*/}"
 	fi

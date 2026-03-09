@@ -1,11 +1,26 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/src/dotfiles/.zshrc.
+#!/bin/zsh
+
+# Main interactive zsh profile for the portable shell environment.
+#
+# This file owns interactive behavior only: completion, history, widgets,
+# keybindings, prompt setup, and loading the categorized shell modules.
+# Environment and PATH policy live in `.zshenv`.
+#
+# Common edits:
+# - completion or history behavior: edit the matching sections below
+# - shell aliases/functions: edit `/.shell/core/`, `/.shell/optional/`, or `/.shell/local/`
+# - local machine-only login tweaks: use `.zlogin` or local override files
+# - prompt tuning: edit `.p10k.zsh` or `/.zsh/p10k/*`
+#
+# Plugin load order matters here. `fzf-tab` must load before autosuggestions and
+# syntax-highlighting so wrapped widgets continue to behave correctly.
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of this file.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-
-#!/bin/zsh
 
 # To profile startup
 # zmodload zsh/zprof
@@ -157,10 +172,6 @@ if _command_exists xclip || _command_exists xsel || _command_exists wl-copy || _
 fi
 # enable inline comments
 setopt interactivecomments
-# syntax highlighting
-# https://github.com/zsh-users/zsh-syntax-highlighting
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-source ${ZDOTDIR:-$HOME}/.zsh/zle/syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
 # {{{1 Bindings
 bindkey -v
@@ -257,6 +268,24 @@ bindkey -M viins "^T" fzf-complete-history-paths
 bindkey -M viins "^P" fzf-complete-git-all-files
 bindkey -M viins "^Y" fzf-complete-git-changed-files
 
+# zsh-autosuggestions should load after fzf-tab so it wraps the final widgets.
+for autosuggestions_file in \
+	${ZDOTDIR:-$HOME}/.zsh/zle/autosuggestions/zsh-autosuggestions.zsh \
+	/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+	/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+	/usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+do
+	if [[ -f "$autosuggestions_file" ]]; then
+		source "$autosuggestions_file"
+		break
+	fi
+done
+unset autosuggestions_file
+
+# syntax highlighting should load last so it can wrap the final widget set.
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+source ${ZDOTDIR:-$HOME}/.zsh/zle/syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+
 # {{{1 Looks
 source ${ZDOTDIR:-$HOME}/.zsh/powerlevel10k/powerlevel10k.zsh-theme
 # If SSH_TMUX_ATTACH is set, then we are sshing from the main home computer.
@@ -290,9 +319,9 @@ if [ -n "${TRACE_FUNC}" ]; then
 fi
 
 # {{{1 shell common functions and aliases
-for i in ${ZDOTDIR:-$HOME}/.shell/*; do
-	. "$i"
-done
+source_config_dir "${ZDOTDIR:-$HOME}/.shell/core"
+source_config_dir "${ZDOTDIR:-$HOME}/.shell/optional"
+source_config_dir "${ZDOTDIR:-$HOME}/.shell/local"
 
 # {{{1 chpwd - mostly for taskwarrior context
 for i in ${ZDOTDIR:-$HOME}/.zsh/chpwd/*; do
@@ -304,7 +333,7 @@ for i in ${ZDOTDIR:-$HOME}/.zsh/precmd/*; do
 	. "$i"
 done
 
-# Unset i used in the above 3 loops
+# Unset i used in the below 2 loops
 unset i
 
 # To profile startup
@@ -313,8 +342,42 @@ unset i
 # {{{1 modeline
 # vim:ft=zsh:foldmethod=marker
 
-autoload -Uz bracketed-paste-magic
-zle -N bracketed-paste bracketed-paste-magic
+zle_bracketed_paste_vi_full() {
+  local char paste_buffer=""
+  local esc_end=$'\e[201~'
+  local keymap_before=$KEYMAP
+  local now=$(date +'%Y-%m-%d %H:%M:%S')
 
-# To customize prompt, run `p10k configure` or edit ~/src/dotfiles/.p10k.zsh.
-[[ ! -f ~/src/dotfiles/.p10k.zsh ]] || source ~/src/dotfiles/.p10k.zsh
+  # Read pasted characters until ESC [ 201 ~ (end of bracketed paste)
+  while read -rk 1 char; do
+    paste_buffer+="$char"
+    [[ "$paste_buffer" == *"$esc_end" ]] && break
+  done
+
+  # Remove ESC [ 201 ~ suffix
+  paste_buffer="${paste_buffer%$esc_end}"
+  paste_buffer="${paste_buffer//$'\r'/}"  # Strip all \r characters
+
+  # Insert paste at cursor position (preserve newlines)
+  LBUFFER+="$paste_buffer"
+
+  # Return to insert mode if that’s where we started
+  if [[ $keymap_before == viins ]]; then
+    zle -K viins
+  fi
+
+  # Log what was pasted
+  print -r -- "[$now] MANUAL PASTE from $keymap_before: ${(qqq)paste_buffer}" >> /tmp/zsh-paste.log
+}
+zle -N bracketed-paste zle_bracketed_paste_vi_full
+
+# Bind in both vi insert and command mode
+bindkey -M viins '^[[200~' bracketed-paste
+bindkey -M vicmd '^[[200~' bracketed-paste
+
+# To customize prompt, run `p10k configure` or edit `$DOTFILES_DIR/.p10k.zsh`.
+[[ ! -f ${DOTFILES_DIR:-$HOME}/.p10k.zsh ]] || source ${DOTFILES_DIR:-$HOME}/.p10k.zsh
+
+if [[ -d "$HOME/.opencode/bin" ]]; then
+	insert2PATH "$HOME/.opencode/bin"
+fi

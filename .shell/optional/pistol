@@ -1,4 +1,3 @@
-# Pistol (https://github.com/doronbehar/pistol)
 if ! _command_exists pistol; then
 	return
 fi

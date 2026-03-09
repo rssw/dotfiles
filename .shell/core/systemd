@@ -1,4 +1,4 @@
-# {{{1 systemd related
+# Standard shell module: systemd shortcuts for service-heavy terminal work.
 if _command_exists systemctl; then
 	if ! _command_exists poweroff; then
 		alias poweroff='systemctl poweroff'
@@ -21,12 +21,12 @@ else
 fi
 
 # {{{1 `juf` shows journalctl of all given systemd units
-juf(){
+juf() {
 	eval journalctl --user --follow ${@/#/--unit }
 }
 
 # {{{1 `jsf` shows journalctl of all given systemd units
-jsf(){
+jsf() {
 	eval sudo journalctl --follow ${@/#/--unit }
 }
 

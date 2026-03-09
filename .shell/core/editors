@@ -1,0 +1,24 @@
+# Standard shell module: editor-oriented helpers available on all machines.
+
+# {{{1 visual/editor related
+alias v="${VISUAL}"
+alias gvi="${VISUAL} +GhostStart"
+
+manw() {
+	env MANWIDTH=$COLUMNS man "$@"
+}
+
+vprofile() {
+	$VISUAL \
+		--cmd 'profile start profile.log' \
+		--cmd 'profile func *' \
+		--cmd 'profile file *' \
+		"$@" && \
+	$VISUAL profile.log && \
+	rm -i profile.log
+}
+
+# Keep editor variables when escalating for edits.
+alias sudo="sudo --preserve-env=VISUAL,EDITOR,GIT_EDITOR"
+
+# vim: ft=sh

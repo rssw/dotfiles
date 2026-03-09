@@ -1,0 +1,17 @@
+# Optional shell module: desktop and launcher helpers.
+
+if _command_exists nautilus && _command_exists gio; then
+	alias nau='gio open .'
+fi
+
+if _command_exists maim; then
+	alias maims='maim --format=png -s -c 1,0,0.6'
+fi
+
+if _command_exists gio; then
+	alias o='gio open'
+elif _command_exists xdg-open; then
+	alias o='xdg-open'
+fi
+
+# vim: ft=sh

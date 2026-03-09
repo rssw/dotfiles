@@ -1,3 +1,13 @@
+# Main tmux entrypoint for the portable terminal workflow.
+#
+# This file keeps global tmux behavior small and delegates most customization to
+# `~/.tmux/theme.tmux` and `~/.tmux/bindings.tmux`.
+#
+# Common edits:
+# - theme/colors: edit `~/.tmux/theme.tmux`
+# - keybindings and navigation policy: edit `~/.tmux/bindings.tmux`
+# - terminal capability quirks: edit the guards below in this file
+
 # make the escape-time in vim within tmux lower
 set-option -sg escape-time 0
 if-shell '[[ $TERM =~ "xterm" ]]' 'set-option -g xterm-keys on'

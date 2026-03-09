@@ -1,0 +1,11 @@
+# Optional shell module: remote session helpers.
+
+if _command_exists tmate; then
+	tmate-self() {
+		while ! command tmate -n $(cat ~/.tmate.session) -k $(cat ~/.tmate-api.key) -a ~/.ssh/authorized_keys; do
+			echo Restarting tmate, after an unexpected error
+		done
+	}
+fi
+
+# vim: ft=sh

@@ -1,0 +1,55 @@
+#!/bin/sh
+
+set -eu
+
+cat <<'EOF'
+Dotfiles help
+
+Shell
+- primary shell: zsh; fallback shell: bash
+- startup order: .zshenv -> .shell/core -> .shell/optional -> .shell/local -> shell-specific rc/login files
+- portable shell layers live in ~/.shell/core and ~/.shell/optional
+- machine-local overrides belong in ~/.shell/local
+
+Tmux
+- prefix: Ctrl-s
+- pane movement: Ctrl-h/j/k/l
+- window movement: Alt-h/l
+- pane resize: Alt-Arrow
+- reload config: tmux source-file ~/.tmux.conf
+
+Neovim
+- split movement: Ctrl-h/j/k/l
+- buffer movement: Alt-h/l
+- split resize: Alt-Arrow
+- advanced layer can be disabled with NVIM_PORTABLE_BASE_ONLY=1
+- host-only behavior belongs in ~/.config/nvim/host-specific
+
+Git
+- portable defaults live in ~/.config/git/config
+- machine-local identity lives in ~/.local/share/git/config
+- useful aliases: st=status, br=branch, co=checkout, cmt=commit, lg=pretty log, shorty=status --short --branch
+
+Mail
+- msmtp is the backend transport for scripts and notifications
+- mutt/neomutt is the interactive mail layer on top of msmtp
+- local mail files:
+  - ~/.config/msmtp/config
+  - ~/.local/share/mutt/private.rc
+
+Post-install
+- guided local setup: ~/bin/setup-local-machine
+- checklist: ~/bin/post-install-checklist
+- GitHub auth: gh auth login
+
+Verification
+- repo verification: ./verify-bootstrap.sh
+- bootstrap dry-run: ./bootstrap.sh --dry-run
+
+Where to edit
+- shell docs: ~/.shell/README.md
+- tmux docs: ~/.tmux/README.md
+- Neovim docs: ~/.config/nvim/README.md
+- git docs: ~/.config/git/README.md
+- install docs: INSTALL.md
+EOF

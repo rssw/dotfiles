@@ -19,3 +19,7 @@ EOF
 		PINENTRY_USER_DATA=""
 	fi
 fi
+
+if _command_exists gopass; then
+	alias pass=gopass
+fi

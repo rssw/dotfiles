@@ -1,6 +1,5 @@
 " Installed imperatively
-packadd treesitter
-runtime host-specific/ZENIX.vim
+silent! packadd treesitter
 " Using win32yank (install via scoop)
 set clipboard=unnamedplus
 if stridx(&shell, 'bash.exe') >= 0

@@ -1,0 +1,263 @@
+# Install
+
+This repo is being refactored into a portable, headless-first dotfiles setup.
+
+The current bootstrap entrypoint is `./bootstrap.sh`.
+
+## Default behavior
+
+Running `./bootstrap.sh` is intended to:
+
+- install required packages for Debian/Ubuntu-family systems
+- install the default optional package set for the full profile
+- initialize git submodules
+- symlink repo-managed config into `HOME`
+- prepare local state directories under `~/.local/share/`
+
+The current full profile includes `nala`, mail tooling (`mutt` and `msmtp`),
+`lf`, `taskwarrior`, clipboard tools, and GPG helpers.
+
+Existing target paths are skipped by default. Use `--backup-existing` to move
+conflicting files aside before linking or templating.
+
+## Safe first run
+
+Preview actions without changing the machine:
+
+```sh
+./bootstrap.sh --dry-run
+```
+
+Run a smaller baseline install:
+
+```sh
+./bootstrap.sh --minimal
+```
+
+Example full install without mail extras:
+
+```sh
+./bootstrap.sh --full --no-mail
+```
+
+## Verification
+
+Run the lightweight verification harness before changing the bootstrap logic:
+
+```sh
+./verify-bootstrap.sh
+```
+
+This runs syntax checks, config smoke checks, and `bootstrap.sh` dry-run checks
+against throwaway `HOME` directories so the current machine is not modified.
+
+## Post-install follow-up
+
+After bootstrap, run the lightweight checklist:
+
+```sh
+~/bin/post-install-checklist
+```
+
+This reports which local files still need customization and reminds you about
+manual steps such as GitHub auth and a test mail send.
+
+For a quick orientation to the installed environment, run:
+
+```sh
+~/bin/dotfiles-help
+```
+
+This prints the house keybindings, config layering, and the main local files to
+edit after install.
+
+If you want a simple guided helper for the most common local values, run:
+
+```sh
+~/bin/setup-local-machine
+```
+
+This writes machine-local Git, `msmtp`, and optional mutt/neomutt config files
+without storing secrets in the repo.
+
+## Supported flags
+
+- profiles: `--full`, `--minimal`
+- feature toggles:
+  - `--with-nala`, `--without-nala`
+  - `--with-mutt`, `--without-mutt`
+  - `--with-lf`, `--without-lf`
+  - `--with-taskwarrior`, `--without-taskwarrior`
+  - `--no-mail`
+  - `--no-extra-shell`
+  - `--backup-existing`
+- execution controls:
+  - `--no-packages`
+  - `--no-submodules`
+  - `--no-link`
+  - `--dry-run`
+
+## Notes
+
+- package installation currently assumes `apt-get` on Debian/Ubuntu-family systems
+- `msmtp` is the intended backend mail transport for scripts and server notifications
+- `mutt`/`neomutt` is the optional interactive mail client layer on top of that transport
+- bootstrap seeds local mail templates when missing:
+  - `~/.config/msmtp/config` from `.config/msmtp/config.example`
+  - `~/.local/share/mutt/private.rc` from `.archive/.mutt/private.rc.example`
+- existing files are not overwritten during linking; conflicting paths are skipped with a warning
+- `~/.config/` is merged entry-by-entry instead of replacing the whole directory
+- only a conservative portable subset of `/.config/` is linked automatically for now
+- `/.shell/local/` is reserved for machine-local overrides and stays untracked
+- Git identity stays local: bootstrap seeds `~/.local/share/git/config` from `.config/git/local.example` when missing
+
+## Current portable config subset
+
+The bootstrap currently auto-links these `~/.config` entries:
+
+- `direnv`
+- `gh`
+- `git`
+- `htop`
+- `lf`
+- `mpv`
+- `nix-init`
+- `nixpkgs`
+- `nvim`
+- `octave`
+- `pip`
+- `pistol`
+- `pulse`
+- `ranger`
+- `rtv`
+- `stig`
+- `tox`
+- `vifm`
+- `vimfx`
+
+These tracked config areas are currently excluded from automatic linking because
+they still look identity-bound, host-specific, deprecated, or not yet refactored
+enough for portable defaults:
+
+- `beets`
+- `letsencrypt`
+- `lyvi`
+- `mpDris2`
+- `newsbeuter`
+- `newsboat`
+- `profanity`
+
+`gh` is now part of the portable subset, but GitHub authentication remains
+local. The repo tracks `/.config/gh/config.yml` for defaults and ships
+`/.config/gh/hosts.yml.example` as a reference only.
+
+## Current root-level link subset
+
+The bootstrap currently links these root-level entries into `HOME`:
+
+- shell startup and shared shell layers: `.bashrc`, `.shell`, `.zlogin`, `.zsh`, `.zshenv`, `.zshrc`
+- editor and terminal workflow: `.config`, `.tmux`, `.tmux.conf`, `.vim`, `.vimrc`, `.p10k.zsh`, `.terminfo`
+- supporting data and helpers: `.bin`, `bin`, `.infokey`, `.inputrc`, `.pam_environment`
+
+Why these remain in the deployment target:
+
+- `.p10k.zsh`
+  - prompt policy for the interactive Zsh environment
+  - still part of the intended terminal UX
+- `.pam_environment`
+  - login-session defaults such as pager behavior, `SSH_AUTH_SOCK`, and shared environment values
+  - still useful for workstation/server login consistency
+- `.infokey`
+  - custom GNU Info keybindings
+  - small, portable, and aligned with the terminal-first workflow
+- `.inputrc`
+  - readline defaults and vi-style history/search bindings
+  - affects many shell-adjacent tools consistently
+- `.terminfo`
+  - local terminal capability entries used by terminal/tmux/editor workflows
+  - retained because terminal compatibility is part of the target environment
+- `.bin` and `bin`
+  - repo helper scripts and user-facing CLI helpers
+  - retained as part of the deployment toolchain and shell workflow
+
+These tracked root-level entries are currently outside the deployment target
+footprint and should be treated as legacy or niche until reviewed further:
+
+- `.ncmpc`
+- `.ncmpcpp`
+- `.nyx`
+- `.pandoc`
+- `.texmf`
+- `.tmate.conf`
+- `.urxvt`
+- `.w3m`
+
+These are currently treated as discarded from the new environment target unless
+they are explicitly brought back later.
+
+## Local templates
+
+Bootstrap now seeds a few machine-local files when they are missing:
+
+- `~/.local/share/git/config`
+  - from `.config/git/local.example`
+- `~/.config/msmtp/config`
+  - from `.config/msmtp/config.example`
+- `~/.local/share/mutt/private.rc`
+  - from `.archive/.mutt/private.rc.example`
+
+These are intended for identity, account settings, and secret lookup commands.
+They are not linked from the repo and should be customized per machine.
+You can either edit them manually or generate them with `~/bin/setup-local-machine`.
+
+## Mail model
+
+The current intended split is:
+
+- `msmtp`
+  - backend transport for scripts, alerts, and server-side notification workflows
+  - should be configured first
+  - secrets should stay in local secret lookup or local config only
+- `mutt` or `neomutt`
+  - interactive mail client layer for reading/composing mail manually
+  - should use `msmtp` as its sendmail path where possible
+  - is not the primary transport abstraction for scripts
+
+Suggested readiness checks after install:
+
+- confirm `~/.config/msmtp/config` has real host/user/from values
+- confirm the `passwordeval` or other secret lookup command works on the machine
+- send a test message through `msmtp` directly before relying on scripts
+- if using mutt/neomutt, confirm its local identity file points at `msmtp`
+
+## Conflict handling
+
+Bootstrap currently supports two conflict behaviors:
+
+- default `skip`
+  - safest behavior
+  - if a target file already exists, bootstrap leaves it alone and prints a warning
+  - best when you are installing onto a machine that may already contain useful local state
+- `--backup-existing`
+  - cautious replacement behavior
+  - if a target file already exists, bootstrap renames it to `*.bootstrap-backup.<timestamp>` and then installs the repo-managed link or template
+  - best when you want the new environment shape applied automatically but still want rollback material preserved
+
+Why the default is still `skip`:
+
+- it avoids surprising changes on partially configured systems
+- it reduces the chance of silently changing a working login or mail setup
+- it keeps first runs conservative until the deployment footprint is fully settled
+
+Why `--backup-existing` exists:
+
+- it is more practical for migrating onto an already-used machine
+- it preserves prior files for manual comparison or rollback
+- it works for both linked repo files and seeded local templates
+
+## Current gaps
+
+- package selection still needs refinement as the portable profiles are finalized
+- more repo paths still need explicit portable vs local/private classification
+- conflict handling currently supports `skip` and `--backup-existing`, but not more advanced migration/merge behavior
+- mail bootstrap now seeds templates and a guided local-setup helper exists; secret-manager-specific wiring beyond generic `passwordeval` remains future work

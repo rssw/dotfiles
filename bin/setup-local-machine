@@ -1,0 +1,129 @@
+#!/bin/sh
+
+set -eu
+
+HOME_DIR=${HOME:?HOME must be set}
+
+ensure_dir() {
+  [ -d "$1" ] || mkdir -p "$1"
+}
+
+prompt_default() {
+  prompt_text=$1
+  default_value=$2
+  printf '%s [%s]: ' "$prompt_text" "$default_value" >&2
+  read -r response || true
+  if [ -n "$response" ]; then
+    printf '%s\n' "$response"
+  else
+    printf '%s\n' "$default_value"
+  fi
+}
+
+prompt_required() {
+  prompt_text=$1
+  while :; do
+    printf '%s: ' "$prompt_text" >&2
+    read -r response || true
+    if [ -n "$response" ]; then
+      printf '%s\n' "$response"
+      return 0
+    fi
+  done
+}
+
+prompt_yes_no() {
+  prompt_text=$1
+  default_value=$2
+  while :; do
+    printf '%s [%s]: ' "$prompt_text" "$default_value" >&2
+    read -r response || true
+    if [ -z "$response" ]; then
+      response=$default_value
+    fi
+    case "$response" in
+      y|Y|yes|YES) printf 'yes\n'; return 0 ;;
+      n|N|no|NO) printf 'no\n'; return 0 ;;
+    esac
+  done
+}
+
+write_git_config() {
+  ensure_dir "$HOME_DIR/.local/share/git"
+  git_name=$(prompt_required "Git user.name")
+  git_email=$(prompt_required "Git user.email")
+  github_user=$(prompt_default "GitHub credential username (optional)" "")
+
+  {
+    printf '[user]\n'
+    printf '\tname = %s\n' "$git_name"
+    printf '\temail = %s\n' "$git_email"
+    if [ -n "$github_user" ]; then
+      printf '\n[credential "https://github.com"]\n'
+      printf '\tusername = %s\n' "$github_user"
+    fi
+  } > "$HOME_DIR/.local/share/git/config"
+
+  printf 'Wrote %s\n' "$HOME_DIR/.local/share/git/config"
+}
+
+write_msmtp_config() {
+  ensure_dir "$HOME_DIR/.config/msmtp"
+  ensure_dir "$HOME_DIR/.local/share/mailutils"
+  smtp_host=$(prompt_required "SMTP host")
+  smtp_port=$(prompt_default "SMTP port" "587")
+  smtp_from=$(prompt_required "SMTP from address")
+  smtp_user=$(prompt_default "SMTP username" "$smtp_from")
+  smtp_secret_cmd=$(prompt_required "SMTP passwordeval / secret lookup command")
+
+  {
+    printf 'defaults\n'
+    printf '\tauth on\n'
+    printf '\ttls on\n'
+    printf '\ttls_trust_file /etc/ssl/certs/ca-certificates.crt\n'
+    printf '\tlogfile ~/.local/share/mailutils/msmtp.log\n\n'
+    printf 'account primary\n'
+    printf '\thost %s\n' "$smtp_host"
+    printf '\tport %s\n' "$smtp_port"
+    printf '\tfrom %s\n' "$smtp_from"
+    printf '\tuser %s\n' "$smtp_user"
+    printf '\tauth plain\n'
+    printf '\tpasswordeval %s\n\n' "$smtp_secret_cmd"
+    printf 'account default : primary\n'
+  } > "$HOME_DIR/.config/msmtp/config"
+
+  printf 'Wrote %s\n' "$HOME_DIR/.config/msmtp/config"
+}
+
+write_mutt_config() {
+  ensure_dir "$HOME_DIR/.local/share/mutt"
+  realname=$(prompt_required "Mutt/neomutt real name")
+  from_addr=$(prompt_required "Mutt/neomutt from address")
+
+  {
+    printf 'set sendmail = "/usr/bin/msmtp"\n'
+    printf 'set use_from = yes\n'
+    printf 'set realname = "%s"\n' "$realname"
+    printf 'set from = "%s"\n' "$from_addr"
+  } > "$HOME_DIR/.local/share/mutt/private.rc"
+
+  printf 'Wrote %s\n' "$HOME_DIR/.local/share/mutt/private.rc"
+}
+
+printf 'Local machine setup\n\n'
+printf 'This helper writes machine-local config only.\n'
+printf 'It does not store secrets in the repo.\n\n'
+
+write_git_config
+printf '\n'
+write_msmtp_config
+
+if [ "$(prompt_yes_no "Configure mutt/neomutt local identity too" "yes")" = yes ]; then
+  printf '\n'
+  write_mutt_config
+fi
+
+printf '\nNext steps\n'
+printf -- '- run: gh auth login\n'
+printf -- '- run: ~/bin/post-install-checklist\n'
+printf -- '- send a test email through msmtp before relying on scripts\n'

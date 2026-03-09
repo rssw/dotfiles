@@ -1,0 +1,56 @@
+# Optional shell module: workflow helpers that depend on extra tools or personal conventions.
+
+if _command_exists transmission-remote; then
+	alias trc='transmission-remote --authenv'
+fi
+
+if _command_exists nix && [[ ! -z "$NIX_CONFIG" ]]; then
+	nixos-rebuild() {
+		sudo env NIX_CONFIG=$NIX_CONFIG NIX_REMOTE=daemon nixos-rebuild "$@"
+	}
+fi
+
+if _command_exists khal; then
+	alias cal='khal --color calendar | head -25'
+fi
+
+pad() {
+	${VISUAL} "${NOTE_DIR}/$(date +%Y-%m-%d_%H.%S).txt"
+}
+
+if _command_exists taskwarrior-tui && [[ -d ~/.local/share/tasks ]]; then
+	alias tui=taskwarrior-tui
+fi
+
+if _command_exists octave; then
+	alias oct=octave
+fi
+
+hsub() {
+	local hist_index="$1"
+	if [ -z "$hist_index" ]; then
+		echo USAGE: hsub "<index>" "<sed filter>" >&2
+		return 1
+	fi
+	shift
+	local cmd_full="$(fc -l "$hist_index" "$hist_index")"
+	if [ -z "$cmd_full" ]; then
+		return 1
+	fi
+	local index
+	IFS=" " read index cmd <<< "$cmd_full"
+	if [[ -z "$@" ]]; then
+		echo $((hist_index - 1)): $cmd
+		return
+	fi
+	local cmd_file="$(mktemp -u -t hsub-cmd.XXXX)"
+	echo We are going to run:
+	echo =======
+	echo $cmd | sed "$@" | tee "$cmd_file"
+	echo =======
+	echo "Are you sure it's OK?"
+	read
+	source "$cmd_file"
+}
+
+# vim: ft=zsh

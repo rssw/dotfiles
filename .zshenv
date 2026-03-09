@@ -1,7 +1,32 @@
 #!/bin/zsh
 
+# Portable shell environment shared by zsh and bash.
+#
+# This file owns environment variables that should exist before interactive
+# shell setup begins: PATH construction, editor/pager defaults, helper
+# functions used by both shells, and local host-specific environment includes.
+#
+# Common edits:
+# - PATH precedence or repo location: edit the PATH section below.
+# - Editor or pager policy: edit the VISUAL/EDITOR and Pager sections below.
+# - Local machine-only environment: add files under
+#   `$DOTFILES_DIR/.local/share/zsh/env/$HOST`.
+#
+# This file should stay shell-portable enough to be sourced from `.bashrc`.
+
 # {{{1 Default IFS
 export DEFAULT_IFS="$IFS"
+
+# {{{1 Dotfiles location
+if [[ -z "${DOTFILES_DIR:-}" ]]; then
+	# Prefer an editable source checkout when present; otherwise assume the files
+	# are installed into HOME via symlinks.
+	if [[ -d "$HOME/src/dotfiles" ]]; then
+		export DOTFILES_DIR="$HOME/src/dotfiles"
+	else
+		export DOTFILES_DIR="$HOME"
+	fi
+fi
 
 # {{{1 HOST - from some reason this is not exported by default
 export HOST
@@ -28,11 +53,12 @@ insert2PATH(){
 	fi
 }
 
-insert2PATH "$HOME/src/dotfiles/.local/bin"
-insert2PATH "$HOME/src/dotfiles/.bin"
+insert2PATH "$DOTFILES_DIR/.local/bin"
+insert2PATH "$DOTFILES_DIR/.bin"
+insert2PATH "$DOTFILES_DIR/bin"
 insert2PATH "$HOME/bin"
-if [[ -d "$HOME/src/dotfiles/.nix-profile/bin" ]]; then
-	insert2PATH "$HOME/src/dotfiles/.nix-profile/bin"
+if [[ -d "$DOTFILES_DIR/.nix-profile/bin" ]]; then
+	insert2PATH "$DOTFILES_DIR/.nix-profile/bin"
 fi
 if [[ -d "/usr/local/go/bin" ]]; then
 	insert2PATH "/usr/local/go/bin"
@@ -42,6 +68,19 @@ fi
 # Taken from http://stackoverflow.com/a/592649/4935114
 _command_exists () {
 	type "$1" &> /dev/null ;
+}
+
+# - {{{1 `source_config_dir`: source all plain files in a directory
+source_config_dir() {
+	local config_dir config_file
+
+	config_dir="$1"
+	[ -d "$config_dir" ] || return 0
+
+	for config_file in "$config_dir"/*; do
+		[ -f "$config_file" ] || continue
+		. "$config_file"
+	done
 }
 
 # - {{{1 VISUAL/EDITOR
@@ -78,14 +117,14 @@ export VISUAL="$EDITOR"
 export PAGER="less"
 export LESS="-X -x4 -r -i"
 export LESSHISTFILE="${HOME}/.local/share/less-history"
-export INFO_PRINT_COMMAND="${HOME}/src/dotfiles/.bin/info-print"
+export INFO_PRINT_COMMAND="${DOTFILES_DIR}/.bin/info-print"
 
 # - {{{1 FZF
 export FZF_DEFAULT_OPTS="--history=$HOME/.local/share/fzf/history"
 
 # - {{{1 local environmental variables
-if [[ -f "$HOME/src/dotfiles/.local/share/zsh/env/${HOST}" ]]; then
-	source "$HOME/src/dotfiles/.local/share/zsh/env/${HOST}"
+if [[ -f "$DOTFILES_DIR/.local/share/zsh/env/${HOST}" ]]; then
+	source "$DOTFILES_DIR/.local/share/zsh/env/${HOST}"
 fi
 
 if [[ "$OSTYPE" == "msys" ]]; then
@@ -94,3 +133,6 @@ fi
 
 # - {{{1
 # vim:ft=zsh:foldmethod=marker
+
+export MIBS=+ALL
+#snmptranslate -m ALL -IR mtxrWlRTabSignalStrength

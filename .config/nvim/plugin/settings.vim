@@ -40,6 +40,27 @@ nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 " }}}
 
+" {{{ Cross-application navigation
+" House rules shared with tmux:
+" - Ctrl-h/j/k/l: move to adjacent split or pane
+" - Alt-h/l: move to previous/next higher-level container (buffer in Neovim)
+" - Alt-Arrow: resize current split directionally
+nnoremap <silent> <M-h> :bprevious<CR>
+nnoremap <silent> <M-l> :bnext<CR>
+nnoremap <silent> <M-Left> :vertical resize -3<CR>
+nnoremap <silent> <M-Right> :vertical resize +3<CR>
+nnoremap <silent> <M-Up> :resize +3<CR>
+nnoremap <silent> <M-Down> :resize -3<CR>
+if has('nvim')
+	tnoremap <silent> <M-h> <C-\><C-n>:bprevious<CR>
+	tnoremap <silent> <M-l> <C-\><C-n>:bnext<CR>
+	tnoremap <silent> <M-Left> <C-\><C-n>:vertical resize -3<CR>
+	tnoremap <silent> <M-Right> <C-\><C-n>:vertical resize +3<CR>
+	tnoremap <silent> <M-Up> <C-\><C-n>:resize +3<CR>
+	tnoremap <silent> <M-Down> <C-\><C-n>:resize -3<CR>
+endif
+" }}}
+
 " {{{ For localvimrc - https://github.com/embear/vim-localvimrc
 " Store and restore decisions only if the answer was given in upper case (Y/N/A)
 let g:localvimrc_persistent = 1

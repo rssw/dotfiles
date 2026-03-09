@@ -1,0 +1,8 @@
+# Standard shell module: small filesystem helpers.
+
+# {{{1 `mkcd` mkdir and cd to it afterwards
+mkcd() {
+	mkdir -p "$1" && cd "$1"
+}
+
+# vim: ft=sh
