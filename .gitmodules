@@ -291,4 +291,4 @@
 	url = git@github.com:lambdalisue/suda.vim
 [submodule ".config/nvim/pack/functional/start/info"]
 	path = .config/nvim/pack/functional/start/info
-	url = git@gitlab.com:HiPhish/info.vim.git
+	url = https://gitlab.com/HiPhish/info.vim.git
