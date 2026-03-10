@@ -62,7 +62,8 @@ post-install-checklist
 ```
 
 This reports which local files still need customization and reminds you about
-manual steps such as GitHub auth and a test mail send.
+manual steps such as terminal font selection, GitHub auth, zkbd key discovery,
+mail setup, and a test mail send.
 
 For a quick orientation to the installed environment, run:
 
@@ -81,6 +82,9 @@ setup-local-machine
 
 This writes machine-local Git, `msmtp`, and optional mutt/neomutt config files
 without storing secrets in the repo.
+
+At the end of a real install, bootstrap also starts a `zsh` login shell for the
+current session when you launched it from another interactive shell.
 
 ## Supported flags
 
@@ -102,6 +106,9 @@ without storing secrets in the repo.
 ## Notes
 
 - package installation currently assumes `apt-get` on Debian/Ubuntu-family systems
+- bootstrap installs the MesloLGS NF Powerlevel10k font into `~/.local/share/fonts`
+  and refreshes the font cache when possible; you still need to select that font
+  in your terminal profile
 - on Ubuntu 22.04+ the bootstrap adds the Fastfetch PPA automatically when
   `fastfetch` is selected but not available from the current apt sources
 - `msmtp` is the intended backend mail transport for scripts and server notifications
@@ -222,8 +229,12 @@ The current intended split is:
 
 Suggested readiness checks after install:
 
+- select `MesloLGS NF` in the terminal profile and restart the terminal
+- run `zkbd` in a real zsh terminal if special keys still need terminal-specific bindings
+- if this machine should default to zsh at login, run `chsh -s "$(command -v zsh)"`
 - confirm `~/.config/msmtp/config` has real host/user/from values
 - confirm the `passwordeval` or other secret lookup command works on the machine
+- if using `mail-rssw`, create `~/.local/share/mailutils/rssw.env` from the example and fill in real values
 - send a test message through `msmtp` directly before relying on scripts
 - if using mutt/neomutt, confirm its local identity file points at `msmtp`
 

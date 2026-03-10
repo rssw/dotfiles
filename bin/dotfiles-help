@@ -10,6 +10,8 @@ Shell
 - startup order: .zshenv -> .shell/core -> .shell/optional -> .shell/local -> shell-specific rc/login files
 - portable shell layers live in ~/.shell/core and ~/.shell/optional
 - machine-local overrides belong in ~/.shell/local
+- after install, select the MesloLGS NF terminal font for the full Powerlevel10k prompt
+- if your login shell is still bash, switch it with: chsh -s "$(command -v zsh)"
 
 Tmux
 - prefix: Ctrl-s
@@ -41,6 +43,7 @@ Post-install
 - guided local setup: setup-local-machine
 - checklist: post-install-checklist
 - GitHub auth: gh auth login
+- terminal-specific key discovery: run zkbd inside a real zsh terminal if needed
 
 Verification
 - repo verification: ./verify-bootstrap.sh

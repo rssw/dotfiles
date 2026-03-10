@@ -31,13 +31,15 @@ WITH_TASKWARRIOR=1
 WITH_EXTRA_SHELL=1
 FASTFETCH_SOURCE_ADDED=0
 
-REQUIRED_PACKAGES="zsh bash git less direnv fzf zsh-autosuggestions zsh-syntax-highlighting neovim tmux ripgrep fd-find jq fastfetch pv p7zip-full unzip cifs-utils exfatprogs nfs-common"
+REQUIRED_PACKAGES="zsh bash git less curl fontconfig direnv fzf zsh-autosuggestions zsh-syntax-highlighting neovim tmux ripgrep fd-find jq fastfetch pv p7zip-full unzip cifs-utils exfatprogs nfs-common"
 PKG_NALA="nala"
 PKG_MAIL="mutt msmtp"
 PKG_LF="lf"
 PKG_TASKWARRIOR="taskwarrior"
 PKG_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
 FASTFETCH_PPA="ppa:zhangsongcui3371/fastfetch"
+MESLO_FONT_BASE_URL="https://github.com/romkatv/powerlevel10k-media/raw/master"
+MESLO_FONT_FILES="MesloLGS%20NF%20Regular.ttf MesloLGS%20NF%20Bold.ttf MesloLGS%20NF%20Italic.ttf MesloLGS%20NF%20Bold%20Italic.ttf"
 
 # Start with a conservative portable subset. Local/private or highly
 # desktop-specific config can be linked manually until those layers are split
@@ -102,6 +104,15 @@ run() {
   if [ "$DRY_RUN" -eq 0 ]; then
     "$@"
   fi
+}
+
+run_in_home() {
+  if [ "$DRY_RUN" -eq 0 ]; then
+    HOME=$HOME_DIR "$@"
+    return 0
+  fi
+
+  log "+ HOME=$HOME_DIR $*"
 }
 
 append_packages() {
@@ -406,6 +417,33 @@ prepare_local_state() {
   install_template_if_missing "$DOTFILES_DIR/.archive/.mutt/private.rc.example" "$HOME_DIR/.local/share/mutt/private.rc"
 }
 
+install_prompt_fonts() {
+  fonts_dir=$HOME_DIR/.local/share/fonts
+
+  ensure_dir "$fonts_dir"
+
+  for font_file in $MESLO_FONT_FILES
+  do
+    font_name=$(printf '%s' "$font_file" | sed 's/%20/ /g')
+    font_target=$fonts_dir/$font_name
+    [ -e "$font_target" ] && continue
+
+    font_url=$MESLO_FONT_BASE_URL/$font_file
+    if command -v curl >/dev/null 2>&1; then
+      run_in_home curl -fsSL -o "$font_target" "$font_url"
+    elif command -v wget >/dev/null 2>&1; then
+      run_in_home wget -q -O "$font_target" "$font_url"
+    else
+      warn "cannot install Powerlevel10k font automatically; curl or wget is required"
+      return 0
+    fi
+  done
+
+  if command -v fc-cache >/dev/null 2>&1; then
+    run_in_home fc-cache -f "$fonts_dir"
+  fi
+}
+
 link_config() {
   if [ "$LINK_CONFIG" -eq 0 ]; then
     log "Skipping symlink creation"
@@ -426,8 +464,16 @@ main() {
   install_packages
   init_submodules
   link_config
+  install_prompt_fonts
 
   log "Bootstrap complete"
+
+  if [ "$DRY_RUN" -eq 0 ] && [ -t 0 ] && [ -t 1 ] && command -v zsh >/dev/null 2>&1; then
+    if [ "${SHELL##*/}" != "zsh" ]; then
+      log "Starting zsh for this session"
+      exec zsh -l
+    fi
+  fi
 }
 
 main "$@"
