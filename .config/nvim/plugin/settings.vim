@@ -100,6 +100,9 @@ let g:gundo_prefer_python3 = 1
 
 " {{{ sandwich
 runtime macros/sandwich/keymap/surround.vim
+if !exists('g:sandwich#recipes')
+  let g:sandwich#recipes = []
+endif
 let g:sandwich#recipes += [
 \   {'buns': ['{ ', ' }'], 'nesting': 1, 'match_syntax': 1,
 \    'kind': ['add', 'replace'], 'action': ['add'], 'input': ['{']},
