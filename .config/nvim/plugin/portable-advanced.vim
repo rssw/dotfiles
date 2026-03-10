@@ -14,7 +14,6 @@ endif
 
 silent! packadd sonokai
 silent! packadd fzf-lua
-silent! packadd ghost
 silent! packadd firenvim
 silent! packadd treesitter
 silent! packadd treesitter-textobjects

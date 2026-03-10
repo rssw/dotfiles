@@ -1,0 +1,206 @@
+*ghost.txt* documentation for vim-ghost
+           ____ _               _  _____         _      __            ~
+          / ___| |__   ___  ___| ||_   _|____  _| |_   / _| ___  _ __ ~
+         | |  _| '_ \ / _ \/ __| __|| |/ _ \ \/ / __| | |_ / _ \| '__|~
+         | |_| | | | | (_) \__ \ |_ | |  __/>  <| |_  |  _| (_) | |   ~
+          \____|_| |_|\___/|___/\__||_|\___/_/\_\\__| |_|  \___/|_|   ~
+                                                                      ~
+                                        _                             ~
+                             _ ____   _(_)_ __ ___                    ~
+                            | '_ \ \ / / | '_ ` _ \                   ~
+                            | | | \ V /| | | | | | |                  ~
+                            |_| |_|\_/ |_|_| |_| |_|                  ~
+                                                                      ~
+
+                Edit browser text in (N)vim
+
+================================================================================
+CONTENTS                                                        *ghostcontents*
+    
+    1. Introduction................................|GhostIntro|
+    2. Usage.......................................|GhostUsage|
+    3. Configuration...............................|GhostConfiguration|
+    4. Contributing................................|GhostContributing|
+    5. Bugs........................................|GhostBugs|
+    6. Changelog...................................|GhostChangelog|
+    7. Credits.....................................|GhostCredits|
+
+================================================================================
+Introduction                                                        *GhostIntro*
+
+Ghost is a plugin for nvim that lets you edit textareas and other large text
+content editable areas in nvim and constantly syncs between the browser and nvim
+buffer bi-directionally.
+
+There are two parts
+
+1. Browser addon
+    - For Firefox -https://addons.mozilla.org/en-US/firefox/addon/ghosttext/ 
+    - For Chrome - https://chrome.google.com/webstore/detail/ghosttext/godiecgffnchndlihlpaajjcplehddca
+2. This nvim plugin
+
+The nvim plugin starts a webserver (by default on port 4001) and then listens for 
+connections from the browser. For each connection, it starts a websocket listener
+and then uses that to send and receive text to and from the browser.
+
+Optional Dependencies
+---------------------
+
+Linux: If `xdotool` is available, this plugin will also activate the nvim window
+when you click the ghost icon on the browser.  On Ubuntu, you can simply do
+>
+    sudo apt-get install xdotool
+While optional, this is highly recommended as it makes the experience even more
+seamless.
+
+Windows: If python module pywinauto (https://github.com/pywinauto/pywinauto)
+is available, it will be used to bring the neovim-qt to foreground.
+>
+    # Ensure that you install this module for the version of python 
+    # that is loaded in neovim
+    pip install pywinauto
+
+macOS: Set the g:ghost_darwin_app variable to launch the correct app. See its
+docs for more info.
+
+Limitations: Currently, on windows, the processname is hardcoded to nvim-qt
+If you use any of the other GUIs for neovim (OniVim, gonvim etc) then this 
+will not work.
+
+================================================================================
+Usage                                                               *GhostUsage*
+
+Install this plugin using your favorite plugin manager. For ex: for vim-plug,
+>
+    Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
+
+Start the server with :GhostStart. That's it.
+
+The `./install` is a script that runs `pip install --user -r requirements.txt` 
+in the plugin folder to install required python dependencies.
+
+You can shutdown the server with :GhostStop
+
+
+================================================================================
+Configuration                                               *GhostConfiguration*
+
+You can configure vim-ghost by setting these options in your vimrc. You will
+need to restart vim-ghost (or restart vim) for them to take effect.
+
+--------------------------------------------------------------------------------
+                                                                  *g:ghost_port*
+Change the port on which the server listens.
+>
+    let g:ghost_port = 5678
+<
+Default: 4001
+
+--------------------------------------------------------------------------------
+                                                             *g:ghost_autostart*
+Start Ghost on nvim startup.
+>
+    let g:ghost_autostart = 1
+<
+Default: 0
+
+--------------------------------------------------------------------------------
+                                                                *g:loaded_ghost*
+Disable ghost.
+>
+    let g:loaded_ghost = 1
+<
+Default: 0
+
+--------------------------------------------------------------------------------
+                                                                   *g:ghost_cmd*
+Use a different command to open temporary files.
+Examples: |:split|, |:vsplit|, |:tabedit|, etc.
+>
+    let g:ghost_cmd = 'tabedit'
+<
+Default: |edit|
+
+--------------------------------------------------------------------------------
+                                                            *g:ghost_darwin_app*
+Specify the macOS app you run vim-ghost in (usually your terminal app for
+terminal vim, or the vim program for GUI vim.
+
+You can check by running this command from inside vim:
+>
+   :!osascript -e 'tell application "System Events"' -e 'name of first application process whose frontmost is true' -e 'end tell'
+<
+Examples: 'Terminal', 'iTerm2', 'VimR', 'MacVim', 'kitty'
+>
+    let g:ghost_darwin_app = 'Terminal'
+<
+Default: ''
+
+--------------------------------------------------------------------------------
+
+Syntax Highlighting
+
+  vim-ghost creates files with a prefix like so - `ghost-<domain>-<titleslug>-<random>.txt`
+  You can use this to set up options specific to a domain - like so:
+
+>
+    augroup ghost
+    au!
+    autocmd BufNewFile,BufRead *stackexchange.com* set filetype=markdown
+    autocmd BufNewFile,BufRead *stackoverflow.com* set filetype=markdown
+    augroup END
+
+--------------------------------------------------------------------------------
+                                                                *g:ghost_enable_sync*
+Enable real-time syncing of the browser's textarea.
+
+  By default, anything you type in vim appears immediately in the browser's textarea.
+  If disabled, manual syncing of the textarea is done with the :GhostSync command.
+  Syncing may be disabled / enabled on the fly using the :GhostToggleSync command.
+>
+    let g:ghost_enable_sync = 1
+<
+Default: 1
+
+================================================================================
+Contributing                                                 *GhostContributing*
+
+https://github.com/raghur/vim-ghost is the main repo. Feel free to file issues,
+suggestions and questions. If you like this plugin, do star the repo and spread
+the word.
+Pull requests are very welcome!
+
+================================================================================
+Bugs                                                                 *GhostBugs*
+
+Please use github issues to file bugs. This is a python plugin - so additional
+logging can be enabled like so:
+>
+    $ NVIM_PYTHON_LOG_FILE=~/pylog NVIM_GHOSTPY_LOG_LEVEL=DEBUG nvim
+
+Now you should see debug logs in ~/pylog_py3_rplugin file. If you have a bug to 
+report then it would be very helpful to attach logs along with (or in a paste)
+
+================================================================================
+Changelog                                                       *GhostChangelog*
+
+v1.10 [2017-12-02]
+    * Form filenames using url host and title
+v1.01 [2017-11-26]
+    * Use pywinauto for raising the nvim-qt window on Windows
+v1.0 [2017-11-25]
+    * Use xdotool to raise window when GhostText is activated.
+v0.9 [2017-11-23]
+    * First public version.
+
+================================================================================
+Credits                                                           *GhostCredits*
+
+Big thanks to
+
+1. GhostText
+2. neovim
+3. pywinauto
+4. xdotool
+
+

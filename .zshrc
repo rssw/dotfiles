@@ -188,9 +188,21 @@ bindkey -a gE vi-forward-blank-word
 bindkey -a gW vi-backward-blank-word-end
 # zkbd for special keys which their code changes often
 autoload zkbd;
-# source zkbd files according to the $TERMinal
-if [[ -f "${ZDOTDIR:-$HOME}/.zkbd/${TERM}-${DISPLAY:-$VENDOR-$OSTYPE}" ]]; then
-	source "${ZDOTDIR:-$HOME}/.zkbd/${TERM}-${DISPLAY:-$VENDOR-$OSTYPE}"
+local_zkbd_dir=$HOME/.zkbd
+local_zkbd_loaded=
+for local_zkbd_file in \
+	"$local_zkbd_dir/${TERM}-${DISPLAY:-$VENDOR-$OSTYPE}" \
+	"$local_zkbd_dir/$TERM"
+do
+	if [[ -f "$local_zkbd_file" ]]; then
+		source "$local_zkbd_file"
+		local_zkbd_loaded=1
+		break
+	fi
+done
+unset local_zkbd_file
+
+if [[ -n "$local_zkbd_loaded" ]]; then
 	bindkey "${key[Home]}" beginning-of-line
 	bindkey -a "${key[Home]}" beginning-of-line
 	bindkey "${key[End]}" end-of-line
@@ -198,10 +210,12 @@ if [[ -f "${ZDOTDIR:-$HOME}/.zkbd/${TERM}-${DISPLAY:-$VENDOR-$OSTYPE}" ]]; then
 	bindkey "${key[Delete]}" delete-char
 	bindkey -a "${key[Delete]}" delete-char
 else
-	if [[ -t 0 && -t 1 && -z ${ZSH_EXECUTION_STRING:-} ]]; then
-		echo you need to run \`zkbd\` for this terminal.
+	if [[ -t 0 && -t 1 && -z ${ZSH_EXECUTION_STRING:-} && -z ${ZKBD_WARNED:-} ]]; then
+		export ZKBD_WARNED=1
+		echo "you need to run \`zkbd\` for this terminal; save the result under $local_zkbd_dir/$TERM"
 	fi
 fi
+unset local_zkbd_dir local_zkbd_loaded
 # don't exit last tmate pane / window, based on: https://superuser.com/a/1702473/430539
 if [[ "$TMUX" =~ "tmate-$UID" ]]; then
 	# tmux detach or delete
@@ -291,30 +305,34 @@ source ${ZDOTDIR:-$HOME}/.zsh/zle/syntax-highlighting/zsh-syntax-highlighting.pl
 # {{{1 Looks
 if [[ -t 0 && -t 1 ]]; then
 	source ${ZDOTDIR:-$HOME}/.zsh/powerlevel10k/powerlevel10k.zsh-theme
-	# If SSH_TMUX_ATTACH is set, then we are sshing from the main home computer.
-	# If TERM_NO_ICONS_FONT is set, we have made
-	# if [ -n $SSH_TMUX_ATTACH ] || zmodload zsh/terminfo && (( terminfo[colors] >= 256 )) && [ -z $TERM_NO_ICONS_FONT ]; then
-	zmodload zsh/terminfo
-	(){
-		if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
-			[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl
-			return
-		fi
-		if [ ! -z "$SSH_TMUX_ATTACH$MLTERM" ]; then
-			[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
-			return
-		fi
-		if (( terminfo[colors] >= 256 )); then
-			# TELEPORT_SESSION is for teleconsole (https://www.teleconsole.com/)
-			# SSH_TERM_NO_ICONS_FONT is inherited between ssh sessions, for example
-			# when sshing to vps from a terminal with no suitable fonts.
-			if [[ -z "$SSH_TERM_NO_ICONS_FONT" ]] && [[ -z "$TELEPORT_SESSION" ]]; then
+	if [[ -f $HOME/.p10k.zsh ]]; then
+		source $HOME/.p10k.zsh
+	else
+		# If SSH_TMUX_ATTACH is set, then we are sshing from the main home computer.
+		# If TERM_NO_ICONS_FONT is set, we have made
+		# if [ -n $SSH_TMUX_ATTACH ] || zmodload zsh/terminfo && (( terminfo[colors] >= 256 )) && [ -z $TERM_NO_ICONS_FONT ]; then
+		zmodload zsh/terminfo
+		(){
+			if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl
+				return
+			fi
+			if [ ! -z "$SSH_TMUX_ATTACH$MLTERM" ]; then
 				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
 				return
 			fi
-		fi
-		[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii
-	}
+			if (( terminfo[colors] >= 256 )); then
+				# TELEPORT_SESSION is for teleconsole (https://www.teleconsole.com/)
+				# SSH_TERM_NO_ICONS_FONT is inherited between ssh sessions, for example
+				# when sshing to vps from a terminal with no suitable fonts.
+				if [[ -z "$SSH_TERM_NO_ICONS_FONT" ]] && [[ -z "$TELEPORT_SESSION" ]]; then
+					[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
+					return
+				fi
+			fi
+			[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii
+		}
+	fi
 fi
 
 # {{{1 Enable tracing a specific function
@@ -378,11 +396,6 @@ zle -N bracketed-paste zle_bracketed_paste_vi_full
 # Bind in both vi insert and command mode
 bindkey -M viins '^[[200~' bracketed-paste
 bindkey -M vicmd '^[[200~' bracketed-paste
-
-# To customize prompt, run `p10k configure` or edit `$DOTFILES_DIR/.p10k.zsh`.
-if [[ -t 0 && -t 1 ]]; then
-	[[ ! -f ${DOTFILES_DIR:-$HOME}/.p10k.zsh ]] || source ${DOTFILES_DIR:-$HOME}/.p10k.zsh
-fi
 
 if [[ -d "$HOME/.opencode/bin" ]]; then
 	insert2PATH "$HOME/.opencode/bin"

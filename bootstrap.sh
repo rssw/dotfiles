@@ -391,6 +391,7 @@ link_root_entries() {
 
 prepare_local_state() {
   ensure_dir "$HOME_DIR/.cache"
+  ensure_dir "$HOME_DIR/.zkbd"
   ensure_dir "$HOME_DIR/.local/share"
   ensure_dir "$HOME_DIR/.local/share/fzf"
   ensure_dir "$HOME_DIR/.local/share/git"
