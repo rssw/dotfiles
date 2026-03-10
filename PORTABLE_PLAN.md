@@ -18,15 +18,18 @@ This file is the planning checkpoint for the session. It should hold enough cont
 - treat machine-local identity, credentials, and secret lookup as post-install follow-up rather than tracked repo state
 - provide both a simple guided local-setup helper and a checklist for per-machine completion steps
 - make the final environment discoverable with an in-repo help command, not just scattered docs
+- keep the active repo tree focused on files that directly support the documented install outcomes; archive the rest
 
 ## Current outcomes
 
 - `bootstrap.sh` now installs packages, initializes submodules, links the portable subset, seeds local templates, and supports `--dry-run` plus `--backup-existing`
 - `verify-bootstrap.sh` now provides repeatable syntax checks, config smoke tests, and isolated bootstrap dry-runs
+- `verify-bootstrap.sh` now skips tool-specific checks cleanly when prerequisite commands are not installed yet
 - shell config is split into `/.shell/core/`, `/.shell/optional/`, and `/.shell/local/`
 - tmux, Neovim, and Git docs/config now follow a clearer portable-vs-local architecture
 - machine-local templates and helpers now exist for Git and mail setup (`msmtp`, mutt/neomutt)
 - post-install support now includes `post-install-checklist`, `setup-local-machine`, and `dotfiles-help`
+- non-install-surface tracked config is being moved under `/.archive/` so the active tree matches the bootstrap footprint
 
 ## Settled decisions
 
@@ -208,6 +211,7 @@ The install system should support both package-level flags and group-level flags
 
 - start with Debian/Ubuntu-family machines as the first-class install target
 - detect package naming differences where needed (for example `fd-find`)
+- add external package sources only when needed for selected packages (for example Fastfetch on Ubuntu releases that do not ship it yet)
 - if promoting Neovim to the default `vi`/`vim` experience, check for and remove `vi-tiny` if required and if it will not be handled automatically by package replacement logic
 
 ## Planned shell architecture

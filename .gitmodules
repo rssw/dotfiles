@@ -14,7 +14,7 @@
 	path = .tmux/fzf-url
 	url = git@github.com:wfxr/tmux-fzf-url.git
 [submodule ".pandoc/s5"]
-	path = .pandoc/s5
+	path = .archive/.pandoc/s5
 	url = git@github.com:CodeGnome/s5.git
 [submodule ".config/direnv/nix"]
 	path = .config/direnv/nix
@@ -23,7 +23,7 @@
 	path = .config/ranger/devicons
 	url = git@github.com:alexanderjeurissen/ranger_devicons
 [submodule ".urxvt/bundle/font-size"]
-	path = .urxvt/bundle/font-size
+	path = .archive/.urxvt/bundle/font-size
 	url = git@github.com:majutsushi/urxvt-font-size
 [submodule ".config/nvim/pack/filetype/opt/editorconfig/tests/plugin/spec/plugin_tests"]
 	path = .config/nvim/pack/filetype/opt/editorconfig/tests/plugin/spec/plugin_tests

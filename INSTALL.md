@@ -50,6 +50,8 @@ Run the lightweight verification harness before changing the bootstrap logic:
 
 This runs syntax checks, config smoke checks, and `bootstrap.sh` dry-run checks
 against throwaway `HOME` directories so the current machine is not modified.
+Checks that depend on optional tools such as `zsh`, `nvim`, or `tmux` are
+skipped with a note when those commands are not installed yet.
 
 ## Post-install follow-up
 
@@ -100,6 +102,8 @@ without storing secrets in the repo.
 ## Notes
 
 - package installation currently assumes `apt-get` on Debian/Ubuntu-family systems
+- on Ubuntu 22.04+ the bootstrap adds the Fastfetch PPA automatically when
+  `fastfetch` is selected but not available from the current apt sources
 - `msmtp` is the intended backend mail transport for scripts and server notifications
 - `mutt`/`neomutt` is the optional interactive mail client layer on top of that transport
 - bootstrap seeds local mail templates when missing:
@@ -135,17 +139,8 @@ The bootstrap currently auto-links these `~/.config` entries:
 - `vifm`
 - `vimfx`
 
-These tracked config areas are currently excluded from automatic linking because
-they still look identity-bound, host-specific, deprecated, or not yet refactored
-enough for portable defaults:
-
-- `beets`
-- `letsencrypt`
-- `lyvi`
-- `mpDris2`
-- `newsbeuter`
-- `newsboat`
-- `profanity`
+Tracked config that is not part of the current install surface has been moved
+under `/.archive/` instead of staying mixed into the active deployment tree.
 
 `gh` is now part of the portable subset, but GitHub authentication remains
 local. The repo tracks `/.config/gh/config.yml` for defaults and ships
@@ -182,7 +177,7 @@ Why these remain in the deployment target:
   - `~/bin` itself remains available for machine-local scripts
 
 These tracked root-level entries are currently outside the deployment target
-footprint and should be treated as legacy or niche until reviewed further:
+footprint and have been archived under `/.archive/`:
 
 - `.ncmpc`
 - `.ncmpcpp`
@@ -193,8 +188,9 @@ footprint and should be treated as legacy or niche until reviewed further:
 - `.urxvt`
 - `.w3m`
 
-These are currently treated as discarded from the new environment target unless
-they are explicitly brought back later.
+Additional non-install-surface config has also been archived there, including
+desktop autostart entries, SSH host config, older desktop app configs, and
+service-specific integrations that are not part of `bootstrap.sh` today.
 
 ## Local templates
 
