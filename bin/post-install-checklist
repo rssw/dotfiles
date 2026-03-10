@@ -38,7 +38,7 @@ printf '\nManual follow-up\n'
 print_item "[ ]" "Select the installed 'MesloLGS NF' font in your terminal profile, then restart the terminal"
 print_item "[ ]" "Run 'p10k configure' only if you want to replace the repo prompt config with a machine-specific one"
 print_item "[ ]" "Run 'zkbd' in a real zsh terminal if Home/End/Delete keys need terminal-specific bindings"
-print_item "[ ]" "Change your login shell to zsh if desired: 'chsh -s \"$(command -v zsh)\"'"
+print_item "[ ]" "Confirm the login shell is now zsh: 'getent passwd "$USER" | cut -d: -f7'"
 print_item "[ ]" "Run 'gh auth login' if this machine should use GitHub CLI auth"
 print_item "[ ]" "Review '~/.local/share/git/config' for your name, email, signing, and credential preferences"
 print_item "[ ]" "Confirm your secret lookup command works for msmtp password retrieval"

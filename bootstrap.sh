@@ -31,7 +31,7 @@ WITH_TASKWARRIOR=1
 WITH_EXTRA_SHELL=1
 FASTFETCH_SOURCE_ADDED=0
 
-REQUIRED_PACKAGES="zsh bash git less curl fontconfig direnv fzf zsh-autosuggestions zsh-syntax-highlighting neovim tmux ripgrep fd-find jq fastfetch pv p7zip-full unzip cifs-utils exfatprogs nfs-common"
+REQUIRED_PACKAGES="zsh bash git less curl fontconfig fonts-firacode fonts-jetbrains-mono direnv fzf zsh-autosuggestions zsh-syntax-highlighting neovim tmux ripgrep fd-find jq fastfetch pv p7zip-full unzip cifs-utils exfatprogs nfs-common"
 PKG_NALA="nala"
 PKG_MAIL="mutt msmtp"
 PKG_LF="lf"
@@ -444,6 +444,23 @@ install_prompt_fonts() {
   fi
 }
 
+ensure_default_shell() {
+  [ "$DRY_RUN" -eq 0 ] || return 0
+  [ -t 0 ] && [ -t 1 ] || return 0
+  command -v zsh >/dev/null 2>&1 || return 0
+  command -v getent >/dev/null 2>&1 || return 0
+
+  zsh_path=$(command -v zsh)
+  current_shell=$(getent passwd "$USER" | cut -d: -f7 || true)
+
+  if [ "$current_shell" = "$zsh_path" ]; then
+    return 0
+  fi
+
+  log "Setting default login shell to zsh"
+  run sudo chsh -s "$zsh_path" "$USER"
+}
+
 link_config() {
   if [ "$LINK_CONFIG" -eq 0 ]; then
     log "Skipping symlink creation"
@@ -465,6 +482,7 @@ main() {
   init_submodules
   link_config
   install_prompt_fonts
+  ensure_default_shell
 
   log "Bootstrap complete"
 

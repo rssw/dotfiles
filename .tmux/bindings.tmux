@@ -181,15 +181,10 @@ unbind-key ]
 bind-key -n M-- run-shell ~/.local/bin/tmux-url-select
 bind-key -n M-p paste-buffer
 # make the use of e and w more like in my .vimrc
-if-shell '[[ "$TMUX_EXE" == "tmux" ]]' " \
-	bind-key -T copy-mode-vi e send-keys -X next-word; \
-	bind-key -T copy-mode-vi w send-keys -X previous-word; \
-	bind-key -T copy-mode-vi E send-keys -X next-space; \
-	bind-key -T copy-mode-vi W send-keys -X previous-space" " \
-	bind-key -t vi-copy e next-word; \
-	bind-key -t vi-copy w previous-word; \
-	bind-key -t vi-copy E next-space; \
-	bind-key -t vi-copy W previous-space"
+bind-key -T copy-mode-vi e send-keys -X next-word
+bind-key -T copy-mode-vi w send-keys -X previous-word
+bind-key -T copy-mode-vi E send-keys -X next-space
+bind-key -T copy-mode-vi W send-keys -X previous-space
 # Show paste buffers
 unbind-key '#'
 bind-key @ show-buffer

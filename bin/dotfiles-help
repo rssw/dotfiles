@@ -10,20 +10,31 @@ Shell
 - startup order: .zshenv -> .shell/core -> .shell/optional -> .shell/local -> shell-specific rc/login files
 - portable shell layers live in ~/.shell/core and ~/.shell/optional
 - machine-local overrides belong in ~/.shell/local
-- after install, select the MesloLGS NF terminal font for the full Powerlevel10k prompt
-- if your login shell is still bash, switch it with: chsh -s "$(command -v zsh)"
+- common defaults: Ctrl-a start of line, Ctrl-e end of line, Ctrl-r history search, Ctrl-w delete word, Ctrl-l clear screen
+- zsh vi mode: Esc enters normal mode, i/a return to insert mode
+- after install, select MesloLGS NF, FiraCode, or JetBrains Mono in the terminal profile
+- bootstrap attempts to switch the login shell to zsh automatically for the current user
 
 Tmux
 - prefix: Ctrl-s
+- common defaults: prefix c=new window, prefix d=detach, prefix z=zoom pane, prefix ?=list bindings
+- panes: prefix v=split below, prefix h=split right, Alt-q=kill pane, prefix b=break pane into window
 - pane movement: Ctrl-h/j/k/l
 - window movement: Alt-h/l
+- common window shortcuts: Alt-n=new window, Ctrl-PageUp/Down=prev/next window, prefix n=rename window
 - pane resize: Alt-Arrow
+- layouts and copy mode: Alt-space=next layout, Alt-c=copy mode, copy-mode y=copy selection
+- bundled helpers: tmux-fzf-url=open URLs from pane history, vim-tmux-navigator=shared Ctrl-h/j/k/l movement with Neovim
 - reload config: tmux source-file ~/.tmux.conf
 
 Neovim
 - split movement: Ctrl-h/j/k/l
 - buffer movement: Alt-h/l
 - split resize: Alt-Arrow
+- common defaults: :q close window, :w write file, u undo, Ctrl-r redo, / search, n/N next/prev match
+- default plugins: fugitive/fubitive/rhubarb/fugitive-gitlab=git workflows; signify=diff signs; lualine=statusline; sandwich/sleuth/repeat/nerdcommenter/lexima/editing helpers; gundo=undo tree; suda=sudo write; direnv/rooter/localvimrc=project env/root detection
+- advanced Neovim layer: cmp+nvim-lsp+vsnip=completions; treesitter=syntax/tree parsing; fzf-lua=fuzzy finding; dap/dap-ui/dap-python/dap-go=debugging; lf.vim=file manager; togglelist/qf_resize/window-swap=window and list helpers
+- filetype plugins: Dockerfile, nix, rust, toml, orgmode, tex/vimtex, json/jsonc/json5/jsonnet, jinja, asciidoctor, csv, neomutt, syncthing, nftables, bitbake, vala, solidity, mediawiki, pydoc
 - advanced layer can be disabled with NVIM_PORTABLE_BASE_ONLY=1
 - host-only behavior belongs in ~/.config/nvim/host-specific
 

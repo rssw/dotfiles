@@ -83,8 +83,9 @@ setup-local-machine
 This writes machine-local Git, `msmtp`, and optional mutt/neomutt config files
 without storing secrets in the repo.
 
-At the end of a real install, bootstrap also starts a `zsh` login shell for the
-current session when you launched it from another interactive shell.
+At the end of a real install, bootstrap attempts to change the current user's
+login shell to `zsh` and then starts a `zsh` login shell for the current
+session when you launched it from another interactive shell.
 
 ## Supported flags
 
@@ -107,8 +108,8 @@ current session when you launched it from another interactive shell.
 
 - package installation currently assumes `apt-get` on Debian/Ubuntu-family systems
 - bootstrap installs the MesloLGS NF Powerlevel10k font into `~/.local/share/fonts`
-  and refreshes the font cache when possible; you still need to select that font
-  in your terminal profile
+  and refreshes the font cache when possible; it also installs `fonts-firacode`
+  and `fonts-jetbrains-mono` from apt so you have common terminal font choices
 - on Ubuntu 22.04+ the bootstrap adds the Fastfetch PPA automatically when
   `fastfetch` is selected but not available from the current apt sources
 - `msmtp` is the intended backend mail transport for scripts and server notifications
@@ -229,9 +230,9 @@ The current intended split is:
 
 Suggested readiness checks after install:
 
-- select `MesloLGS NF` in the terminal profile and restart the terminal
+- select `MesloLGS NF`, `FiraCode`, or `JetBrains Mono` in the terminal profile and restart the terminal
 - run `zkbd` in a real zsh terminal if special keys still need terminal-specific bindings
-- if this machine should default to zsh at login, run `chsh -s "$(command -v zsh)"`
+- confirm the login shell changed to zsh with `getent passwd "$USER" | cut -d: -f7`
 - confirm `~/.config/msmtp/config` has real host/user/from values
 - confirm the `passwordeval` or other secret lookup command works on the machine
 - if using `mail-rssw`, create `~/.local/share/mailutils/rssw.env` from the example and fill in real values
