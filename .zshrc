@@ -198,7 +198,7 @@ if [[ -f "${ZDOTDIR:-$HOME}/.zkbd/${TERM}-${DISPLAY:-$VENDOR-$OSTYPE}" ]]; then
 	bindkey "${key[Delete]}" delete-char
 	bindkey -a "${key[Delete]}" delete-char
 else
-	if [[ -t 0 && -t 1 ]]; then
+	if [[ -t 0 && -t 1 && -z ${ZSH_EXECUTION_STRING:-} ]]; then
 		echo you need to run \`zkbd\` for this terminal.
 	fi
 fi
