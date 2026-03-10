@@ -198,7 +198,9 @@ if [[ -f "${ZDOTDIR:-$HOME}/.zkbd/${TERM}-${DISPLAY:-$VENDOR-$OSTYPE}" ]]; then
 	bindkey "${key[Delete]}" delete-char
 	bindkey -a "${key[Delete]}" delete-char
 else
-	echo you need to run \`zkbd\` for this terminal.
+	if [[ -t 0 && -t 1 ]]; then
+		echo you need to run \`zkbd\` for this terminal.
+	fi
 fi
 # don't exit last tmate pane / window, based on: https://superuser.com/a/1702473/430539
 if [[ "$TMUX" =~ "tmate-$UID" ]]; then
@@ -287,31 +289,33 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 source ${ZDOTDIR:-$HOME}/.zsh/zle/syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
 # {{{1 Looks
-source ${ZDOTDIR:-$HOME}/.zsh/powerlevel10k/powerlevel10k.zsh-theme
-# If SSH_TMUX_ATTACH is set, then we are sshing from the main home computer.
-# If TERM_NO_ICONS_FONT is set, we have made
-# if [ -n $SSH_TMUX_ATTACH ] || zmodload zsh/terminfo && (( terminfo[colors] >= 256 )) && [ -z $TERM_NO_ICONS_FONT ]; then
-zmodload zsh/terminfo
-(){
-	if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
-		[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl
-		return
-	fi
-	if [ ! -z "$SSH_TMUX_ATTACH$MLTERM" ]; then
-		[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
-		return
-	fi
-	if (( terminfo[colors] >= 256 )); then
-		# TELEPORT_SESSION is for teleconsole (https://www.teleconsole.com/)
-		# SSH_TERM_NO_ICONS_FONT is inherited between ssh sessions, for example
-		# when sshing to vps from a terminal with no suitable fonts.
-		if [[ -z "$SSH_TERM_NO_ICONS_FONT" ]] && [[ -z "$TELEPORT_SESSION" ]]; then
+if [[ -t 0 && -t 1 ]]; then
+	source ${ZDOTDIR:-$HOME}/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+	# If SSH_TMUX_ATTACH is set, then we are sshing from the main home computer.
+	# If TERM_NO_ICONS_FONT is set, we have made
+	# if [ -n $SSH_TMUX_ATTACH ] || zmodload zsh/terminfo && (( terminfo[colors] >= 256 )) && [ -z $TERM_NO_ICONS_FONT ]; then
+	zmodload zsh/terminfo
+	(){
+		if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+			[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl
+			return
+		fi
+		if [ ! -z "$SSH_TMUX_ATTACH$MLTERM" ]; then
 			[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
 			return
 		fi
-	fi
-	[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii
-}
+		if (( terminfo[colors] >= 256 )); then
+			# TELEPORT_SESSION is for teleconsole (https://www.teleconsole.com/)
+			# SSH_TERM_NO_ICONS_FONT is inherited between ssh sessions, for example
+			# when sshing to vps from a terminal with no suitable fonts.
+			if [[ -z "$SSH_TERM_NO_ICONS_FONT" ]] && [[ -z "$TELEPORT_SESSION" ]]; then
+				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
+				return
+			fi
+		fi
+		[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii
+	}
+fi
 
 # {{{1 Enable tracing a specific function
 if [ -n "${TRACE_FUNC}" ]; then
@@ -376,7 +380,9 @@ bindkey -M viins '^[[200~' bracketed-paste
 bindkey -M vicmd '^[[200~' bracketed-paste
 
 # To customize prompt, run `p10k configure` or edit `$DOTFILES_DIR/.p10k.zsh`.
-[[ ! -f ${DOTFILES_DIR:-$HOME}/.p10k.zsh ]] || source ${DOTFILES_DIR:-$HOME}/.p10k.zsh
+if [[ -t 0 && -t 1 ]]; then
+	[[ ! -f ${DOTFILES_DIR:-$HOME}/.p10k.zsh ]] || source ${DOTFILES_DIR:-$HOME}/.p10k.zsh
+fi
 
 if [[ -d "$HOME/.opencode/bin" ]]; then
 	insert2PATH "$HOME/.opencode/bin"

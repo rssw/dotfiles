@@ -79,6 +79,9 @@ source_config_dir() {
 
 	for config_file in "$config_dir"/*; do
 		[ -f "$config_file" ] || continue
+		case "${config_file##*/}" in
+			.*) continue ;;
+		esac
 		. "$config_file"
 	done
 }
