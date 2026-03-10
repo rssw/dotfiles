@@ -29,6 +29,7 @@ WITH_MAIL=1
 WITH_LF=1
 WITH_TASKWARRIOR=1
 WITH_EXTRA_SHELL=1
+FASTFETCH_SOURCE_ADDED=0
 
 REQUIRED_PACKAGES="zsh bash git less direnv fzf zsh-autosuggestions zsh-syntax-highlighting neovim tmux ripgrep fd-find jq fastfetch pv p7zip-full unzip cifs-utils exfatprogs nfs-common"
 PKG_NALA="nala"
@@ -36,6 +37,7 @@ PKG_MAIL="mutt msmtp"
 PKG_LF="lf"
 PKG_TASKWARRIOR="taskwarrior"
 PKG_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
+FASTFETCH_PPA="ppa:zhangsongcui3371/fastfetch"
 
 # Start with a conservative portable subset. Local/private or highly
 # desktop-specific config can be linked manually until those layers are split
@@ -114,6 +116,64 @@ append_packages() {
   done
 
   printf '%s\n' "$package_list"
+}
+
+package_is_selected() {
+  package_name=$1
+  package_list=$2
+
+  case " $package_list " in
+    *" $package_name "*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+package_is_available() {
+  package_name=$1
+
+  if [ "$package_name" = "fastfetch" ] && [ "$FASTFETCH_SOURCE_ADDED" -eq 1 ]; then
+    return 0
+  fi
+
+  apt-cache show "$package_name" >/dev/null 2>&1
+}
+
+ensure_fastfetch_repo() {
+  package_list=$1
+
+  if ! package_is_selected fastfetch "$package_list"; then
+    return 0
+  fi
+
+  if package_is_available fastfetch; then
+    return 0
+  fi
+
+  log "fastfetch is not available in the current apt sources; adding $FASTFETCH_PPA"
+
+  if ! command -v add-apt-repository >/dev/null 2>&1; then
+    run sudo apt-get install -y software-properties-common
+  fi
+
+  run sudo add-apt-repository -y "$FASTFETCH_PPA"
+  run sudo apt-get update
+  FASTFETCH_SOURCE_ADDED=1
+}
+
+filter_available_packages() {
+  package_list=$1
+  available_packages=""
+
+  for package_name in $package_list
+  do
+    if package_is_available "$package_name"; then
+      available_packages=$(append_packages "$available_packages" "$package_name")
+    else
+      warn "package not available in apt sources, skipping: $package_name"
+    fi
+  done
+
+  printf '%s\n' "$available_packages"
 }
 
 normalize_mode() {
@@ -208,8 +268,16 @@ install_packages() {
   fi
 
   package_list=$(build_package_list)
-  log "Installing packages:$package_list"
   run sudo apt-get update
+  ensure_fastfetch_repo "$package_list"
+  package_list=$(filter_available_packages "$package_list")
+
+  if [ -z "$package_list" ]; then
+    warn "no installable packages remain after filtering apt sources"
+    return 0
+  fi
+
+  log "Installing packages:$package_list"
   run sudo apt-get install -y $package_list
 }
 

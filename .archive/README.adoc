@@ -1,3 +1,12 @@
+== Archive status
+
+This directory holds tracked files that are no longer part of the active
+bootstrap/install surface for this repo.
+
+If a path is needed again for the documented install outcomes, move it back out
+of `/.archive/` and update `bootstrap.sh`, `INSTALL.md`, and `PORTABLE_PLAN.md`
+at the same time.
+
 == My dotfiles
 
 * I use `Neovim`.
