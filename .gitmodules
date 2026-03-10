@@ -106,9 +106,6 @@
 [submodule ".config/nvim/pack/looks/opt/css-color"]
 	path = .config/nvim/pack/looks/opt/css-color
 	url = git@github.com:ap/vim-css-color
-[submodule ".config/nvim/pack/functional/opt/ghost"]
-	path = .config/nvim/pack/functional/opt/ghost
-	url = git@github.com:raghur/vim-ghost
 [submodule ".config/nvim/pack/filetype/start/orgmode"]
 	path = .config/nvim/pack/filetype/start/orgmode
 	url = git@github.com:jceb/vim-orgmode

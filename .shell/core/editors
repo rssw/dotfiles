@@ -2,7 +2,7 @@
 
 # {{{1 visual/editor related
 alias v="${VISUAL}"
-alias gvi="${VISUAL} +GhostStart"
+alias gvi="${VISUAL}"
 
 manw() {
 	env MANWIDTH=$COLUMNS man "$@"

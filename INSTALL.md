@@ -167,6 +167,7 @@ Why these remain in the deployment target:
 - `.p10k.zsh`
   - prompt policy for the interactive Zsh environment
   - still part of the intended terminal UX
+  - linked into `HOME`, so `p10k configure` updates the tracked repo file on installed machines
 - `.pam_environment`
   - login-session defaults such as pager behavior, `SSH_AUTH_SOCK`, and shared environment values
   - still useful for workstation/server login consistency
@@ -231,7 +232,7 @@ The current intended split is:
 Suggested readiness checks after install:
 
 - select `MesloLGS NF`, `FiraCode`, or `JetBrains Mono` in the terminal profile and restart the terminal
-- run `zkbd` in a real zsh terminal if special keys still need terminal-specific bindings
+- run `zkbd` in a real zsh terminal if special keys still need terminal-specific bindings, then save the output as `~/.zkbd/$TERM`
 - confirm the login shell changed to zsh with `getent passwd "$USER" | cut -d: -f7`
 - confirm `~/.config/msmtp/config` has real host/user/from values
 - confirm the `passwordeval` or other secret lookup command works on the machine

@@ -1,0 +1,2 @@
+SimpleWebSocketServer
+python-slugify

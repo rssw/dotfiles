@@ -36,8 +36,8 @@ check_file "$HOME_DIR/.local/share/mailutils/rssw.env" "mail-rssw local env file
 
 printf '\nManual follow-up\n'
 print_item "[ ]" "Select the installed 'MesloLGS NF' font in your terminal profile, then restart the terminal"
-print_item "[ ]" "Run 'p10k configure' only if you want to replace the repo prompt config with a machine-specific one"
-print_item "[ ]" "Run 'zkbd' in a real zsh terminal if Home/End/Delete keys need terminal-specific bindings"
+print_item "[ ]" "Run 'p10k configure' only if you want to replace the tracked repo prompt config; ~/.p10k.zsh is linked back to this repo"
+print_item "[ ]" "Run 'zkbd' in a real zsh terminal if Home/End/Delete keys need terminal-specific bindings, then save the output as ~/.zkbd/$TERM"
 print_item "[ ]" "Confirm the login shell is now zsh: 'getent passwd "$USER" | cut -d: -f7'"
 print_item "[ ]" "Run 'gh auth login' if this machine should use GitHub CLI auth"
 print_item "[ ]" "Review '~/.local/share/git/config' for your name, email, signing, and credential preferences"

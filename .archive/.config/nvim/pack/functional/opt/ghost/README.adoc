@@ -1,0 +1,90 @@
+= Vim Ghost
+
+Edit browser textarea content in Vim/Neovim!
+
+[.center.text-center]
+image::https://i.imgur.com/yitnBrU.gif[demo,100%]
+
+. Install this https://addons.mozilla.org/en-US/firefox/addon/ghosttext/[firefox addon] or this https://chrome.google.com/webstore/detail/ghosttext/godiecgffnchndlihlpaajjcplehddca[Chrome extension]
+. Add this plugin
++
+```
+" Vim-plug
+Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
+```
+. Ensure you have a vim/neovim instance open. Run `:GhostStart` to start the server.
+. On any textarea, click the ghost icon - switch to neovim and edit!. Content is sync'ed real time. Works both ways - edits in the browser window are pushed to neovim as well.
+. When done, just delete the buffer with `:bd!` - you'll be disconnected
+
+== Configuring filetype
+Whenever a buffer is connected, a `User` event `vim-ghost#connected` is raised. Here's a quick sample of 
+setting filetype to `markdown` if the textarea was on github or reddit
+
+```
+function! s:SetupGhostBuffer()
+    if match(expand("%:a"), '\v/ghost-(github|reddit)\.com-')
+        set ft=markdown
+    endif
+endfunction
+
+augroup vim-ghost
+    au!
+    au User vim-ghost#connected call s:SetupGhostBuffer()
+augroup END
+```
+
+== Requirements
+
+* Recent neovim/vim
+* Python 3.4+
+* Python plugin host - `python3 -c 'import pynvim'` should not error
+* Python websocket server https://github.com/dpallot/simple-websocket-server.git
+** This is automatically installed as a `pip --user` dependency when `:GhostInstall` runs.
+
+=== additional requirements for vim
+
+* https://github.com/roxma/vim-hug-neovim-rpc[vim-hug-neovim-rpc]
+* https://github.com/roxma/nvim-yarp[nvim-yarp]
+
+[source,vimscript]
+----
+" Only enabled for Vim 8 (not for Neovim).
+Plug 'roxma/nvim-yarp', v:version >= 800 && !has('nvim') ? {} : { 'on': [], 'for': [] }
+Plug 'roxma/vim-hug-neovim-rpc', v:version >= 800 && !has('nvim') ? {} : { 'on': [], 'for': [] }
+----
+
+== Auto switching to vim:
+
+._Optional, but highly recommended - Switching focus to Neovim_
+* Linux: The `xdotool` command - if available, will be used to focus the nvim window.
+Works in console, tmux or guis like neovim-qt
+** On Ubuntu, you can install it with `sudo apt-get install xdotool`
+* macOS: Set the `g:ghost_darwin_app` variable to the name of your app (see docs).
+* Windows: If pywinauto (https://github.com/pywinauto/pywinauto)
+is available, it will be used to bring the neovim-qt to foreground.
++
+[source,shell]
+----
+# Ensure that you install this module for the version of python
+# that is loaded in neovim
+pip install pywinauto
+----
+Limitations: Currently, on windows, the processname is hardcoded to nvim-qt
+If you use any of the other GUIs for neovim (OniVim, gonvim etc) then this
+will not work.
+
+== Rationale
+
+With Firefox moving to webextensions, *It's all text* is dead. Typing in text areas is a royal PITA and I was looking for a replacement. Came across GhostText - but the vim addon seems dead and uses tcl :ugh:
+
+My vimscript fu is pretty limited - so I thought I'd write a python plugin for neovim.
+
+== TODOS
+
+PR's welcome. Some areas:
+
+- [.line-through]#vim compatibility# - DONE
+
+Love it or just find it as useful as I do? Star this repo to let me know
+
+
