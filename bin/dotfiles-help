@@ -18,11 +18,11 @@ Shell
 
 Tmux
 - prefix: Ctrl-s
-- common defaults: prefix c=new window, prefix d=detach, prefix z=zoom pane, prefix ?=list bindings
+- common defaults: prefix c=new window, prefix d=detach, prefix n/p=next/prev window, prefix z=zoom pane, prefix ?=list bindings
 - panes: prefix v=split below, prefix h=split right, Alt-q=kill pane, prefix b=break pane into window
 - pane movement: Ctrl-h/j/k/l
 - window movement: Alt-h/l
-- common window shortcuts: Alt-n=new window, Ctrl-PageUp/Down=prev/next window, prefix n=rename window
+- common window shortcuts: Alt-n=new window, Ctrl-PageUp/Down=prev/next window, prefix N=rename window
 - pane resize: Alt-Arrow
 - layouts and copy mode: Alt-space=next layout, Alt-c=copy mode, copy-mode y=copy selection
 - bundled helpers: tmux-fzf-url=open URLs from pane history, vim-tmux-navigator=shared Ctrl-h/j/k/l movement with Neovim
@@ -33,6 +33,7 @@ Neovim
 - buffer movement: Alt-h/l
 - split resize: Alt-Arrow
 - common defaults: :q close window, :w write file, u undo, Ctrl-r redo, / search, n/N next/prev match
+- direct Vim split movement fallback: Ctrl-w h/j/k/l
 - default plugins: fugitive/fubitive/rhubarb/fugitive-gitlab=git workflows; signify=diff signs; lualine=statusline; sandwich/sleuth/repeat/nerdcommenter/lexima/editing helpers; gundo=undo tree; suda=sudo write; direnv/rooter/localvimrc=project env/root detection
 - advanced Neovim layer: cmp+nvim-lsp+vsnip=completions; treesitter=syntax/tree parsing; fzf-lua=fuzzy finding; dap/dap-ui/dap-python/dap-go=debugging; lf.vim=file manager; togglelist/qf_resize/window-swap=window and list helpers
 - filetype plugins: Dockerfile, nix, rust, toml, orgmode, tex/vimtex, json/jsonc/json5/jsonnet, jinja, asciidoctor, csv, neomutt, syncthing, nftables, bitbake, vala, solidity, mediawiki, pydoc

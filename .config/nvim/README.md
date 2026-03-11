@@ -21,7 +21,7 @@ This directory contains the Neovim layer of the portable terminal-first setup.
 ## Design goals
 
 - keep a terminal-first base configuration
-- preserve tmux-aware movement with `Ctrl-h/j/k/l`
+- preserve tmux-aware movement with `Ctrl-h/j/k/l`, while retaining native `Ctrl-w h/j/k/l` as the direct Vim-only fallback
 - support optional layers without hiding the plain Vim behavior underneath
 - keep trust-sensitive features explicit and documented
 
