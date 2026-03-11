@@ -26,6 +26,21 @@ check_file() {
   fi
 }
 
+check_zkbd() {
+  zkbd_dir=$HOME_DIR/.zkbd
+
+  if [ ! -d "$zkbd_dir" ]; then
+    print_item "[ ]" "zkbd key files: missing directory ($zkbd_dir)"
+    return
+  fi
+
+  if find "$zkbd_dir" -maxdepth 1 -type f ! -name '*.tmp' | grep -q .; then
+    print_item "[x]" "zkbd key files: found machine-local key definitions in $zkbd_dir"
+  else
+    print_item "[ ]" "zkbd key files: missing; run 'zkbd' in your terminal and tmux, then let it save files under $zkbd_dir"
+  fi
+}
+
 printf 'Post-install checklist\n\n'
 
 printf 'Local config files\n'
@@ -33,6 +48,7 @@ check_file "$HOME_DIR/.local/share/git/config" "Git local identity"
 check_file "$HOME_DIR/.config/msmtp/config" "msmtp mail transport config"
 check_file "$HOME_DIR/.local/share/mutt/private.rc" "mutt/neomutt local mail config"
 check_file "$HOME_DIR/.local/share/mailutils/rssw.env" "mail-rssw local env file (if used)"
+check_zkbd
 
 printf '\nManual follow-up\n'
 print_item "[ ]" "Select the installed 'MesloLGS NF' font in your terminal profile, then restart the terminal"

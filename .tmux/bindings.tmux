@@ -79,11 +79,10 @@ bind-key v split-window -v -c '#{pane_current_path}'
 unbind-key %
 bind-key h split-window -h -c '#{pane_current_path}'
 # Creating new window
-unbind-key c
+bind-key c new-window -c '#{pane_current_path}'
 bind-key -n M-n new-window -c '#{pane_current_path}'
-# make renaming windows and session process easier
-unbind-key ,
-bind-key n command-prompt -I "rename-window "
+# Keep default next/previous window on prefix n/p and use uppercase N for rename
+bind-key N command-prompt -I "rename-window "
 # Killing a window: Safer to unbind it and bind only `kill-pane` with confirmation
 unbind-key &
 # Rotate the panes in the current window forwards
