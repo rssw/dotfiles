@@ -301,6 +301,7 @@ zstyle ':fzf-tab:complete:git*' fzf-preview 'env words="$words" word=${word%% } 
 zstyle ':fzf-tab:complete:git*' fzf-flags --preview-window=right:55%:wrap
 zstyle ':fzf-tab:complete:git*' fzf-min-height 10000
 bindkey -M viins "^ " fzf-complete-macro
+bindkey -M viins "^R" fzf-complete-history-commands
 bindkey -M viins "^Z" fzf-complete-history-commands
 bindkey -M viins "^A" fzf-complete-history-words
 bindkey -M viins "^T" fzf-complete-history-paths

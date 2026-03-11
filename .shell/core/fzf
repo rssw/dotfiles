@@ -5,4 +5,22 @@ fi
 
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }--layout=reverse --inline-info"
 
+fh() {
+	selected_cmd=$(
+		if [ -n "${ZSH_VERSION:-}" ]; then
+			fc -rl 1 | sed 's/^ *[0-9]\+ *//'
+		else
+			history | sed 's/^ *[0-9]\+ *//'
+		fi | fzf +s --tac
+	)
+	[ -n "$selected_cmd" ] || return 0
+
+	if [ -n "${ZSH_VERSION:-}" ]; then
+		print -z -- "$selected_cmd"
+		return 0
+	fi
+
+	echo "$selected_cmd"
+}
+
 # vim: ft=sh

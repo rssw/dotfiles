@@ -8,7 +8,7 @@ This directory now separates portable shell behavior into three layers.
   - loaded by both `/.zshrc` and `/.bashrc`
 - `optional/`
   - integrations that only activate when their backing tools exist
-  - examples: clipboard tools, desktop helpers, `gpg`, `lf`, `guix`, `mpd`, `wego`
+  - examples: desktop helpers, `gpg`, `lf`, `guix`, `mpd`, `tmux`, `wego`
   - also loaded by both `/.zshrc` and `/.bashrc`
 - `local/`
   - machine-specific or private shell snippets
@@ -38,8 +38,17 @@ The shell startup order is:
 - add general aliases/functions: create or edit a file in `/.shell/core/`
 - add package-aware integrations: place them in `/.shell/optional/`
 - add host-only overrides: create an untracked file in `/.shell/local/`
+- review later: improve `bin/tm` session selection UX with numbered choices and possibly arrow-key navigation
+
+Current shared examples:
+
+- `/.shell/core/archive`: `extract`
+- `/.shell/core/filesystem`: `md`
+- `/.shell/core/fzf`: `fh`
+- `/.shell/optional/tmux`: `ta`, `tat`, `tls`, `tns`
 
 ## Planned follow-up
 
 - continue splitting broad workflow helpers into smaller purpose-based files where helpful
 - add a repo help command that can summarize modules and exported commands by category
+- review shell and editor color choices against the final portable theme direction

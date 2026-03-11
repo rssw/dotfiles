@@ -1,7 +1,7 @@
 # Standard shell module: small filesystem helpers.
 
-# {{{1 `mkcd` mkdir and cd to it afterwards
-mkcd() {
+# {{{1 `md` mkdir and cd to it afterwards
+md() {
 	mkdir -p "$1" && cd "$1"
 }
 

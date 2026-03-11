@@ -1,0 +1,12 @@
+# Optional shell module: tmux command helpers.
+
+if ! _command_exists tmux; then
+	return
+fi
+
+alias ta='tmux attach'
+alias tls='tmux ls'
+alias tat='tmux attach -t'
+alias tns='tmux new-session -s'
+
+# vim: ft=sh
