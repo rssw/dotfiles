@@ -22,6 +22,34 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Load Powerlevel10k immediately after instant prompt so later startup code can
+# print messages without tripping instant-prompt ordering checks.
+if [[ -t 0 && -t 1 ]]; then
+	source ${ZDOTDIR:-$HOME}/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+	if [[ -f $HOME/.p10k.zsh ]]; then
+		source $HOME/.p10k.zsh
+	else
+		zmodload zsh/terminfo
+		(){
+			if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl
+				return
+			fi
+			if [ ! -z "$SSH_TMUX_ATTACH$MLTERM" ]; then
+				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
+				return
+			fi
+			if (( terminfo[colors] >= 256 )); then
+				if [[ -z "$SSH_TERM_NO_ICONS_FONT" ]] && [[ -z "$TELEPORT_SESSION" ]]; then
+					[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
+					return
+				fi
+			fi
+			[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii
+		}
+	fi
+fi
+
 # To profile startup
 # zmodload zsh/zprof
 
@@ -33,6 +61,9 @@ setopt EXTENDEDGLOB
 # allow ?, ~ and = to be used even if unmatched -
 # http://zsh.sourceforge.net/Doc/Release/Options.html#index-NOMATCH
 setopt nonomatch
+
+# Keep Ctrl-s available for tmux prefix instead of XON/XOFF flow control.
+[[ -t 0 ]] && stty -ixon 2>/dev/null
 
 # {{{ Completions
 if [[ -d ${ZDOTDIR:-$HOME}/.zsh/comp/local ]]; then
@@ -301,39 +332,6 @@ unset autosuggestions_file
 # syntax highlighting should load last so it can wrap the final widget set.
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 source ${ZDOTDIR:-$HOME}/.zsh/zle/syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
-
-# {{{1 Looks
-if [[ -t 0 && -t 1 ]]; then
-	source ${ZDOTDIR:-$HOME}/.zsh/powerlevel10k/powerlevel10k.zsh-theme
-	if [[ -f $HOME/.p10k.zsh ]]; then
-		source $HOME/.p10k.zsh
-	else
-		# If SSH_TMUX_ATTACH is set, then we are sshing from the main home computer.
-		# If TERM_NO_ICONS_FONT is set, we have made
-		# if [ -n $SSH_TMUX_ATTACH ] || zmodload zsh/terminfo && (( terminfo[colors] >= 256 )) && [ -z $TERM_NO_ICONS_FONT ]; then
-		zmodload zsh/terminfo
-		(){
-			if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
-				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl
-				return
-			fi
-			if [ ! -z "$SSH_TMUX_ATTACH$MLTERM" ]; then
-				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
-				return
-			fi
-			if (( terminfo[colors] >= 256 )); then
-				# TELEPORT_SESSION is for teleconsole (https://www.teleconsole.com/)
-				# SSH_TERM_NO_ICONS_FONT is inherited between ssh sessions, for example
-				# when sshing to vps from a terminal with no suitable fonts.
-				if [[ -z "$SSH_TERM_NO_ICONS_FONT" ]] && [[ -z "$TELEPORT_SESSION" ]]; then
-					[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
-					return
-				fi
-			fi
-			[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii
-		}
-	fi
-fi
 
 # {{{1 Enable tracing a specific function
 if [ -n "${TRACE_FUNC}" ]; then

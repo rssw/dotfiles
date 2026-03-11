@@ -27,6 +27,9 @@ export HISTFILE="$HOME/.local/share/bash-history"
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# Keep Ctrl-s available for tmux prefix instead of XON/XOFF flow control.
+[[ -t 0 ]] && stty -ixon 2>/dev/null
+
 if [ -z "$DOTFILES_DIR" ]; then
 	# Prefer an editable source checkout when present; otherwise assume the files
 	# are installed into HOME via symlinks.
