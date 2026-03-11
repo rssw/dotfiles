@@ -15,15 +15,7 @@
 # Plugin load order matters here. `fzf-tab` must load before autosuggestions and
 # syntax-highlighting so wrapped widgets continue to behave correctly.
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of this file.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# Load Powerlevel10k immediately after instant prompt so later startup code can
-# print messages without tripping instant-prompt ordering checks.
+# Load Powerlevel10k early so the prompt is available before later startup code.
 if [[ -t 0 && -t 1 ]]; then
 	source ${ZDOTDIR:-$HOME}/.zsh/powerlevel10k/powerlevel10k.zsh-theme
 	if [[ -f $HOME/.p10k.zsh ]]; then
