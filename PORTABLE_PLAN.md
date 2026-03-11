@@ -30,6 +30,7 @@ This file is the planning checkpoint for the session. It should hold enough cont
 - machine-local templates and helpers now exist for Git and mail setup (`msmtp`, mutt/neomutt)
 - post-install support now includes `post-install-checklist`, `setup-local-machine`, and `dotfiles-help`
 - non-install-surface tracked config is being moved under `/.archive/` so the active tree matches the bootstrap footprint
+- the remaining shell/editor visual follow-up is to review colorscheme alignment across prompt, terminal, tmux, and Neovim
 
 ## Settled decisions
 

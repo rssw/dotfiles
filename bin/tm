@@ -1,0 +1,39 @@
+#!/bin/sh
+
+set -eu
+
+if [ -n "${TMUX:-}" ]; then
+	exec tmux switch-client -t "${1:-main}"
+fi
+
+if [ $# -gt 0 ]; then
+	exec tmux new-session -A -s "$1"
+fi
+
+sessions=$(tmux list-sessions -F '#S' 2>/dev/null || true)
+
+if [ -z "$sessions" ]; then
+	exec tmux new-session -s main
+fi
+
+session_count=$(printf '%s\n' "$sessions" | sed '/^$/d' | wc -l)
+
+if [ "$session_count" -eq 1 ]; then
+	only_session=$(printf '%s\n' "$sessions" | sed -n '1p')
+	if [ "$only_session" = "main" ]; then
+		exec tmux attach-session -t main
+	fi
+fi
+
+printf 'Available sessions\n'
+printf '%s\n' '------------------'
+printf '%s\n' "$sessions"
+printf '\nAttach to session [main]: '
+IFS= read -r selected_session
+selected_session=${selected_session:-main}
+
+if printf '%s\n' "$sessions" | grep -Fxq "$selected_session"; then
+	exec tmux attach-session -t "$selected_session"
+fi
+
+exec tmux new-session -s "$selected_session"

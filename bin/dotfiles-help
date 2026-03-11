@@ -11,6 +11,8 @@ Shell
 - portable shell layers live in ~/.shell/core and ~/.shell/optional
 - machine-local overrides belong in ~/.shell/local
 - common defaults: Ctrl-a start of line, Ctrl-e end of line, Ctrl-r history search, Ctrl-w delete word, Ctrl-l clear screen
+- fzf helpers: Ctrl-r/Ctrl-z=fuzzy command history, Ctrl-a=history words, Ctrl-t=history paths, fh=pick a past command into the prompt
+- filesystem helpers: md=create and enter a directory, extract=unpack common archive formats
 - zsh vi mode: Esc enters normal mode, i/a return to insert mode
 - after install, select MesloLGS NF, FiraCode, or JetBrains Mono in the terminal profile
 - bootstrap attempts to switch the login shell to zsh automatically for the current user
@@ -22,10 +24,11 @@ Tmux
 - panes: prefix v=split below, prefix h=split right, Alt-q=kill pane, prefix b=break pane into window
 - pane movement: Ctrl-h/j/k/l
 - window movement: Alt-h/l
-- common window shortcuts: Alt-n=new window, Ctrl-PageUp/Down=prev/next window, prefix N=rename window
+- common window shortcuts: Alt-n=new window, Ctrl-PageUp/Down=prev/next window, prefix ,=rename window
 - pane resize: Alt-Arrow
 - layouts and copy mode: Alt-space=next layout, Alt-c=copy mode, copy-mode y=copy selection
 - bundled helpers: tmux-fzf-url=open URLs from pane history, vim-tmux-navigator=shared Ctrl-h/j/k/l movement with Neovim
+- shell aliases: ta=attach, tat=attach target, tls=list sessions, tns=new named session, tm=smart attach/create session picker
 - reload config: tmux source-file ~/.tmux.conf
 
 Neovim
@@ -66,6 +69,7 @@ Scripts
 - local-only scripts belong in ~/bin
 - shared repo scripts are installed at ~/bin/shared
 - both are on PATH, with ~/bin first
+- shared helpers include: tm, now, post-install-checklist, setup-local-machine, dotfiles-help
 
 Where to edit
 - shell docs: ~/.shell/README.md

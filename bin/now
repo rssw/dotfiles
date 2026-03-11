@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -eu
+
+location=${NOW_WEATHER_LOCATION:-Hastings,NZ}
+weather_file=$(mktemp)
+calendar_file=$(mktemp)
+clock_file=$(mktemp)
+trap 'rm -f "$weather_file" "$calendar_file" "$clock_file"' EXIT HUP INT TERM
+
+if command -v curl >/dev/null 2>&1; then
+	if ! curl -fsSL --max-time 3 "wttr.in/${location}?0" >"$weather_file" 2>/dev/null; then
+		:
+	fi
+fi
+
+if [ -s "$weather_file" ]; then
+	cat "$weather_file"
+elif command -v curl >/dev/null 2>&1; then
+	printf 'Weather unavailable. Try: curl wttr.in/%s?0\n' "$location"
+else
+	printf 'Weather unavailable because curl is not installed.\n'
+fi
+
+printf '\n'
+if command -v cal >/dev/null 2>&1; then
+	cal >"$calendar_file"
+	cat "$calendar_file"
+elif command -v ncal >/dev/null 2>&1; then
+	ncal >"$calendar_file"
+	cat "$calendar_file"
+else
+	date '+%A, %d %B %Y'
+	printf 'Calendar unavailable because cal/ncal is not installed.\n'
+fi
+
+printf '\n'
+if command -v toilet >/dev/null 2>&1; then
+	date +%H:%M | toilet -f future --filter border >"$clock_file"
+elif command -v figlet >/dev/null 2>&1; then
+	date +%H:%M | figlet >"$clock_file"
+else
+	date '+%Y-%m-%d %H:%M' >"$clock_file"
+fi
+
+cat "$clock_file"

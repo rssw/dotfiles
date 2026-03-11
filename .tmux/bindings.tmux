@@ -36,6 +36,8 @@ bind-key '$' command-prompt -I "rename-session "
 # {{{1 Windows Navigation
 unbind-key p
 unbind-key n
+bind-key p previous-window
+bind-key n next-window
 bind-key -n C-PageUp previous-window
 bind-key -n C-PageDown next-window
 bind-key -n M-h previous-window
@@ -71,6 +73,8 @@ if-shell -b '[ $(printf "%d" "$TMUX_VERSION") -ge 3 ]' " \
 	bind-key -n C-S-PageDown swap-window -t +1"
 # Prompt for an index to move the current window
 unbind-key .
+unbind-key ,
+bind-key , command-prompt -I "rename-window "
 # splitting vertically
 unbind-key '"'
 bind-key v split-window -v -c '#{pane_current_path}'
@@ -82,10 +86,8 @@ bind-key h split-window -h -c '#{pane_current_path}'
 unbind-key c
 bind-key c new-window -c '#{pane_current_path}'
 bind-key -n M-n new-window -c '#{pane_current_path}'
-# Keep default next/previous window on prefix n/p and use uppercase N for rename
-unbind-key n
+# Keep default next/previous window on prefix n/p and keep rename on prefix comma
 unbind-key N
-bind-key N command-prompt -I "rename-window "
 # Killing a window: Safer to unbind it and bind only `kill-pane` with confirmation
 unbind-key &
 # Rotate the panes in the current window forwards
