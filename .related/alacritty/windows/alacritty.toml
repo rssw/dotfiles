@@ -1,0 +1,22 @@
+[general]
+import = [
+    "C:\\Users\\Jacques\\AppData\\Roaming\\alacritty\\themes\\sonokai-maia.toml"
+]
+
+[font]
+size = 12
+
+[font.normal]
+family = "MesloLGS Nerd Font Mono"
+
+[font.bold]
+family = "MesloLGS Nerd Font Mono"
+style = "Bold"
+
+[font.italic]
+family = "MesloLGS Nerd Font Mono"
+style = "Italic"
+
+[font.bold_italic]
+family = "MesloLGS Nerd Font Mono"
+style = "Bold Italic"
