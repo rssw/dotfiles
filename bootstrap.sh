@@ -21,6 +21,7 @@ DRY_RUN=0
 INSTALL_PACKAGES=1
 INIT_SUBMODULES=1
 LINK_CONFIG=1
+VERIFY_ONLY=0
 MODE=full
 CONFLICT_MODE=skip
 
@@ -100,6 +101,7 @@ Options:
   --no-packages         Skip package installation
   --no-submodules       Skip git submodule initialization
   --no-link             Skip symlink creation
+  --verify              Check deployed managed paths against the selected profile
   --dry-run             Print actions without making changes
   --help                Show this help text
 EOF
@@ -230,6 +232,7 @@ parse_args() {
       --no-packages) INSTALL_PACKAGES=0 ;;
       --no-submodules) INIT_SUBMODULES=0 ;;
       --no-link) LINK_CONFIG=0 ;;
+      --verify) VERIFY_ONLY=1 ;;
       --dry-run) DRY_RUN=1 ;;
       --help)
         usage
@@ -245,6 +248,13 @@ parse_args() {
   done
 
   normalize_mode
+
+  if [ "$VERIFY_ONLY" -eq 1 ]; then
+    INSTALL_PACKAGES=0
+    INIT_SUBMODULES=0
+    LINK_CONFIG=0
+    DRY_RUN=0
+  fi
 }
 
 ensure_supported_platform() {
@@ -409,6 +419,80 @@ link_root_entries() {
   done
 }
 
+verify_diff() {
+  verify_source_path=$1
+  verify_target_path=$2
+
+  if diff -ruN "$verify_source_path" "$verify_target_path" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  diff -ruN "$verify_source_path" "$verify_target_path" || true
+  return 1
+}
+
+verify_one() {
+  verify_source_path=$1
+  verify_target_path=$2
+
+  if [ ! -e "$verify_target_path" ] && [ ! -L "$verify_target_path" ]; then
+    printf 'missing: %s (expected %s)\n' "$verify_target_path" "$verify_source_path"
+    return 1
+  fi
+
+  if [ -L "$verify_target_path" ]; then
+    current_target=$(readlink "$verify_target_path" || true)
+    if [ "$current_target" = "$verify_source_path" ]; then
+      return 0
+    fi
+
+    printf 'target mismatch: %s -> %s (expected %s)\n' "$verify_target_path" "$current_target" "$verify_source_path"
+    return 1
+  fi
+
+  verify_diff "$verify_source_path" "$verify_target_path"
+}
+
+verify_root_entries() {
+  verify_failed=0
+
+  for name in $ROOT_LINK_ENTRIES
+  do
+    entry_source_path=$DOTFILES_DIR/$name
+    case "$name" in
+      .config)
+        for config_name in $CONFIG_ENTRIES; do
+          config_path=$entry_source_path/$config_name
+          [ -e "$config_path" ] || continue
+          if ! verify_one "$config_path" "$HOME_DIR/.config/$(basename "$config_path")"; then
+            verify_failed=1
+          fi
+        done
+        ;;
+      bin)
+        if ! verify_one "$entry_source_path" "$HOME_DIR/bin/shared"; then
+          verify_failed=1
+        fi
+        ;;
+      *)
+        if ! verify_one "$entry_source_path" "$HOME_DIR/$name"; then
+          verify_failed=1
+        fi
+        ;;
+    esac
+  done
+
+  return "$verify_failed"
+}
+
+verify_deployment() {
+  if verify_root_entries; then
+    return 0
+  fi
+
+  return 1
+}
+
 prepare_local_state() {
   ensure_dir "$HOME_DIR/.cache"
   ensure_dir "$HOME_DIR/.zkbd"
@@ -494,6 +578,11 @@ link_config() {
 
 main() {
   parse_args "$@"
+  if [ "$VERIFY_ONLY" -eq 1 ]; then
+    verify_deployment
+    return $?
+  fi
+
   ensure_supported_platform
 
   log "Bootstrap mode: $MODE"
