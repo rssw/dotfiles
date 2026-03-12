@@ -1,0 +1,7 @@
+# Local secret mirror manifest.
+#
+# Copy is seeded to: ~/.local/share/secret-mirror/items
+# Format: <local-name> <bitwarden-item-id>
+#
+# Example:
+# smtp-password 00000000-0000-0000-0000-000000000000

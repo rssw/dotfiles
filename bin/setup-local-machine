@@ -74,7 +74,7 @@ write_msmtp_config() {
   smtp_port=$(prompt_default "SMTP port" "587")
   smtp_from=$(prompt_required "SMTP from address")
   smtp_user=$(prompt_default "SMTP username" "$smtp_from")
-  smtp_secret_cmd=$(prompt_required "SMTP passwordeval / secret lookup command")
+  smtp_secret_cmd=$(prompt_required "SMTP passwordeval / secret lookup command (example: ~/bin/shared/secret-read smtp-password)")
 
   {
     printf 'defaults\n'

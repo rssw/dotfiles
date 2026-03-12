@@ -1,0 +1,141 @@
+#!/bin/sh
+
+set -eu
+
+session_dir=${HOME:?HOME must be set}/.local/share/bitwarden
+session_file=${BW_SESSION_FILE:-$session_dir/session.env}
+
+ensure_dir() {
+	[ -d "$1" ] || mkdir -p "$1"
+}
+
+status_json() {
+	bw status 2>/dev/null || true
+}
+
+status_field() {
+	field_name=$1
+	status_json | sed -n "s/.*\"$field_name\":\"\([^\"]*\)\".*/\1/p"
+}
+
+load_session() {
+	if [ -f "$session_file" ]; then
+		# shellcheck disable=SC1090
+		. "$session_file"
+	fi
+}
+
+clear_session() {
+	rm -f "$session_file"
+}
+
+save_session() {
+	ensure_dir "$session_dir"
+	{
+		printf 'export BW_SESSION=%s\n' "$(printf %s "$1" | sed "s/'/'\\''/g; s/^/'/; s/$/'/")"
+	} > "$session_file"
+	chmod 600 "$session_file"
+	printf 'Saved Bitwarden session to %s\n' "$session_file"
+}
+
+require_bw() {
+	command -v bw >/dev/null 2>&1 || {
+		printf 'bw CLI is not installed\n' >&2
+		exit 1
+	}
+}
+
+require_bw
+load_session
+
+bw_email_default=${BW_EMAIL:-$(status_field userEmail)}
+
+login_raw() {
+	login_email=$1
+	if [ -n "$login_email" ]; then
+		if token=$(bw login "$login_email" --raw 2>/tmp/bw-session-login.err); then
+			printf '%s\n' "$token"
+			return 0
+		fi
+	else
+		if token=$(bw login --raw 2>/tmp/bw-session-login.err); then
+			printf '%s\n' "$token"
+			return 0
+		fi
+	fi
+
+	if grep -q 'already logged in' /tmp/bw-session-login.err 2>/dev/null; then
+		bw logout >/dev/null 2>&1 || true
+		if [ -n "$login_email" ]; then
+			token=$(bw login "$login_email" --raw)
+		else
+			token=$(bw login --raw)
+		fi
+		printf '%s\n' "$token"
+		rm -f /tmp/bw-session-login.err
+		return 0
+	fi
+
+	cat /tmp/bw-session-login.err >&2
+	rm -f /tmp/bw-session-login.err
+	return 1
+}
+
+cmd=${1:-unlock}
+shift || true
+
+case "$cmd" in
+	login)
+		bw_email=${1:-$bw_email_default}
+		token=$(login_raw "$bw_email")
+		save_session "$token"
+		;;
+	unlock)
+		if [ -n "$bw_email_default" ]; then
+			printf 'Requesting Bitwarden login session for %s\n' "$bw_email_default" >&2
+			token=$(login_raw "$bw_email_default")
+		else
+			printf 'Requesting Bitwarden login session\n' >&2
+			token=$(login_raw "")
+		fi
+		save_session "$token"
+		;;
+	status)
+		bw status
+		printf '\n'
+		if [ -f "$session_file" ]; then
+			printf 'session file: %s\n' "$session_file"
+		else
+			printf 'session file: missing\n'
+		fi
+		;;
+	test)
+		if [ -z "${BW_SESSION:-}" ]; then
+			printf 'BW_SESSION is not available; run `bw-session unlock`\n' >&2
+			exit 1
+		fi
+		if bw sync >/dev/null 2>&1; then
+			printf 'Bitwarden session is usable\n'
+			exit 0
+		fi
+		printf 'Bitwarden session is not usable; run `bw-session unlock`\n' >&2
+		exit 1
+		;;
+	sync)
+		exec bw sync
+		;;
+	clear)
+		clear_session
+		printf 'Removed %s\n' "$session_file"
+		;;
+	logout)
+		bw logout || true
+		clear_session
+		printf 'Logged out and removed %s\n' "$session_file"
+		;;
+	*)
+		printf 'usage: bw-session [login [email]|unlock|status|test|sync|clear|logout]\n' >&2
+		printf 'note: for this Vaultwarden setup, `unlock` uses the working login flow to obtain a session\n' >&2
+		exit 1
+		;;
+esac

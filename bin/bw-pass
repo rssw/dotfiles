@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -eu
+
+session_file=${BW_SESSION_FILE:-${HOME:?HOME must be set}/.local/share/bitwarden/session.env}
+
+if [ -f "$session_file" ]; then
+	# shellcheck disable=SC1090
+	. "$session_file"
+fi
+
+if [ -z "${BW_SESSION:-}" ]; then
+	printf 'BW_SESSION is not available; run `bw-session unlock` first\n' >&2
+	exit 1
+fi
+
+if [ "$#" -ne 1 ]; then
+	printf 'usage: bw-pass <item-id>\n' >&2
+	exit 1
+fi
+
+if output=$(bw get password "$1" 2>/tmp/bw-pass.err); then
+	printf '%s\n' "$output"
+	exit 0
+fi
+
+cat /tmp/bw-pass.err >&2
+rm -f /tmp/bw-pass.err
+printf 'Bitwarden session may be locked or expired; run `bw-session unlock` and try again\n' >&2
+exit 1

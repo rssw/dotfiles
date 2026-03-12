@@ -49,6 +49,8 @@ check_file "$HOME_DIR/.config/msmtp/config" "msmtp mail transport config"
 check_file "$HOME_DIR/.local/share/mutt/private.rc" "mutt/neomutt local mail config"
 check_file "$HOME_DIR/.local/share/mailutils/rssw.env" "mail-rssw local env file (if used)"
 check_zkbd
+check_file "$HOME_DIR/.local/share/bitwarden/session.env" "Bitwarden session file (if using bw-pass)"
+check_file "$HOME_DIR/.local/share/secret-mirror/items" "secret mirror manifest (if using local mirrored secrets)"
 
 printf '\nManual follow-up\n'
 print_item "[ ]" "Select the installed 'MesloLGS NF' font in your terminal profile, then restart the terminal"
@@ -58,6 +60,8 @@ print_item "[ ]" "Confirm the login shell is now zsh: 'getent passwd "$USER" | c
 print_item "[ ]" "Run 'gh auth login' if this machine should use GitHub CLI auth"
 print_item "[ ]" "Review '~/.local/share/git/config' for your name, email, signing, and credential preferences"
 print_item "[ ]" "Confirm your secret lookup command works for msmtp password retrieval"
+print_item "[ ]" "If using Bitwarden/Vaultwarden, run 'bw-session login' or 'bw-session unlock', then test with 'bw-session test'"
+print_item "[ ]" "If using local mirrored secrets, populate '~/.local/share/secret-mirror/items' and run 'secret-sync'"
 print_item "[ ]" "If using 'mail-rssw', create '~/.local/share/mailutils/rssw.env' from the example and fill in real values"
 print_item "[ ]" "Verify backend mail path: 'printf test | msmtp --debug --from=default your-address@example.com'"
 print_item "[ ]" "Verify interactive mail path if used: launch mutt/neomutt and confirm sendmail/from settings"

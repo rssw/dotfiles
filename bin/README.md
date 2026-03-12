@@ -16,7 +16,7 @@ Directory model:
 Current status:
 - safe, generic scripts can live here directly
 - private or production-tied scripts should stay out of git or be sanitized first
-- environment helper scripts now include `post-install-checklist`, `setup-local-machine`, `dotfiles-help`, `tm`, and `now`
+- environment helper scripts now include `post-install-checklist`, `setup-local-machine`, `dotfiles-help`, `tm`, `now`, `bw-session`, `bw-pass`, `secret-sync`, `secret-read`, and `vdiff`
 
 Planned install behavior:
 - create `~/bin` if missing and keep it for local-only scripts

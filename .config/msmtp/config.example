@@ -9,6 +9,8 @@ defaults
 # Example account using a local secret lookup command.
 # Replace values and secret retrieval to match your environment.
 # Intended use: backend/script mail delivery. Keep secret lookup local.
+# Example with locally mirrored secret cache:
+#   passwordeval ~/bin/shared/secret-read smtp-password
 account primary
 	host smtp.example.com
 	port 587

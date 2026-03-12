@@ -11,8 +11,9 @@ Shell
 - portable shell layers live in ~/.shell/core and ~/.shell/optional
 - machine-local overrides belong in ~/.shell/local
 - common defaults: Ctrl-a start of line, Ctrl-e end of line, Ctrl-r history search, Ctrl-w delete word, Ctrl-l clear screen
-- fzf helpers: Ctrl-r=fuzzy command history, fh=pick a past command into the prompt
+- fzf helpers: Ctrl-z=fuzzy command history, fh=pick a past command into the prompt
 - filesystem helpers: md=create and enter a directory, extract=unpack common archive formats
+- secret helpers: bw-session manages the local Bitwarden session file; for this Vaultwarden setup, `bw-session unlock` is the normal way to obtain a usable session; secret-sync refreshes local mirrored secrets from Bitwarden; secret-read prints a cached mirrored secret; bw-pass remains available for direct item lookups; bw-session test checks whether the saved session still works
 - zsh vi mode: Esc enters normal mode, i/a return to insert mode
 - after install, select MesloLGS NF, FiraCode, or JetBrains Mono in the terminal profile
 - bootstrap attempts to switch the login shell to zsh automatically for the current user
@@ -59,6 +60,10 @@ Mail
 - local mail files:
   - ~/.config/msmtp/config
   - ~/.local/share/mutt/private.rc
+- preferred unattended example: passwordeval ~/bin/shared/secret-read smtp-password
+- direct Bitwarden example: passwordeval ~/bin/shared/bw-pass ITEM_ID
+- mirrored secret manifest: ~/.local/share/secret-mirror/items
+- unattended scheduled mail should use mirrored local secrets rather than relying only on BW_SESSION
 
 Post-install
 - guided local setup: setup-local-machine
@@ -73,13 +78,14 @@ Verification
 
 Packages
 - baseline everywhere: shell/core CLI, prompt fonts, search/navigation tools, Neovim, tmux, storage/network filesystem support
-- full profile adds: nala, mutt+msmtp, lf, taskwarrior, and extra shell integrations
+- full profile adds: nala, mutt+msmtp, lf, taskwarrior, Bitwarden CLI, and extra shell integrations
 
 Scripts
 - local-only scripts belong in ~/bin
 - shared repo scripts are installed at ~/bin/shared
 - both are on PATH, with ~/bin first
 - shared helpers include: tm, now, post-install-checklist, setup-local-machine, dotfiles-help
+- secret-manager helpers include: bw-session, secret-sync, secret-read, bw-pass
 - diff helper: vdiff left right (files => nvim -d, directories => DirDiff)
 
 Where to edit

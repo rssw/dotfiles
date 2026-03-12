@@ -1,0 +1,41 @@
+#!/bin/sh
+
+if ! _command_exists bw; then
+	return
+fi
+
+BW_SESSION_FILE=${BW_SESSION_FILE:-$HOME/.local/share/bitwarden/session.env}
+SECRET_MIRROR_FILE=${SECRET_MIRROR_FILE:-$HOME/.local/share/secret-mirror/items}
+SECRET_STORE_DIR=${SECRET_STORE_DIR:-$HOME/.local/share/secrets}
+
+if [ -f "$BW_SESSION_FILE" ]; then
+	. "$BW_SESSION_FILE"
+fi
+
+bw-ready() {
+	[ -n "${BW_SESSION:-}" ]
+}
+
+_secret_mirror_missing() {
+	[ -f "$SECRET_MIRROR_FILE" ] || return 1
+
+	while IFS=' ' read -r secret_name item_id extra; do
+		[ -n "${secret_name:-}" ] || continue
+		case "$secret_name" in
+			\#*) continue ;;
+		esac
+		[ -n "${item_id:-}" ] || continue
+		if [ ! -s "$SECRET_STORE_DIR/$secret_name" ]; then
+			return 0
+		fi
+	done < "$SECRET_MIRROR_FILE"
+
+	return 1
+}
+
+if tty -s && [ -z "${SECRET_MIRROR_PROMPTED:-}" ]; then
+	if _secret_mirror_missing; then
+		export SECRET_MIRROR_PROMPTED=1
+		printf 'secret mirror incomplete; run `secret-sync` when you want to refresh local secrets\n'
+	fi
+fi

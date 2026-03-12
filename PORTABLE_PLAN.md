@@ -32,6 +32,7 @@ This file is the planning checkpoint for the session. It should hold enough cont
 - non-install-surface tracked config is being moved under `/.archive/` so the active tree matches the bootstrap footprint
 - the remaining shell/editor visual follow-up is to review colorscheme alignment across prompt, terminal, tmux, and Neovim
 - language-server package installation is intentionally deferred until there is a curated cross-ecosystem profile worth standardizing in bootstrap
+- Vaultwarden-backed Bitwarden CLI support is now part of the standard full interactive environment, with local mirrored secrets as the preferred path for unattended jobs
 
 ## Settled decisions
 
