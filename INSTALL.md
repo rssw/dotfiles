@@ -21,6 +21,24 @@ Bootstrap groups packages by capability so the standard environment is easier to
 reason about everywhere: core shell, prompt/fonts, navigation/search, editor,
 system/storage support, and a small set of optional feature groups.
 
+## Standard environment
+
+The baseline environment that bootstrap tries to make available everywhere is:
+
+- shell/core CLI: `zsh`, `bash`, `git`, `less`, `curl`
+- prompt/fonts: `fontconfig`, MesloLGS NF download, `fonts-firacode`, `fonts-jetbrains-mono`
+- navigation/search: `direnv`, `fzf`, `ripgrep`, `fd-find`, `jq`, `pv`, `p7zip-full`, `unzip`
+- editor/terminal: `zsh-autosuggestions`, `zsh-syntax-highlighting`, `neovim`, `tmux`
+- system/storage support: `cifs-utils`, `exfatprogs`, `nfs-common`, `fastfetch`
+
+The default full profile adds:
+
+- package QoL: `nala`
+- mail: `mutt`, `msmtp`
+- file manager: `lf`
+- productivity: `taskwarrior`
+- extra shell integrations: `wl-clipboard`, `xclip`, `xsel`, `gpg`, `pinentry-curses`
+
 Existing target paths are skipped by default. Use `--backup-existing` to move
 conflicting files aside before linking or templating.
 
