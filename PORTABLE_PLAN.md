@@ -1,6 +1,6 @@
 # Portable Dotfiles Plan
 
-Goal: turn this inherited dotfiles repo into a portable, headless-first setup that can be installed on a new machine with one command, or a very small set of commands, while remaining easy to understand and edit by hand later.
+Goal: turn the previous approach for this dotfiles repo into a portable, headless-first setup that can be installed on a new machine with one command, or a very small set of commands, while remaining easy to understand and edit by hand later.
 
 This file is the planning checkpoint for the session. It should hold enough context to resume planning or move into execution later without losing design intent.
 
@@ -31,6 +31,7 @@ This file is the planning checkpoint for the session. It should hold enough cont
 - post-install support now includes `post-install-checklist`, `setup-local-machine`, and `dotfiles-help`
 - non-install-surface tracked config is being moved under `/.archive/` so the active tree matches the bootstrap footprint
 - the remaining shell/editor visual follow-up is to review colorscheme alignment across prompt, terminal, tmux, and Neovim
+- language-server package installation is intentionally deferred until there is a curated cross-ecosystem profile worth standardizing in bootstrap
 
 ## Settled decisions
 
@@ -112,26 +113,26 @@ The main design constraint is that Neovim frequently runs inside tmux. Shortcuts
 
 - word-motion remaps in Neovim are a separate concern from pane/split navigation and should not drive cross-application navigation design
 
-### Rationale and comparison to the inherited config
+### Rationale and comparison to the previous approach
 
-- the inherited config already aligned `tmux` and Neovim for adjacent pane/split movement with `Ctrl-h/j/k/l`
-- the inherited config already used `Alt-h/l` for tmux window switching and `Alt-Arrow` for tmux pane resizing
-- the inherited config did not extend that same higher-level navigation model into Neovim buffers, so part of the new policy is an intentional completion of an existing design direction rather than a reversal
-- likely reasons the original author stopped there:
+- the previous approach already aligned `tmux` and Neovim for adjacent pane/split movement with `Ctrl-h/j/k/l`
+- the previous approach already used `Alt-h/l` for tmux window switching and `Alt-Arrow` for tmux pane resizing
+- the previous approach did not extend that same higher-level navigation model into Neovim buffers, so part of the new policy is an intentional completion of an existing design direction rather than a reversal
+- likely reasons the previous approach stopped there:
   - adjacent pane/split movement is the highest-frequency pain point when Neovim runs inside tmux
   - tmux-to-Neovim pass-through for `Ctrl-h/j/k/l` solves the biggest nested-terminal friction first
   - leaving Neovim buffers and tabs closer to native behavior avoids over-customizing Vim's non-spatial navigation model
-- likely reasons the original author chose these custom bindings instead of defaults:
+- likely reasons the previous approach chose these custom bindings instead of defaults:
   - tmux prefix-heavy defaults are slower for frequent movement
   - directional `hjkl` bindings fit vi-style muscle memory already used elsewhere in the repo
   - plain letter modifiers are often more portable than some function-key or modified-arrow combinations across SSH, tmux, and terminals
-- likely terminal/client conflicts the original author may have been avoiding:
+- likely terminal/client conflicts the previous approach may have been avoiding:
   - shell/readline use of `Ctrl-p/n` for history movement
   - inconsistent handling of Home/End/Delete and some modified special keys across terminals
   - Windows and WSL terminal layers, where some key combinations can be translated or dropped before reaching tmux or Neovim
   - terminal-emulator tab shortcuts that often use PageUp/PageDown or other common key families
 - design conclusion for this repo:
-  - keep the inherited `Ctrl-h/j/k/l` pane/split policy
+  - keep the previous `Ctrl-h/j/k/l` pane/split policy
   - preserve native fallbacks
   - extend the house policy to Neovim buffers and split resizing only where it improves consistency without creating common terminal conflicts
 
@@ -214,6 +215,7 @@ The install system should support both package-level flags and group-level flags
 - detect package naming differences where needed (for example `fd-find`)
 - add external package sources only when needed for selected packages (for example Fastfetch on Ubuntu releases that do not ship it yet)
 - if promoting Neovim to the default `vi`/`vim` experience, check for and remove `vi-tiny` if required and if it will not be handled automatically by package replacement logic
+- keep bootstrap package groups capability-oriented so it is easy to understand what the standard environment guarantees on every machine
 
 ## Planned shell architecture
 
@@ -303,7 +305,7 @@ Refactor Neovim into explicit layers:
 ## Git architecture
 
 - keep the global ignore baseline
-- rebuild the inherited git configuration around the actual user identity and workflow
+- rebuild the previous git configuration around the actual user identity and workflow
 - separate portable git defaults from local/private identity and service-specific settings
 
 ## Documentation strategy

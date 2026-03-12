@@ -38,7 +38,7 @@ The shell startup order is:
 - add general aliases/functions: create or edit a file in `/.shell/core/`
 - add package-aware integrations: place them in `/.shell/optional/`
 - add host-only overrides: create an untracked file in `/.shell/local/`
-- review later: improve `bin/tm` session selection UX with numbered choices and possibly arrow-key navigation
+- `bin/tm` now supports numbered session selection and uses `fzf` as the interactive picker when available
 
 Current shared examples:
 

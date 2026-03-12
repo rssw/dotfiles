@@ -17,6 +17,10 @@ Running `./bootstrap.sh` is intended to:
 The current full profile includes `nala`, mail tooling (`mutt` and `msmtp`),
 `lf`, `taskwarrior`, clipboard tools, and GPG helpers.
 
+Bootstrap groups packages by capability so the standard environment is easier to
+reason about everywhere: core shell, prompt/fonts, navigation/search, editor,
+system/storage support, and a small set of optional feature groups.
+
 Existing target paths are skipped by default. Use `--backup-existing` to move
 conflicting files aside before linking or templating.
 
@@ -114,6 +118,7 @@ session when you launched it from another interactive shell.
   `fastfetch` is selected but not available from the current apt sources
 - `msmtp` is the intended backend mail transport for scripts and server notifications
 - `mutt`/`neomutt` is the optional interactive mail client layer on top of that transport
+- language-server binaries are not installed by bootstrap today; Neovim enables LSP clients only when the matching server executable is already present on the machine
 - bootstrap seeds local mail templates when missing:
   - `~/.config/msmtp/config` from `.config/msmtp/config.example`
   - `~/.local/share/mutt/private.rc` from `.archive/.mutt/private.rc.example`

@@ -142,7 +142,7 @@ bind-key -n M-Up resize-pane -U
 bind-key | resize-pane -x 200
 bind-key _ resize-pane -y 200
 # Other manipulation for panes:
-# Stolen from: http://superuser.com/questions/266567/tmux-how-can-i-link-a-window-as-split-window
+# Based on: http://superuser.com/questions/266567/tmux-how-can-i-link-a-window-as-split-window
 bind-key j command-prompt -p "create pane from:" "join-pane -s ':%%'"
 # Take the current pane and create a new window out of it.
 unbind-key !
