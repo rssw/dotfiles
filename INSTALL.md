@@ -75,6 +75,17 @@ against throwaway `HOME` directories so the current machine is not modified.
 Checks that depend on optional tools such as `zsh`, `nvim`, or `tmux` are
 skipped with a note when those commands are not installed yet.
 
+To check whether the current machine's managed deployment still matches what
+bootstrap would link for the selected profile, run:
+
+```sh
+./bootstrap.sh --verify
+```
+
+This compares repo-managed linked paths only. It stays quiet for matches and
+prints diffs or missing-path notices for mismatches. Machine-local seeded files
+such as Git identity and mail templates are intentionally excluded.
+
 ## Post-install follow-up
 
 After bootstrap, run the lightweight checklist:
@@ -124,6 +135,7 @@ session when you launched it from another interactive shell.
   - `--no-packages`
   - `--no-submodules`
   - `--no-link`
+  - `--verify`
   - `--dry-run`
 
 ## Notes

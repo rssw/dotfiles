@@ -69,6 +69,7 @@ Post-install
 Verification
 - repo verification: ./verify-bootstrap.sh
 - bootstrap dry-run: ./bootstrap.sh --dry-run
+- deployment drift check: ./bootstrap.sh --verify
 
 Packages
 - baseline everywhere: shell/core CLI, prompt fonts, search/navigation tools, Neovim, tmux, storage/network filesystem support
