@@ -11,7 +11,7 @@ This directory contains the Neovim layer of the portable terminal-first setup.
 - `pack/`
   - plugin tree managed mostly through git submodules
 - `host-specific/`
-  - machine-specific overlays retained from the inherited config
+  - machine-specific overlays retained from the previous approach
   - standard behavior should gradually move out of here into the portable base
 - `plugin/portable-advanced.vim` and `lua/portable_advanced.lua`
   - optional advanced layer for richer UI, completion, treesitter, fuzzy finder,

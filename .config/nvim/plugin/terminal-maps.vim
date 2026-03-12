@@ -18,7 +18,7 @@ tnoremap <C-\><C-\> <C-\><C-n>
 
 " {{{ Partially solves an unfixable, annoying collision between Nvim's keys
 " interpretation, and my zsh's `bindkey` settings. Related ZSH config:
-" https://github.com/doronbehar/dotfiles/blob/master/.zshrc#L149
+" Keep terminal-mode movement aligned with the shell and tmux workflow.
 "
 " I need to report this to ZSH's mailing lists, as it doesn't occour in Bash.
 tnoremap <Home> <Nop>

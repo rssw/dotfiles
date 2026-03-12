@@ -9,51 +9,95 @@ if [ "${1:-}" = "-d" ]; then
 	shift
 fi
 
-if [ -n "${TMUX:-}" ]; then
-	exec tmux switch-client -t "${1:-main}"
-fi
+list_sessions() {
+	tmux list-sessions -F '#S' 2>/dev/null | sed '/^$/d' || true
+}
+
+session_exists() {
+	printf '%s\n' "$sessions" | grep -Fxq "$1"
+}
+
+resolve_session_choice() {
+	choice=$1
+	if printf '%s' "$choice" | grep -Eq '^[0-9]+$'; then
+		resolved=$(printf '%s\n' "$sessions" | sed -n "${choice}p")
+		printf '%s\n' "$resolved"
+		return 0
+	fi
+
+	printf '%s\n' "$choice"
+}
+
+attach_or_create() {
+	target_session=$1
+	if [ "$detach_others" -eq 1 ]; then
+		exec tmux new-session -A -D -s "$target_session"
+	fi
+	exec tmux new-session -A -s "$target_session"
+}
+
+attach_existing() {
+	target_session=$1
+	if [ -n "${TMUX:-}" ]; then
+		exec tmux switch-client -t "$target_session"
+	fi
+
+	if [ "$detach_others" -eq 1 ]; then
+		exec tmux attach-session -d -t "$target_session"
+	fi
+	exec tmux attach-session -t "$target_session"
+}
+
+pick_session() {
+	default_session=$1
+
+	if [ -t 0 ] && [ -t 1 ] && command -v fzf >/dev/null 2>&1; then
+		selected_line=$(printf '%s\n' "$sessions" | nl -w2 -s'  ' | \
+			fzf --height=40% --reverse --prompt='tm session> ' \
+				--header="Enter: attach  Esc: abort  default: $default_session") || return 1
+		printf '%s\n' "$selected_line" | sed 's/^ *[0-9][0-9]*  //'
+		return 0
+	fi
+
+	printf 'Available sessions\n' >&2
+	printf '%s\n' '------------------' >&2
+	printf '%s\n' "$sessions" | nl -w2 -s'  ' >&2
+	printf '\nAttach to session [%s]: ' "$default_session" >&2
+	IFS= read -r selected_session || return 1
+	selected_session=${selected_session:-$default_session}
+	resolve_session_choice "$selected_session"
+}
 
 if [ $# -gt 0 ]; then
-	if [ "$detach_others" -eq 1 ]; then
-		exec tmux new-session -A -D -s "$1"
-	fi
-	exec tmux new-session -A -s "$1"
+	target_session=$1
+	attach_or_create "$target_session"
 fi
 
-sessions=$(tmux list-sessions -F '#S' 2>/dev/null || true)
+sessions=$(list_sessions)
 
 if [ -z "$sessions" ]; then
-	exec tmux new-session -s main
+	attach_or_create main
 fi
 
-session_count=$(printf '%s\n' "$sessions" | sed '/^$/d' | wc -l)
+session_count=$(printf '%s\n' "$sessions" | wc -l)
+default_session=main
+
+if ! session_exists "$default_session"; then
+	default_session=$(printf '%s\n' "$sessions" | sed -n '1p')
+fi
 
 if [ "$session_count" -eq 1 ]; then
-	only_session=$(printf '%s\n' "$sessions" | sed -n '1p')
-	if [ "$only_session" = "main" ]; then
-		if [ "$detach_others" -eq 1 ]; then
-			exec tmux attach-session -d -t main
-		fi
-		exec tmux attach-session -t main
-	fi
+	attach_existing "$default_session"
 fi
 
-printf 'Available sessions\n'
-printf '%s\n' '------------------'
-printf '%s\n' "$sessions"
-printf '\nAttach to session [main]: '
-IFS= read -r selected_session
-selected_session=${selected_session:-main}
+selected_session=$(pick_session "$default_session") || exit 1
 
-if printf '%s\n' "$sessions" | grep -Fxq "$selected_session"; then
-	if [ "$detach_others" -eq 1 ]; then
-		exec tmux attach-session -d -t "$selected_session"
-	fi
-	exec tmux attach-session -t "$selected_session"
+if [ -z "$selected_session" ]; then
+	selected_session=$default_session
 fi
 
-if [ "$detach_others" -eq 1 ]; then
-	exec tmux new-session -A -D -s "$selected_session"
+if session_exists "$selected_session"; then
+	attach_existing "$selected_session"
 fi
 
-exec tmux new-session -A -s "$selected_session"
+attach_or_create "$selected_session"

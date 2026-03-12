@@ -7,7 +7,7 @@
 # config paths that are already classified as portable enough for reuse.
 #
 # Common edits:
-# - package groups: edit the package variables below
+# - package groups: edit the capability-based package variables below
 # - portable config coverage: edit `CONFIG_ENTRIES`
 # - root-level links: edit the list in `link_root_entries`
 # - machine/private setup: keep it out of this script until it is split cleanly
@@ -31,12 +31,19 @@ WITH_TASKWARRIOR=1
 WITH_EXTRA_SHELL=1
 FASTFETCH_SOURCE_ADDED=0
 
-REQUIRED_PACKAGES="zsh bash git less curl fontconfig fonts-firacode fonts-jetbrains-mono direnv fzf zsh-autosuggestions zsh-syntax-highlighting neovim tmux ripgrep fd-find jq fastfetch pv p7zip-full unzip cifs-utils exfatprogs nfs-common"
-PKG_NALA="nala"
-PKG_MAIL="mutt msmtp"
-PKG_LF="lf"
-PKG_TASKWARRIOR="taskwarrior"
-PKG_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
+PKG_CORE_SHELL="zsh bash git less curl"
+PKG_CORE_PROMPT="fontconfig fonts-firacode fonts-jetbrains-mono"
+PKG_CORE_NAVIGATION="direnv fzf ripgrep fd-find jq pv p7zip-full unzip"
+PKG_CORE_EDITOR="zsh-autosuggestions zsh-syntax-highlighting neovim tmux"
+PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
+
+PKG_OPTIONAL_NALA="nala"
+PKG_OPTIONAL_MAIL="mutt msmtp"
+PKG_OPTIONAL_FILE_MANAGER="lf"
+PKG_OPTIONAL_PRODUCTIVITY="taskwarrior"
+PKG_OPTIONAL_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
+
+PKG_REQUIRED_GROUPS="PKG_CORE_SHELL PKG_CORE_PROMPT PKG_CORE_NAVIGATION PKG_CORE_EDITOR PKG_CORE_SYSTEM"
 FASTFETCH_PPA="ppa:zhangsongcui3371/fastfetch"
 MESLO_FONT_BASE_URL="https://github.com/romkatv/powerlevel10k-media/raw/master"
 MESLO_FONT_FILES="MesloLGS%20NF%20Regular.ttf MesloLGS%20NF%20Bold.ttf MesloLGS%20NF%20Italic.ttf MesloLGS%20NF%20Bold%20Italic.ttf"
@@ -251,22 +258,28 @@ ensure_supported_platform() {
 }
 
 build_package_list() {
-  package_list=$REQUIRED_PACKAGES
+  package_list=""
+
+  for package_group in $PKG_REQUIRED_GROUPS
+  do
+    eval "group_packages=\${$package_group}"
+    package_list=$(append_packages "$package_list" $group_packages)
+  done
 
   if [ "$WITH_NALA" -eq 1 ]; then
-    package_list=$(append_packages "$package_list" $PKG_NALA)
+    package_list=$(append_packages "$package_list" $PKG_OPTIONAL_NALA)
   fi
   if [ "$WITH_MAIL" -eq 1 ]; then
-    package_list=$(append_packages "$package_list" $PKG_MAIL)
+    package_list=$(append_packages "$package_list" $PKG_OPTIONAL_MAIL)
   fi
   if [ "$WITH_LF" -eq 1 ]; then
-    package_list=$(append_packages "$package_list" $PKG_LF)
+    package_list=$(append_packages "$package_list" $PKG_OPTIONAL_FILE_MANAGER)
   fi
   if [ "$WITH_TASKWARRIOR" -eq 1 ]; then
-    package_list=$(append_packages "$package_list" $PKG_TASKWARRIOR)
+    package_list=$(append_packages "$package_list" $PKG_OPTIONAL_PRODUCTIVITY)
   fi
   if [ "$WITH_EXTRA_SHELL" -eq 1 ]; then
-    package_list=$(append_packages "$package_list" $PKG_EXTRA_SHELL)
+    package_list=$(append_packages "$package_list" $PKG_OPTIONAL_EXTRA_SHELL)
   fi
 
   printf '%s\n' "$package_list"
