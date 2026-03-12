@@ -11,7 +11,7 @@ Shell
 - portable shell layers live in ~/.shell/core and ~/.shell/optional
 - machine-local overrides belong in ~/.shell/local
 - common defaults: Ctrl-a start of line, Ctrl-e end of line, Ctrl-r history search, Ctrl-w delete word, Ctrl-l clear screen
-- fzf helpers: Ctrl-r/Ctrl-z=fuzzy command history, Ctrl-a=history words, Ctrl-t=history paths, fh=pick a past command into the prompt
+- fzf helpers: Ctrl-r=fuzzy command history, fh=pick a past command into the prompt
 - filesystem helpers: md=create and enter a directory, extract=unpack common archive formats
 - zsh vi mode: Esc enters normal mode, i/a return to insert mode
 - after install, select MesloLGS NF, FiraCode, or JetBrains Mono in the terminal profile
@@ -68,6 +68,10 @@ Post-install
 Verification
 - repo verification: ./verify-bootstrap.sh
 - bootstrap dry-run: ./bootstrap.sh --dry-run
+
+Packages
+- baseline everywhere: shell/core CLI, prompt fonts, search/navigation tools, Neovim, tmux, storage/network filesystem support
+- full profile adds: nala, mutt+msmtp, lf, taskwarrior, and extra shell integrations
 
 Scripts
 - local-only scripts belong in ~/bin

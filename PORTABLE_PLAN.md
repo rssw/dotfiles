@@ -50,7 +50,7 @@ This file is the planning checkpoint for the session. It should hold enough cont
   - `fzf`
   - `fzf-tab`
   - `direnv`
-- `nala` is optional, not standard
+- `nala` belongs to the default full profile, not the minimal baseline
 - if `nala` is installed, alias `apt` to `nala`
 - `fd-find` should be normalized to `fd` when available on Debian-family systems
 

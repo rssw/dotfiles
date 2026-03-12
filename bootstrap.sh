@@ -73,7 +73,14 @@ Default behavior is a full install for Debian/Ubuntu-family systems:
 - link repo-managed config into HOME
 - prepare local state directories
 
-The current default full profile includes `nala`, mail tooling (`mutt` and
+Capability groups:
+- core shell: zsh, bash, git, less, curl
+- prompt/fonts: fontconfig plus bundled prompt fonts and apt font packages
+- navigation/search: direnv, fzf, ripgrep, fd, jq, pv, unzip/7zip
+- editor/terminal: zsh plugins, Neovim, tmux
+- system/storage: cifs, exfat, nfs, fastfetch
+
+The current default full profile also includes `nala`, mail tooling (`mutt` and
 `msmtp`), `lf`, `taskwarrior`, and extra shell integrations.
 
 Options:
