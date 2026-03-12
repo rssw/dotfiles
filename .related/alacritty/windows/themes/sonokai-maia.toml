@@ -1,0 +1,34 @@
+[colors.primary]
+background = "#273136"
+foreground = "#e1e2e3"
+
+[colors.normal]
+black = "#1c1e1f"
+red = "#f76c7c"
+green = "#9cd57b"
+yellow = "#e3d367"
+blue = "#78cee9"
+magenta = "#baa0f8"
+cyan = "#f3a96a"
+white = "#e1e2e3"
+
+[colors.bright]
+black = "#82878b"
+red = "#f76c7c"
+green = "#9cd57b"
+yellow = "#e3d367"
+blue = "#78cee9"
+magenta = "#baa0f8"
+cyan = "#f3a96a"
+white = "#e1e2e3"
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+
+[colors.cursor]
+text = "#273136"
+cursor = "#e3d367"
+
+[colors.selection]
+text = "#273136"
+background = "#78cee9"
