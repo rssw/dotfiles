@@ -1,0 +1,18 @@
+name: 'Close stale issues and PRs'
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v4
+        with:
+          days-before-stale: 31
+          days-before-close: 0
+          stale-issue-message: ''
+          stale-pr-message: ''
+          close-issue-message: 'Closing this issue because it has been awaiting a response from its author for more than a month. Please provide the requested information and this issue will be re-opened.'
+          only-issue-labels: 'blocked,awaiting-author'
+          only-pr-labels: 'Stale'

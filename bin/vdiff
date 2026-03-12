@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -eu
+
+if [ "$#" -ne 2 ]; then
+	printf 'usage: vdiff <left> <right>\n' >&2
+	exit 1
+fi
+
+left=$1
+right=$2
+
+if [ -d "$left" ] && [ -d "$right" ]; then
+	exec nvim -c 'silent! packadd dirdiff' -c "DirDiff $left $right"
+fi
+
+exec nvim -d "$left" "$right"

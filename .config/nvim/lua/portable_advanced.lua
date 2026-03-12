@@ -233,6 +233,26 @@ local function setup_cmp_and_lsp()
     'svls', 'nixd', 'vhdl_ls', 'cmake', 'arduino_language_server',
     'autotools_ls', 'cssls', 'eslint', 'dockerls', 'bashls', 'vimls', 'yamlls',
   }
+  local server_commands = {
+    arduino_language_server = 'arduino-language-server',
+    autotools_ls = 'autotools-language-server',
+    bashls = 'bash-language-server',
+    clangd = 'clangd',
+    cmake = 'cmake-language-server',
+    cssls = 'vscode-css-language-server',
+    dockerls = 'docker-langserver',
+    eslint = 'vscode-eslint-language-server',
+    gopls = 'gopls',
+    jedi_language_server = 'jedi-language-server',
+    matlab_ls = 'matlab-language-server',
+    nixd = 'nixd',
+    rls = 'rls',
+    svls = 'svls',
+    texlab = 'texlab',
+    vhdl_ls = 'vhdl_ls',
+    vimls = 'vim-language-server',
+    yamlls = 'yaml-language-server',
+  }
   local capabilities = cmp_lsp.default_capabilities(vim.lsp.protocol.make_client_capabilities())
   local default_setup_settings = {
     autostart = true,
@@ -253,7 +273,8 @@ local function setup_cmp_and_lsp()
     end,
   }
   for _, server in ipairs(servers_list) do
-    if lspconfig[server] then
+    local command_name = server_commands[server]
+    if lspconfig[server] and (not command_name or vim.fn.executable(command_name) == 1) then
       lspconfig[server].setup(default_setup_settings)
     end
   end
@@ -274,6 +295,18 @@ local function setup_fzf()
     buffers = { sort_lastused = false },
     actions = { files = { ['default'] = fzf.actions.file_edit } },
   })
+  vim.api.nvim_create_user_command('Files', function()
+    fzf.files()
+  end, {})
+  vim.api.nvim_create_user_command('Buffers', function()
+    fzf.buffers()
+  end, {})
+  vim.api.nvim_create_user_command('Lines', function()
+    fzf.lines()
+  end, {})
+  vim.api.nvim_create_user_command('RG', function(t)
+    fzf.live_grep({ search = t.args })
+  end, { nargs = '*' })
   map({ 'n', 'v', 'i' }, '<C-x><C-f>', function()
     fzf.complete_path({ cmd = "find -maxdepth 2 -mindepth 1 -printf '%P\\n'", previewer = 'builtin' })
   end, { silent = true, desc = 'Fuzzy complete path' })
@@ -287,6 +320,9 @@ local function setup_fzf()
 end
 
 local function setup_treesitter()
+  if vim.fn.has('nvim-0.10') == 0 then
+    return
+  end
   local ok, configs = pcall(require, 'nvim-treesitter.configs')
   if not ok then
     return

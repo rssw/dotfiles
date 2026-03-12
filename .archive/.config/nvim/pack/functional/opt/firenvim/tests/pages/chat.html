@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" id="html">
+        <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Test Page</title>
+                <script>
+                        addEventListener("load", () => {
+                                const textarea = document.getElementById("content-input");
+                                textarea.addEventListener("keyup", (e) => {
+                                        if (e.key === "Enter" && e.ctrlKey && e.keyCode === 13) {
+                                                textarea.value += "<C-Enter> pressed!";
+                                        } else if (e.key === "A" && e.ctrlKey) {
+                                                textarea.value += "<C-A> pressed!";
+                                        } else if (e.key === "b" && !e.ctrlKey) {
+                                                textarea.value += "b pressed!";
+                                        } else if (e.key === " " && !e.ctrlKey) {
+                                                textarea.value += "Space pressed!";
+                                        }
+                                        textarea.focus();
+                                });
+                        });
+                </script>
+        </head>
+        <body id="body">
+                <textarea id="content-input" rows="20" cols="80"></textarea>
+        </body>
+</html>

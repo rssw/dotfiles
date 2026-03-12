@@ -1,6 +1,7 @@
 " {{{1 netrw
 " https://vi.stackexchange.com/questions/14622/how-can-i-close-the-netrw-buffer
 let g:netrw_fastbrowse = 0
+command! E Explore
 " }}}
 
 " {{{ Android:
@@ -32,7 +33,8 @@ let g:rooter_manual_only = 1
 
 " {{{ tmux-navigator
 let g:tmux_navigator_disable_when_zoomed = 1
-" We don't want the <c-\> which I never use
+" We disable the plugin's defaults and remap explicitly so tmux/Neovim house
+" rules stay documented in one place.
 let g:tmux_navigator_no_mappings = 1
 nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
@@ -139,24 +141,21 @@ command! -nargs=+ LF call lf#LF(<f-args>, [
 nnoremap <leader>e :LF %:p edit<CR>
 " }}}
 
-" {{{ firenvim
-let g:firenvim_config = {
-	\ 'localSettings': {
-		\ '.*': {
-			\ 'selector': '',
-			\ 'priority': 0,
-			\ 'takeover': 'never',
-		\ },
-	\ }
-\ }
-if exists('g:started_by_firenvim')
-	" set laststatus=0
-	au BufEnter www.overleaf.com_* nnoremap <C-CR> <Esc>:w<CR>:call firenvim#eval_js('document.querySelector(".btn-recompile").click();')<CR>
-	" au TextChanged * ++nested call firenvim_w#delaywrite()
-	" au TextChangedI * ++nested call firenvim_w#delaywrite()
-	" https://github.com/glacambre/firenvim#interacting-with-the-page
-	nnoremap <Esc><Esc> :call firenvim#focus_page()<CR>
-endif
+" {{{ markdown and tabular
+augroup portableMarkdown
+	autocmd!
+	autocmd FileType markdown silent! packadd tabular
+	autocmd FileType markdown setlocal conceallevel=0
+	autocmd FileType markdown let b:sleuth_automatic=0
+	autocmd FileType markdown normal zR
+augroup END
+
+let g:vim_markdown_frontmatter = 1
+" }}}
+
+" {{{ better-whitespace
+let g:strip_whitespace_confirm = 0
+let g:strip_whitespace_on_save = 1
 " }}}
 
 " {{{ AnsiEsc

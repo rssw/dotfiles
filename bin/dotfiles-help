@@ -32,13 +32,17 @@ Tmux
 - reload config: tmux source-file ~/.tmux.conf
 
 Neovim
+- leader: Space
 - split movement: Ctrl-h/j/k/l
 - buffer movement: Alt-h/l
 - split resize: Alt-Arrow
 - common defaults: :q close window, :w write file, u undo, Ctrl-r redo, / search, n/N next/prev match
 - direct Vim split movement fallback: Ctrl-w h/j/k/l
-- default plugins: fugitive/fubitive/rhubarb/fugitive-gitlab=git workflows; signify=diff signs; lualine=statusline; sandwich/sleuth/repeat/nerdcommenter/lexima/editing helpers; gundo=undo tree; suda=sudo write; direnv/rooter/localvimrc=project env/root detection
-- advanced Neovim layer: cmp+nvim-lsp+vsnip=completions; treesitter=syntax/tree parsing; fzf-lua=fuzzy finding; dap/dap-ui/dap-python/dap-go=debugging; lf.vim=file manager; togglelist/qf_resize/window-swap=window and list helpers
+- default plugins: fugitive/fubitive/rhubarb/fugitive-gitlab=git workflows; signify=diff signs; lualine=statusline; sandwich/sleuth/repeat/nerdcommenter/lexima/editing helpers; gundo=undo tree; better-whitespace=trim trailing spaces; visual-star-search=search visual selections; suda=sudo write; direnv/rooter/localvimrc=project env/root detection
+- advanced Neovim layer: cmp+nvim-lsp+vsnip=completions; treesitter=syntax/tree parsing; fzf-lua=fuzzy finding via :Files/:Buffers/:Lines/:RG; dap/dap-ui/dap-python/dap-go=debugging; lf.vim=file manager; togglelist/qf_resize/window-swap=window and list helpers
+- markdown support: preservim/vim-markdown with tabular for tables and frontmatter support
+- file navigation: :E/:Explore uses netrw, q closes netrw, - moves up, <leader>e uses lf.vim, :Files and :Buffers use fzf-lua
+- dispatch: :Dispatch <cmd> runs async jobs in Neovim via dispatch-neovim
 - filetype plugins: Dockerfile, nix, rust, toml, orgmode, tex/vimtex, json/jsonc/json5/jsonnet, jinja, asciidoctor, csv, neomutt, syncthing, nftables, bitbake, vala, solidity, mediawiki, pydoc
 - advanced layer can be disabled with NVIM_PORTABLE_BASE_ONLY=1
 - host-only behavior belongs in ~/.config/nvim/host-specific
@@ -70,6 +74,7 @@ Scripts
 - shared repo scripts are installed at ~/bin/shared
 - both are on PATH, with ~/bin first
 - shared helpers include: tm, now, post-install-checklist, setup-local-machine, dotfiles-help
+- diff helper: vdiff left right (files => nvim -d, directories => DirDiff)
 
 Where to edit
 - shell docs: ~/.shell/README.md

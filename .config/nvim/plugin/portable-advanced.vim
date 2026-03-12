@@ -14,9 +14,10 @@ endif
 
 silent! packadd sonokai
 silent! packadd fzf-lua
-silent! packadd firenvim
-silent! packadd treesitter
-silent! packadd treesitter-textobjects
+if has('nvim-0.10')
+	silent! packadd treesitter
+	silent! packadd treesitter-textobjects
+endif
 
 set completeopt=menu,menuone,noselect
 let g:vsnip_snippet_dir = $XDG_CONFIG_HOME . '/nvim/snippets'
@@ -24,6 +25,7 @@ let g:vsnip_snippet_dir = $XDG_CONFIG_HOME . '/nvim/snippets'
 if has('termguicolors')
 	set termguicolors
 endif
+let g:sonokai_style = 'maia'
 let g:sonokai_disable_terminal_colors = 1
 let g:sonokai_colors_override = {'bg0': ['#000000', '0']}
 silent! colorscheme sonokai
