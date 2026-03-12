@@ -32,6 +32,34 @@ This directory contains the Neovim layer of the portable terminal-first setup.
 - add or update plugins under `.config/nvim/pack/`
 - keep machine-local behavior isolated under `.config/nvim/host-specific/`
 
+## Key defaults
+
+- leader is `Space`
+- local leader is `Space`
+
+## Optional plugin model
+
+- `pack/*/start` plugins load automatically at startup
+- `pack/*/opt` plugins load only when explicitly requested with `:packadd`
+- the advanced layer (`plugin/portable-advanced.vim`) is the main place where optional plugins are enabled by default
+- ad-hoc enabling is also available with `ENABLE_PLUGINS=name1,name2 nvim`
+
+## Current workflows
+
+- `fzf-lua`
+  - commands: `:Files`, `:Buffers`, `:Lines`, `:RG [pattern]`
+  - insert-mode completion helpers: `<C-x><C-f>` paths, `<C-x><C-l>` lines
+- `vim-dispatch` and `dispatch-neovim`
+  - run `:Dispatch <cmd>` to execute an async build/test command inside Neovim
+  - Neovim uses `dispatch-neovim` to back `:Dispatch` with terminal jobs instead of relying on tmux
+- file navigation
+  - `:E` / `:Explore` for built-in file browsing
+  - inside netrw: `Enter` opens, `-` goes up a directory, `q` closes the browser window
+  - `<leader>e` opens `lf.vim` on the current file path
+  - `:Files` / `:Buffers` for fuzzy navigation with `fzf-lua`
+- diff helpers
+  - `vdiff left right` from the shell launches `nvim -d` for files or `DirDiff` for directories
+
 ## Testing
 
 - restart Neovim or run `:source $MYVIMRC`

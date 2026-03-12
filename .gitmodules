@@ -175,9 +175,6 @@
 [submodule ".config/nvim/pack/looks/start/colorizer.lua"]
 	path = .config/nvim/pack/looks/start/colorizer.lua
 	url = git@github.com:norcalli/nvim-colorizer.lua
-[submodule ".config/nvim/pack/functional/opt/firenvim"]
-	path = .config/nvim/pack/functional/opt/firenvim
-	url = git@github.com:glacambre/firenvim
 [submodule ".config/nvim/pack/filetype/start/jsx-typescript"]
 	path = .config/nvim/pack/filetype/start/jsx-typescript
 	url = git@github.com:peitalin/vim-jsx-typescript
@@ -289,3 +286,12 @@
 [submodule ".config/nvim/pack/functional/start/info"]
 	path = .config/nvim/pack/functional/start/info
 	url = https://gitlab.com/HiPhish/info.vim.git
+[submodule ".config/nvim/pack/editing/start/better-whitespace"]
+	path = .config/nvim/pack/editing/start/better-whitespace
+	url = https://github.com/ntpeters/vim-better-whitespace.git
+[submodule ".config/nvim/pack/editing/start/visual-star-search"]
+	path = .config/nvim/pack/editing/start/visual-star-search
+	url = https://github.com/nelstrom/vim-visual-star-search.git
+[submodule ".config/nvim/pack/filetype/start/markdown"]
+	path = .config/nvim/pack/filetype/start/markdown
+	url = https://github.com/preservim/vim-markdown.git

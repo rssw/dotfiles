@@ -2,11 +2,21 @@
 
 set -eu
 
+detach_others=0
+
+if [ "${1:-}" = "-d" ]; then
+	detach_others=1
+	shift
+fi
+
 if [ -n "${TMUX:-}" ]; then
 	exec tmux switch-client -t "${1:-main}"
 fi
 
 if [ $# -gt 0 ]; then
+	if [ "$detach_others" -eq 1 ]; then
+		exec tmux new-session -A -D -s "$1"
+	fi
 	exec tmux new-session -A -s "$1"
 fi
 
@@ -21,6 +31,9 @@ session_count=$(printf '%s\n' "$sessions" | sed '/^$/d' | wc -l)
 if [ "$session_count" -eq 1 ]; then
 	only_session=$(printf '%s\n' "$sessions" | sed -n '1p')
 	if [ "$only_session" = "main" ]; then
+		if [ "$detach_others" -eq 1 ]; then
+			exec tmux attach-session -d -t main
+		fi
 		exec tmux attach-session -t main
 	fi
 fi
@@ -33,7 +46,14 @@ IFS= read -r selected_session
 selected_session=${selected_session:-main}
 
 if printf '%s\n' "$sessions" | grep -Fxq "$selected_session"; then
+	if [ "$detach_others" -eq 1 ]; then
+		exec tmux attach-session -d -t "$selected_session"
+	fi
 	exec tmux attach-session -t "$selected_session"
 fi
 
-exec tmux new-session -s "$selected_session"
+if [ "$detach_others" -eq 1 ]; then
+	exec tmux new-session -A -D -s "$selected_session"
+fi
+
+exec tmux new-session -A -s "$selected_session"

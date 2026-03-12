@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "Node",
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "target": "ES2020",
+    "typeRoots": ["node_modules/@types", "node_modules/web-ext-types/"],
+    "alwaysStrict": true
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

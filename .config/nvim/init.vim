@@ -11,6 +11,9 @@
 " - plugin set: edit `pack/` and related runtime config
 
 " {{{1 Uncategorized
+let mapleader=" "
+let maplocalleader=" "
+
 " Make any buffer able to be hidden even if not saved
 set hidden
 " no word wrap:

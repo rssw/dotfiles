@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <title>CodeMirror</title>
+    <meta charset="utf-8"/>
+
+    <link rel=stylesheet href="../../node_modules/codemirror/lib/codemirror.css">
+    <script src="../../node_modules/codemirror/lib/codemirror.js"></script>
+    <script src="../../node_modules/codemirror/mode/xml/xml.js"></script>
+    <script src="../../node_modules/codemirror/mode/javascript/javascript.js"></script>
+    <script src="../../node_modules/codemirror/mode/css/css.js"></script>
+    <script src="../../node_modules/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+  </head>
+  <body>
+    <form style="position: relative; margin-top: .5em;"><textarea id=demotext>
+<!-- Create a simple CodeMirror instance -->
+<link rel="stylesheet" href="lib/codemirror.css">
+<script src="../../node_modules/codemirror/lib/codemirror.js"></script>
+<script>
+  var editor = CodeMirror.fromTextArea(myTextarea, {
+    lineNumbers: true
+  });
+</script></textarea>
+    </form>
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("demotext"), {
+        lineNumbers: true,
+        mode: "text/html",
+        matchBrackets: true
+      });
+    </script>
+  </body>
+</html>
