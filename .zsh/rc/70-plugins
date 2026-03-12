@@ -1,0 +1,15 @@
+for autosuggestions_file in \
+	${ZDOTDIR:-$HOME}/.zsh/zle/autosuggestions/zsh-autosuggestions.zsh \
+	/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+	/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+	/usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+do
+	if [[ -f "$autosuggestions_file" ]]; then
+		source "$autosuggestions_file"
+		break
+	fi
+done
+unset autosuggestions_file
+
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+source ${ZDOTDIR:-$HOME}/.zsh/zle/syntax-highlighting/zsh-syntax-highlighting.plugin.zsh

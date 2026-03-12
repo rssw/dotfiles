@@ -1,0 +1,9 @@
+for i in ${ZDOTDIR:-$HOME}/.zsh/chpwd/*; do
+	. "$i"
+done
+
+for i in ${ZDOTDIR:-$HOME}/.zsh/precmd/*; do
+	. "$i"
+done
+
+unset i

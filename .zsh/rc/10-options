@@ -1,0 +1,9 @@
+setopt GLOB_DOTS
+setopt EXTENDEDGLOB
+setopt nonomatch
+setopt interactivecomments
+
+[[ -t 0 ]] && stty -ixon 2>/dev/null
+
+bindkey -v
+export KEYTIMEOUT=1

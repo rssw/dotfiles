@@ -1,0 +1,48 @@
+autoload -Uz url-quote-magic
+zle -N self-insert url-quote-magic
+
+export FZF_COMPLETION_TRIGGER=''
+source ${ZDOTDIR:-$HOME}/.zsh/zle/fzf/personal-widgets
+if [[ -f ~/.local/share/zsh/macros/${HOST} ]]; then
+	source ~/.local/share/zsh/macros/${HOST}
+fi
+
+if _command_exists xclip || _command_exists xsel || _command_exists wl-copy || _command_exists clip.exe; then
+	export ZSH_SYSTEM_CLIPBOARD_DISABLE_DEFAULT_MAPS=1
+	source ${ZDOTDIR:-$HOME}/.zsh/zle/system-clipboard/zsh-system-clipboard.zsh
+	function () {
+		local binded_keys i parts key cmd keymap
+		for keymap in vicmd visual emacs; do
+			binded_keys=(${(f)"$(bindkey -M $keymap)"})
+			for (( i = 1; i < ${#binded_keys[@]}; ++i )); do
+				parts=("${(z)binded_keys[$i]}")
+				key="${parts[1]}"
+				cmd="${parts[2]}"
+				if (( $+functions[zsh-system-clipboard-$keymap-$cmd] )); then
+					eval bindkey -M $keymap "\ "$key zsh-system-clipboard-$keymap-$cmd
+				fi
+			done
+		done
+		bindkey -ar " "
+	}
+fi
+
+autoload edit-command-line && zle -N edit-command-line
+zle_bracketed_paste_vi_full() {
+  local char paste_buffer=""
+  local esc_end=$'\e[201~'
+  local keymap_before=$KEYMAP
+  local now=$(date +'%Y-%m-%d %H:%M:%S')
+  while read -rk 1 char; do
+    paste_buffer+="$char"
+    [[ "$paste_buffer" == *"$esc_end" ]] && break
+  done
+  paste_buffer="${paste_buffer%$esc_end}"
+  paste_buffer="${paste_buffer//$'\r'/}"
+  LBUFFER+="$paste_buffer"
+  if [[ $keymap_before == viins ]]; then
+    zle -K viins
+  fi
+  print -r -- "[$now] MANUAL PASTE from $keymap_before: ${(qqq)paste_buffer}" >> /tmp/zsh-paste.log
+}
+zle -N bracketed-paste zle_bracketed_paste_vi_full
