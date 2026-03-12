@@ -6,9 +6,15 @@ This directory contains the tmux layer of the portable terminal workflow.
   - main tmux entrypoint
   - sets terminal behavior, env propagation, and sources the files below
 - `bindings.tmux`
-  - custom keymap and cross-application navigation policy
-  - keeps `Ctrl-h/j/k/l` aligned with Neovim split movement
-  - uses `Alt-h/l` for tmux window movement and `Alt-Arrow` for pane resizing
+  - ordered loader for the smaller binding groups under `/.tmux/bindings/`
+- `bindings/00-prefix.tmux`
+  - prefix and modal defaults
+- `bindings/20-windows.tmux`
+  - window navigation and the custom split/new-window keys
+- `bindings/30-panes.tmux`
+  - pane navigation, pane resizing, and tmux/Neovim crossover behavior
+- `bindings/40-copy.tmux`
+  - copy-mode bindings and clipboard integration
 - `theme.tmux`
   - appearance and status line settings
 - `init.tmux`
@@ -24,6 +30,8 @@ This directory contains the tmux layer of the portable terminal workflow.
 ## Common edits
 
 - change navigation or resize keys in `.tmux/bindings.tmux`
+- change prefix/default-preserving behavior in `.tmux/bindings/00-prefix.tmux`
+- change window or pane behavior in the matching file under `.tmux/bindings/`
 - change colors or status line in `.tmux/theme.tmux`
 - change terminal compatibility rules in `../.tmux.conf`
 

@@ -1,0 +1,3 @@
+if [[ -d "$HOME/.opencode/bin" ]]; then
+	insert2PATH "$HOME/.opencode/bin"
+fi

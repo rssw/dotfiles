@@ -1,0 +1,3 @@
+source_config_dir "${ZDOTDIR:-$HOME}/.shell/core"
+source_config_dir "${ZDOTDIR:-$HOME}/.shell/optional"
+source_config_dir "${ZDOTDIR:-$HOME}/.shell/local"

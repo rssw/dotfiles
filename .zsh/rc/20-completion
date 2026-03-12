@@ -1,0 +1,50 @@
+if [[ -d ${ZDOTDIR:-$HOME}/.zsh/comp/local ]]; then
+	fpath=(${ZDOTDIR:-$HOME}/.zsh/comp/local $fpath)
+fi
+if [[ -d ${ZDOTDIR:-$HOME}/.zsh/comp/git-fzf ]]; then
+	fpath=(${ZDOTDIR:-$HOME}/.zsh/comp/git-fzf $fpath)
+fi
+if [[ -d ${ZDOTDIR:-$HOME}/.nix-profile/share/zsh/site-functions ]]; then
+	fpath=(${ZDOTDIR:-$HOME}/.nix-profile/share/zsh/site-functions $fpath)
+fi
+if [[ -d ${ZDOTDIR:-$HOME}/.zsh/comp/untracked ]]; then
+	fpath=(${ZDOTDIR:-$HOME}/.zsh/comp/untracked $fpath)
+fi
+if [[ -d ${ZDOTDIR:-$HOME}/.zsh/comp/tested ]]; then
+	fpath=(${ZDOTDIR:-$HOME}/.zsh/comp/tested $fpath)
+fi
+if [[ -d ${ZDOTDIR:-$HOME}/.zsh/comp/community/src ]]; then
+	fpath=(${ZDOTDIR:-$HOME}/.zsh/comp/community/src $fpath)
+fi
+fpath(){ printf '%s\n' "${fpath[@]}"; }
+fpath_exclude=(/nix/var/nix/profiles/default/share/zsh/site-functions)
+fpath=(${fpath:|fpath_exclude})
+autoload -Uz compinit && compinit -D
+compdef _todo todo
+
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*:gpg:*' menu select=2
+zstyle ':completion:*:git*:*' menu select=2
+if [[ -z "$LS_COLORS" ]]; then
+	test -r ${ZDOTDIR:-$HOME}/.dircolors && eval "$(dircolors -b ${ZDOTDIR:-$HOME}/.dircolors)" || eval "$(dircolors -b)"
+fi
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+zstyle ':completion:*:functions' ignored-patterns '_*'
+zstyle ':completion::complete:*' use-cache true
+
+if [[ -z ${functions[command_not_found_handler]} ]]; then
+	if [ -f /etc/zsh_command_not_found ]; then
+		source /etc/zsh_command_not_found
+	elif [ -f /usr/share/doc/pkgfile/command-not-found.zsh ]; then
+		source /usr/share/doc/pkgfile/command-not-found.zsh
+	fi
+fi

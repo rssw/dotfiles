@@ -1,0 +1,27 @@
+# Prompt setup must happen early so later startup code sees the final prompt.
+
+if [[ -t 0 && -t 1 ]]; then
+	source ${ZDOTDIR:-$HOME}/.zsh/powerlevel10k/powerlevel10k.zsh-theme
+	if [[ -f $HOME/.p10k.zsh ]]; then
+		source $HOME/.p10k.zsh
+	else
+		zmodload zsh/terminfo
+		(){
+			if [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/wsl
+				return
+			fi
+			if [ ! -z "$SSH_TMUX_ATTACH$MLTERM" ]; then
+				[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
+				return
+			fi
+			if (( terminfo[colors] >= 256 )); then
+				if [[ -z "$SSH_TERM_NO_ICONS_FONT" ]] && [[ -z "$TELEPORT_SESSION" ]]; then
+					[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/default ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/default
+					return
+				fi
+			fi
+			[[ ! -f ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii ]] || source ${ZDOTDIR:-$HOME}/.zsh/p10k/ascii
+		}
+	fi
+fi

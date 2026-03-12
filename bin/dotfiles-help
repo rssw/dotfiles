@@ -7,7 +7,7 @@ Dotfiles help
 
 Shell
 - primary shell: zsh; fallback shell: bash
-- startup order: .zshenv -> .shell/core -> .shell/optional -> .shell/local -> shell-specific rc/login files
+- startup order: .zshenv -> .zsh/rc/* -> .shell/core -> .shell/optional -> .shell/local -> shell-specific rc/login files
 - portable shell layers live in ~/.shell/core and ~/.shell/optional
 - machine-local overrides belong in ~/.shell/local
 - common defaults: Ctrl-a start of line, Ctrl-e end of line, Ctrl-r history search, Ctrl-w delete word, Ctrl-l clear screen
@@ -29,6 +29,7 @@ Tmux
 - layouts and copy mode: Alt-space=next layout, Alt-c=copy mode, copy-mode y=copy selection
 - bundled helpers: tmux-fzf-url=open URLs from pane history, vim-tmux-navigator=shared Ctrl-h/j/k/l movement with Neovim
 - shell aliases: ta=attach, tat=attach target, tls=list sessions, tns=new named session, tm=smart attach/create session picker, tm -d=detach other clients first
+- config layout: .tmux/bindings/00-prefix.tmux for prefix defaults, 20-windows for window keys, 30-panes for pane movement, 40-copy for copy mode
 - reload config: tmux source-file ~/.tmux.conf
 
 Neovim

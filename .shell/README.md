@@ -20,10 +20,11 @@ This directory now separates portable shell behavior into three layers.
 The shell startup order is:
 
 1. `/.zshenv` for shared environment and helper functions
-2. `/.shell/core/`
-3. `/.shell/optional/`
-4. `/.shell/local/`
-5. shell-specific hooks from `/.zshrc`, `/.bashrc`, and `/.zlogin`
+2. ordered `/.zsh/rc/` parts for prompt, completion, history, widgets, and bindings
+3. `/.shell/core/`
+4. `/.shell/optional/`
+5. `/.shell/local/`
+6. shell-specific hooks from `/.zshrc`, `/.bashrc`, and `/.zlogin`
 
 ## Module guidelines
 
@@ -39,6 +40,7 @@ The shell startup order is:
 - add package-aware integrations: place them in `/.shell/optional/`
 - add host-only overrides: create an untracked file in `/.shell/local/`
 - `bin/tm` now supports numbered session selection and uses `fzf` as the interactive picker when available
+- zsh interactive behavior is split into ordered parts under `/.zsh/rc/`
 
 Current shared examples:
 

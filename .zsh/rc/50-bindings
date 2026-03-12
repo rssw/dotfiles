@@ -1,0 +1,80 @@
+bindkey -a e vi-forward-word-end
+bindkey -a w vi-backward-word
+bindkey -a E vi-forward-blank-word-end
+bindkey -a W vi-backward-blank-word
+bindkey -a ge vi-forward-word
+bindkey -a gw vi-backward-word-end
+bindkey -a gE vi-forward-blank-word
+bindkey -a gW vi-backward-blank-word-end
+
+autoload zkbd
+local_zkbd_dir=$HOME/.zkbd
+local_zkbd_loaded=
+for local_zkbd_file in "$local_zkbd_dir/${TERM}-${DISPLAY:-$VENDOR-$OSTYPE}" "$local_zkbd_dir/$TERM"
+do
+	if [[ -f "$local_zkbd_file" ]]; then
+		source "$local_zkbd_file"
+		local_zkbd_loaded=1
+		break
+	fi
+done
+unset local_zkbd_file
+
+if [[ -n "$local_zkbd_loaded" ]]; then
+	bindkey "${key[Home]}" beginning-of-line
+	bindkey -a "${key[Home]}" beginning-of-line
+	bindkey "${key[End]}" end-of-line
+	bindkey -a "${key[End]}" end-of-line
+	bindkey "${key[Delete]}" delete-char
+	bindkey -a "${key[Delete]}" delete-char
+else
+	if [[ -t 0 && -t 1 && -z ${ZSH_EXECUTION_STRING:-} && -z ${ZKBD_WARNED:-} ]]; then
+		export ZKBD_WARNED=1
+		echo "you need to run \`zkbd\` for this terminal; save the result under $local_zkbd_dir/$TERM"
+	fi
+fi
+unset local_zkbd_dir local_zkbd_loaded
+
+if [[ "$TMUX" =~ "tmate-$UID" ]]; then
+	function tmate-safe-exit() {
+		if [[ -n "${BUFFER}" ]]; then
+			zle delete-char-or-list
+		else
+			if [[ "$(tmate list-panes -a | wc -l)" == "1" && -z "$NVIM" && -z "$VIM" ]]; then
+				echo "do not try to exit the last tmate pane!"
+			else
+				exit
+			fi
+		fi
+	}
+	if [[ -n "$TMUX" ]]; then
+		setopt ignoreeof
+		zle -N tmate-safe-exit
+		bindkey "^D" tmate-safe-exit
+	fi
+fi
+
+if [[ $TERM =~ .*tmux.* ]]; then
+	unset zle_bracketed_paste
+fi
+
+autoload -U select-quoted
+zle -N select-quoted
+for m in visual viopp; do
+	for c in "a'" "i'" 'a"' 'i"' 'a`' 'i`'; do
+		bindkey -M $m $c select-quoted
+	done
+done
+
+autoload -U select-bracketed
+zle -N select-bracketed
+for m in visual viopp; do
+	for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+		bindkey -M $m $c select-bracketed
+	done
+done
+
+bindkey -M viins "^V" edit-command-line
+bindkey -M vicmd "^V" edit-command-line
+bindkey -M viins '^[[200~' bracketed-paste
+bindkey -M vicmd '^[[200~' bracketed-paste
