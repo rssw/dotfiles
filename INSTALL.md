@@ -15,7 +15,7 @@ Running `./bootstrap.sh` is intended to:
 - prepare local state directories under `~/.local/share/`
 
 The current full profile includes `nala`, mail tooling (`mutt` and `msmtp`),
-`lf`, `taskwarrior`, clipboard tools, and GPG helpers.
+`lf`, `taskwarrior`, Bitwarden CLI, clipboard tools, and GPG helpers.
 
 Bootstrap groups packages by capability so the standard environment is easier to
 reason about everywhere: core shell, prompt/fonts, navigation/search, editor,
@@ -37,6 +37,7 @@ The default full profile adds:
 - mail: `mutt`, `msmtp`
 - file manager: `lf`
 - productivity: `taskwarrior`
+- secret manager CLI: pinned Bitwarden CLI configured for the hosted Vaultwarden server
 - extra shell integrations: `wl-clipboard`, `xclip`, `xsel`, `gpg`, `pinentry-curses`
 
 Existing target paths are skipped by default. Use `--backup-existing` to move
@@ -116,6 +117,27 @@ setup-local-machine
 This writes machine-local Git, `msmtp`, and optional mutt/neomutt config files
 without storing secrets in the repo.
 
+If you use the hosted Vaultwarden instance, the default full profile also
+installs a pinned Bitwarden CLI release that is known to work with it,
+configures the CLI server URL, and provides helper commands:
+
+- `bw-session login`
+- `bw-session unlock`
+- `bw-session status`
+- `bw-session test`
+- `secret-sync`
+- `secret-read NAME`
+- `bw-pass ITEM_ID`
+
+When present, `~/.local/share/bitwarden/session.env` is loaded automatically by
+interactive shells so saved Bitwarden sessions are available in new terminals.
+Shell startup stays quiet; `bw-pass` and `bw-session test` are the intended
+places to detect and report expired or missing sessions.
+
+For the current hosted Vaultwarden deployment, `bw-session unlock` is treated as
+the practical "get me a usable session" command and uses the login flow that is
+known to succeed reliably with this CLI/server combination.
+
 At the end of a real install, bootstrap attempts to change the current user's
 login shell to `zsh` and then starts a `zsh` login shell for the current
 session when you launched it from another interactive shell.
@@ -128,6 +150,7 @@ session when you launched it from another interactive shell.
   - `--with-mutt`, `--without-mutt`
   - `--with-lf`, `--without-lf`
   - `--with-taskwarrior`, `--without-taskwarrior`
+  - `--with-bitwarden`, `--without-bitwarden`
   - `--no-mail`
   - `--no-extra-shell`
   - `--backup-existing`
@@ -148,6 +171,7 @@ session when you launched it from another interactive shell.
   `fastfetch` is selected but not available from the current apt sources
 - `msmtp` is the intended backend mail transport for scripts and server notifications
 - `mutt`/`neomutt` is the optional interactive mail client layer on top of that transport
+- the default full profile installs Bitwarden CLI `2026.1.0` from GitHub because newer releases are not currently compatible with the hosted Vaultwarden deployment
 - language-server binaries are not installed by bootstrap today; Neovim enables LSP clients only when the matching server executable is already present on the machine
 - bootstrap seeds local mail templates when missing:
   - `~/.config/msmtp/config` from `.config/msmtp/config.example`
@@ -244,6 +268,12 @@ Bootstrap now seeds a few machine-local files when they are missing:
   - from `.config/git/local.example`
 - `~/.config/msmtp/config`
   - from `.config/msmtp/config.example`
+  - preferred unattended lookup: `passwordeval ~/bin/shared/secret-read smtp-password`
+  - direct Bitwarden lookup remains available: `passwordeval ~/bin/shared/bw-pass ITEM_ID`
+- `~/.local/share/secret-mirror/items`
+  - from `.config/secret-mirror/items.example`
+  - format: `<local-name> <bitwarden-item-id>`
+  - used by `secret-sync` to refresh cached secrets into `~/.local/share/secrets/`
 - `~/.local/share/mutt/private.rc`
   - from `.archive/.mutt/private.rc.example`
 
@@ -259,6 +289,9 @@ The current intended split is:
   - backend transport for scripts, alerts, and server-side notification workflows
   - should be configured first
   - secrets should stay in local secret lookup or local config only
+  - do not rely on a Bitwarden session token alone for unattended scheduled jobs;
+    use a non-interactive local secret source if mail must continue working after
+    session expiry or restart
 - `mutt` or `neomutt`
   - interactive mail client layer for reading/composing mail manually
   - should use `msmtp` as its sendmail path where possible

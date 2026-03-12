@@ -30,6 +30,7 @@ WITH_MAIL=1
 WITH_LF=1
 WITH_TASKWARRIOR=1
 WITH_EXTRA_SHELL=1
+WITH_BITWARDEN=1
 FASTFETCH_SOURCE_ADDED=0
 
 PKG_CORE_SHELL="zsh bash git less curl"
@@ -48,6 +49,9 @@ PKG_REQUIRED_GROUPS="PKG_CORE_SHELL PKG_CORE_PROMPT PKG_CORE_NAVIGATION PKG_CORE
 FASTFETCH_PPA="ppa:zhangsongcui3371/fastfetch"
 MESLO_FONT_BASE_URL="https://github.com/romkatv/powerlevel10k-media/raw/master"
 MESLO_FONT_FILES="MesloLGS%20NF%20Regular.ttf MesloLGS%20NF%20Bold.ttf MesloLGS%20NF%20Italic.ttf MesloLGS%20NF%20Bold%20Italic.ttf"
+BITWARDEN_VERSION="2026.1.0"
+BITWARDEN_URL="https://github.com/bitwarden/clients/releases/download/cli-v${BITWARDEN_VERSION}/bw-linux-${BITWARDEN_VERSION}.zip"
+BITWARDEN_SERVER_URL="https://rssw.co.za/bitwarden/"
 
 # Start with a conservative portable subset. Local/private or highly
 # desktop-specific config can be linked manually until those layers are split
@@ -82,7 +86,7 @@ Capability groups:
 - system/storage: cifs, exfat, nfs, fastfetch
 
 The current default full profile also includes `nala`, mail tooling (`mutt` and
-`msmtp`), `lf`, `taskwarrior`, and extra shell integrations.
+`msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
 
 Options:
   --full                Enable the default full profile
@@ -95,6 +99,8 @@ Options:
   --without-lf          Exclude lf
   --with-taskwarrior    Include taskwarrior
   --without-taskwarrior Exclude taskwarrior
+  --with-bitwarden      Include Bitwarden CLI
+  --without-bitwarden   Exclude Bitwarden CLI
   --no-mail             Exclude mail-related optional packages
   --no-extra-shell      Exclude extra shell integrations packages
   --backup-existing     Backup conflicting existing paths before installing
@@ -210,6 +216,7 @@ normalize_mode() {
     WITH_LF=0
     WITH_TASKWARRIOR=0
     WITH_EXTRA_SHELL=0
+    WITH_BITWARDEN=0
   fi
 }
 
@@ -226,6 +233,8 @@ parse_args() {
       --without-lf) WITH_LF=0 ;;
       --with-taskwarrior) WITH_TASKWARRIOR=1 ;;
       --without-taskwarrior) WITH_TASKWARRIOR=0 ;;
+      --with-bitwarden) WITH_BITWARDEN=1 ;;
+      --without-bitwarden) WITH_BITWARDEN=0 ;;
       --no-mail) WITH_MAIL=0 ;;
       --no-extra-shell) WITH_EXTRA_SHELL=0 ;;
       --backup-existing) CONFLICT_MODE=backup ;;
@@ -502,6 +511,8 @@ prepare_local_state() {
   ensure_dir "$HOME_DIR/.local/share/mutt"
   ensure_dir "$HOME_DIR/.local/share/mailutils"
   ensure_dir "$HOME_DIR/.local/share/nvim"
+  ensure_dir "$HOME_DIR/.local/share/secret-mirror"
+  ensure_dir "$HOME_DIR/.local/share/secrets"
   ensure_dir "$HOME_DIR/.local/share/zsh"
   ensure_dir "$HOME_DIR/.local/share/zsh/env"
   ensure_dir "$HOME_DIR/.local/share/zsh/login"
@@ -519,6 +530,7 @@ prepare_local_state() {
   install_template_if_missing "$DOTFILES_DIR/.config/git/local.example" "$HOME_DIR/.local/share/git/config"
   ensure_dir "$HOME_DIR/.config/msmtp"
   install_template_if_missing "$DOTFILES_DIR/.config/msmtp/config.example" "$HOME_DIR/.config/msmtp/config"
+  install_template_if_missing "$DOTFILES_DIR/.config/secret-mirror/items.example" "$HOME_DIR/.local/share/secret-mirror/items"
   install_template_if_missing "$DOTFILES_DIR/.archive/.mutt/private.rc.example" "$HOME_DIR/.local/share/mutt/private.rc"
 }
 
@@ -546,6 +558,31 @@ install_prompt_fonts() {
 
   if command -v fc-cache >/dev/null 2>&1; then
     run_in_home fc-cache -f "$fonts_dir"
+  fi
+}
+
+install_bitwarden_cli() {
+  [ "$WITH_BITWARDEN" -eq 1 ] || return 0
+  [ "$INSTALL_PACKAGES" -eq 1 ] || return 0
+
+  ensure_dir "$HOME_DIR/bin"
+  ensure_dir "$HOME_DIR/.local/share/bitwarden"
+
+  bitwarden_target=$HOME_DIR/bin/bw
+  if [ -x "$bitwarden_target" ] && "$bitwarden_target" --version 2>/dev/null | grep -q "$BITWARDEN_VERSION"; then
+    :
+  else
+    bitwarden_tmp_dir=$(mktemp -d)
+    bitwarden_archive=$bitwarden_tmp_dir/bw.zip
+
+    run_in_home curl -fsSL -o "$bitwarden_archive" "$BITWARDEN_URL"
+    run unzip -o "$bitwarden_archive" -d "$bitwarden_tmp_dir"
+    run install -m 0755 "$bitwarden_tmp_dir/bw" "$bitwarden_target"
+    run rm -rf "$bitwarden_tmp_dir"
+  fi
+
+  if [ -n "$BITWARDEN_SERVER_URL" ]; then
+    run_in_home "$bitwarden_target" config server "$BITWARDEN_SERVER_URL"
   fi
 }
 
@@ -591,6 +628,7 @@ main() {
   install_packages
   init_submodules
   link_config
+  install_bitwarden_cli
   install_prompt_fonts
   ensure_default_shell
 

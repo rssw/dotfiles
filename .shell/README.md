@@ -8,7 +8,7 @@ This directory now separates portable shell behavior into three layers.
   - loaded by both `/.zshrc` and `/.bashrc`
 - `optional/`
   - integrations that only activate when their backing tools exist
-  - examples: desktop helpers, `gpg`, `lf`, `guix`, `mpd`, `tmux`, `wego`
+  - examples: Bitwarden helpers, desktop helpers, `gpg`, `lf`, `guix`, `mpd`, `tmux`, `wego`
   - also loaded by both `/.zshrc` and `/.bashrc`
 - `local/`
   - machine-specific or private shell snippets
@@ -47,6 +47,7 @@ Current shared examples:
 - `/.shell/core/archive`: `extract`
 - `/.shell/core/filesystem`: `md`
 - `/.shell/core/fzf`: `fh`
+- `/.shell/optional/bitwarden`: `bw-ready`, automatic loading of `~/.local/share/bitwarden/session.env`, and an interactive reminder when configured mirrored secrets are missing
 - `/.shell/optional/tmux`: `ta`, `tat`, `tls`, `tns`
 
 ## Planned follow-up
