@@ -31,6 +31,7 @@ WITH_LF=1
 WITH_TASKWARRIOR=1
 WITH_EXTRA_SHELL=1
 WITH_BITWARDEN=1
+WITH_LSP_DEFAULT=1
 FASTFETCH_SOURCE_ADDED=0
 
 PKG_CORE_SHELL="zsh bash git less curl"
@@ -40,10 +41,12 @@ PKG_CORE_EDITOR="zsh-autosuggestions zsh-syntax-highlighting neovim tmux"
 PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
 
 PKG_OPTIONAL_NALA="nala"
-PKG_OPTIONAL_MAIL="mutt msmtp"
+PKG_OPTIONAL_MAIL="mutt msmtp isync"
 PKG_OPTIONAL_FILE_MANAGER="lf"
 PKG_OPTIONAL_PRODUCTIVITY="taskwarrior"
 PKG_OPTIONAL_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
+PKG_OPTIONAL_LSP_DEFAULT="nodejs npm python3-pip golang-go texlab html-ls cssls typescript-language-server jedi-language-server"
+
 
 PKG_REQUIRED_GROUPS="PKG_CORE_SHELL PKG_CORE_PROMPT PKG_CORE_NAVIGATION PKG_CORE_EDITOR PKG_CORE_SYSTEM"
 FASTFETCH_PPA="ppa:zhangsongcui3371/fastfetch"
@@ -599,6 +602,32 @@ install_bitwarden_cli() {
   fi
 }
 
+install_lsp_servers() {
+  [ "$WITH_LSP_DEFAULT" -eq 1 ] || return 0
+  [ "$INSTALL_PACKAGES" -eq 1 ] || return 0
+
+  ensure_dir "$HOME_DIR/bin"
+  ensure_dir "$HOME_DIR/.local/share/nvim/lsp"
+
+  # npm-based LSP servers
+  if command -v npm >/dev/null 2>&1; then
+    run_in_home npm install -g bash-language-server yaml-language-server vscode-html-language-server vscode-css-language-server typescript-language-server
+  fi
+
+  # pip-based
+  if command -v pip3 >/dev/null 2>&1; then
+    run_in_home pip3 install jedi-language-server
+  fi
+
+  # go-based
+  if command -v go >/dev/null 2>&1; then
+    run_in_home go install golang.org/x/tools/gopls@latest
+  fi
+
+  # apt-based
+  run sudo apt-get install -y texlab
+}
+
 ensure_default_shell() {
   [ "$DRY_RUN" -eq 0 ] || return 0
   [ -t 0 ] && [ -t 1 ] || return 0
@@ -642,6 +671,7 @@ main() {
   init_submodules
   link_config
   install_bitwarden_cli
+  install_lsp_servers
   install_prompt_fonts
   ensure_default_shell
 
