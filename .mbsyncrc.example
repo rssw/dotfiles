@@ -1,0 +1,23 @@
+# ~/.mbsyncrc.example
+#
+# Tracked template for mbsync (isync) IMAP/Maildir sync.
+# Copied to ~/.mbsyncrc if missing.
+#
+# Customize per machine with real IMAP server details, credentials, and local Maildir paths.
+# Example for single inbox:
+#
+# IMAPStore remote
+# Host imap.example.com
+# User your.email@example.com
+# PassCmd ~/bin/shared/secret-read imap-password
+# SSLType IMAPS
+#
+# MaildirStore local
+# Path ~/.local/share/mail/INBOX/
+# Inbox ~/.local/share/mail/INBOX
+#
+# Channel inbox
+# Master :remote:
+# Slave :local:
+# Create Both
+# SyncState *

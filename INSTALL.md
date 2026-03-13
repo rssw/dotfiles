@@ -18,8 +18,46 @@ The current full profile includes `nala`, mail tooling (`mutt` and `msmtp`),
 `lf`, `taskwarrior`, Bitwarden CLI, clipboard tools, and GPG helpers.
 
 Bootstrap groups packages by capability so the standard environment is easier to
-reason about everywhere: core shell, prompt/fonts, navigation/search, editor,
-system/storage support, and a small set of optional feature groups.
+ reason about everywhere: core shell, prompt/fonts, navigation/search, editor,
+ system/storage support, and a small set of optional feature groups.
+
+## Guaranteed baseline environment
+
+Every bootstrap deployment guarantees this standard set:
+
+- **Shell/core CLI**: zsh, bash, git, less, curl
+- **Prompt/fonts**: fontconfig, MesloLGS NF, fonts-firacode, fonts-jetbrains-mono
+- **Navigation/search**: direnv, fzf, ripgrep, fd-find, jq, pv, p7zip-full, unzip
+- **Editor/terminal**: zsh-autosuggestions, zsh-syntax-highlighting, neovim, tmux
+- **System/storage**: cifs-utils, exfatprogs, nfs-common, fastfetch
+
+The default full profile adds:
+
+- **Package QoL**: nala
+- **Mail**: mutt, msmtp
+- **File manager**: lf
+- **Productivity**: taskwarrior
+- **Secret manager CLI**: Bitwarden CLI (Vaultwarden-compatible)
+- **Extra shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
+
+## Guaranteed baseline environment
+
+Every bootstrap deployment guarantees this standard set:
+
+- **Shell/core CLI**: zsh, bash, git, less, curl
+- **Prompt/fonts**: fontconfig, MesloLGS NF, fonts-firacode, fonts-jetbrains-mono
+- **Navigation/search**: direnv, fzf, ripgrep, fd-find, jq, pv, p7zip-full, unzip
+- **Editor/terminal**: zsh-autosuggestions, zsh-syntax-highlighting, neovim, tmux
+- **System/storage**: cifs-utils, exfatprogs, nfs-common, fastfetch
+
+The default full profile adds:
+
+- **Package QoL**: nala
+- **Mail**: mutt, msmtp
+- **File manager**: lf
+- **Productivity**: taskwarrior
+- **Secret manager CLI**: Bitwarden CLI (Vaultwarden-compatible)
+- **Extra shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
 
 ## Standard environment
 

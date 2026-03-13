@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Optional LSP server installer.
+# Usage: lsp-install [server]
+#
+# Servers:
+# - clangd (apt)
+# - jedi-language-server (pip)
+# - rls (rustup)
+# - svls (npm)
+# etc.
+
+set -eu
+
+server=$1
+case "$server" in
+  clangd)
+    sudo apt-get install -y clangd
+    ;;
+  jedi-language-server)
+    pip3 install jedi-language-server
+    ;;
+  rls)
+    rustup component add rls rust-analysis rust-src
+    ;;
+  svls)
+    npm install -g svls
+    ;;
+  *)
+    printf 'usage: lsp-install [clangd|jedi-language-server|rls|svls|...]\n' >&2
+    exit 1
+    ;;
+esac
