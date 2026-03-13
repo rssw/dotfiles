@@ -34,7 +34,7 @@ Every bootstrap deployment guarantees this standard set:
 The default full profile adds:
 
 - **Package QoL**: nala
-- **Mail**: mutt, msmtp, isync
+- **Mail**: mutt, msmtp, isync, notmuch
 - **File manager**: lf
 - **Productivity**: taskwarrior
 - **Secret manager CLI**: Bitwarden CLI (Vaultwarden-compatible)
