@@ -28,6 +28,7 @@ This file is the planning checkpoint for the session. It should hold enough cont
 - shell config is split into `/.shell/core/`, `/.shell/optional/`, and `/.shell/local/`
 - tmux, Neovim, and Git docs/config now follow a clearer portable-vs-local architecture
 - machine-local templates and helpers now exist for Git and mail setup (`msmtp`, mutt/neomutt)
+- a portable base `.muttrc` is part of the managed surface, while account-specific identity stays local in `~/.local/share/mutt/private.rc`; mailbox synchronization remains a separate concern
 - post-install support now includes `post-install-checklist`, `setup-local-machine`, and `dotfiles-help`
 - non-install-surface tracked config is being moved under `/.archive/` so the active tree matches the bootstrap footprint
 - the remaining shell/editor visual follow-up is to review colorscheme alignment across prompt, terminal, tmux, and Neovim

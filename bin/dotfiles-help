@@ -53,11 +53,14 @@ Git
 - portable defaults live in ~/.config/git/config
 - machine-local identity lives in ~/.local/share/git/config
 - useful aliases: st=status, br=branch, co=checkout, cmt=commit, lg=pretty log, shorty=status --short --branch
+- quick gh usage: gh auth login, gh repo view, gh pr create, gh pr checkout <num>, gh issue list
 
 Mail
 - msmtp is the backend transport for scripts and notifications
 - mutt/neomutt is the interactive mail layer on top of msmtp
+- the tracked ~/.muttrc provides a readable base UI and local mailbox defaults; account identity still lives in ~/.local/share/mutt/private.rc
 - local mail files:
+  - ~/.muttrc
   - ~/.config/msmtp/config
   - ~/.local/share/mutt/private.rc
 - preferred unattended example: passwordeval ~/bin/shared/secret-read smtp-password

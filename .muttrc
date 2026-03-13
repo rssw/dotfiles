@@ -1,0 +1,81 @@
+# Portable mutt base config for the standard interactive mail workflow.
+
+set save_history = 1000
+set history_file = ~/.local/share/mutt/history
+set message_cachedir = ~/.cache/mutt/messages
+set header_cache = ~/.cache/mutt/header
+set tmpdir = ~/.cache/mutt/compositions
+set mbox_type = Maildir
+set sendmail_wait = 0
+set send_charset = "utf-8"
+set charset = "utf-8"
+set rfc2047_parameters = yes
+
+# Avoid falling back to /var/mail/$USER when no local mailbox layout exists yet.
+set folder = "~/.local/share/mail"
+set spoolfile = ""
+set record = "+Sent"
+set postponed = "+Drafts"
+set mbox = "+Archive"
+set trash = "+Trash"
+
+set pager_stop = yes
+set display_filter = ""
+set query_command = ""
+set auto_subscribe = yes
+set mail_check_stats
+set sort = threads
+set strict_threads = yes
+
+set pager_index_lines = 12
+set pager_context = 3
+set menu_scroll = yes
+set tilde = yes
+set markers = no
+
+color normal white black
+color status black yellow
+color indicator black cyan
+color tree cyan black
+color error brightred black
+color message brightred black
+color hdrdefault cyan black
+color quoted yellow black
+color signature green black
+color attachment magenta black
+color search black yellow
+color tilde brightblack black
+color index white black ~F
+
+bind pager j next-line
+bind pager k previous-line
+bind attach,index,pager \CD next-page
+bind attach,index,pager \CU previous-page
+bind pager g top
+bind pager G bottom
+bind attach,index g noop
+bind attach,index gg first-entry
+bind attach,index G last-entry
+bind pager,index N search-opposite
+bind index,pager \Ci sidebar-prev
+bind index,pager \Cu sidebar-next
+macro index,pager \Co "<sidebar-open>" "Open the highlighted mailbox on the sidebar"
+
+bind editor <space> noop
+bind editor <Tab> complete-query
+bind editor <backspace> backspace
+bind editor <delete> delete-char
+
+bind index,pager D delete-message
+bind pager,index R group-chat-reply
+bind index,pager <esc>D purge-message
+bind index,pager M save-message
+
+set wait_key = no
+
+source ~/.local/share/mutt/private.rc
+
+folder-hook $trash 'set read_inc=1000'
+folder-hook $mbox 'set read_inc=1000'
+
+# vim:ft=muttrc
