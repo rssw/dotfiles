@@ -56,9 +56,9 @@ BITWARDEN_SERVER_URL="https://rssw.co.za/bitwarden/"
 # Start with a conservative portable subset. Local/private or highly
 # desktop-specific config can be linked manually until those layers are split
 # more clearly.
-CONFIG_ENTRIES="direnv gh git htop lf mpv nix-init nixpkgs nvim octave pip pistol pulse ranger rtv stig tox vifm vimfx"
+CONFIG_ENTRIES="direnv gh git htop lf nvim pip"
 
-ROOT_LINK_ENTRIES=".bashrc .bin .config .infokey .inputrc .p10k.zsh .pam_environment .shell .terminfo .tmux .tmux.conf .vim .vimrc .zlogin .zsh .zshenv .zshrc bin"
+ROOT_LINK_ENTRIES=".bashrc .bin .config .infokey .inputrc .muttrc .p10k.zsh .pam_environment .shell .terminfo .tmux .tmux.conf .vim .vimrc .zlogin .zsh .zshenv .zshrc bin"
 
 # Tracked but intentionally excluded from automatic linking for now:
 # - beets: local plugin paths and private include
@@ -348,6 +348,14 @@ ensure_dir() {
   run mkdir -p "$target_dir"
 }
 
+ensure_maildir() {
+  maildir_root=$1
+  ensure_dir "$maildir_root"
+  ensure_dir "$maildir_root/cur"
+  ensure_dir "$maildir_root/new"
+  ensure_dir "$maildir_root/tmp"
+}
+
 install_template_if_missing() {
   template_source_path=$1
   template_target_path=$2
@@ -508,6 +516,11 @@ prepare_local_state() {
   ensure_dir "$HOME_DIR/.local/share"
   ensure_dir "$HOME_DIR/.local/share/fzf"
   ensure_dir "$HOME_DIR/.local/share/git"
+  ensure_maildir "$HOME_DIR/.local/share/mail/INBOX"
+  ensure_maildir "$HOME_DIR/.local/share/mail/Sent"
+  ensure_maildir "$HOME_DIR/.local/share/mail/Drafts"
+  ensure_maildir "$HOME_DIR/.local/share/mail/Archive"
+  ensure_maildir "$HOME_DIR/.local/share/mail/Trash"
   ensure_dir "$HOME_DIR/.local/share/mutt"
   ensure_dir "$HOME_DIR/.local/share/mailutils"
   ensure_dir "$HOME_DIR/.local/share/nvim"

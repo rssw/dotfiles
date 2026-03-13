@@ -45,6 +45,7 @@ printf 'Post-install checklist\n\n'
 
 printf 'Local config files\n'
 check_file "$HOME_DIR/.local/share/git/config" "Git local identity"
+check_file "$HOME_DIR/.muttrc" "mutt/neomutt base config"
 check_file "$HOME_DIR/.config/msmtp/config" "msmtp mail transport config"
 check_file "$HOME_DIR/.local/share/mutt/private.rc" "mutt/neomutt local mail config"
 check_file "$HOME_DIR/.local/share/mailutils/rssw.env" "mail-rssw local env file (if used)"

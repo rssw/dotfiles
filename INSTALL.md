@@ -191,20 +191,8 @@ The bootstrap currently auto-links these `~/.config` entries:
 - `git`
 - `htop`
 - `lf`
-- `mpv`
-- `nix-init`
-- `nixpkgs`
 - `nvim`
-- `octave`
 - `pip`
-- `pistol`
-- `pulse`
-- `ranger`
-- `rtv`
-- `stig`
-- `tox`
-- `vifm`
-- `vimfx`
 
 Tracked config that is not part of the current install surface has been moved
 under `/.archive/` instead of staying mixed into the active deployment tree.
@@ -218,7 +206,7 @@ local. The repo tracks `/.config/gh/config.yml` for defaults and ships
 The bootstrap currently links these root-level entries into `HOME`:
 
 - shell startup and shared shell layers: `.bashrc`, `.shell`, `.zlogin`, `.zsh`, `.zshenv`, `.zshrc`
-- editor and terminal workflow: `.config`, `.tmux`, `.tmux.conf`, `.vim`, `.vimrc`, `.p10k.zsh`, `.terminfo`
+- editor and terminal workflow: `.config`, `.tmux`, `.tmux.conf`, `.vim`, `.vimrc`, `.p10k.zsh`, `.terminfo`, `.muttrc`
 - supporting data and helpers: `.bin`, `bin` (installed as `~/bin/shared`), `.infokey`, `.inputrc`, `.pam_environment`
 
 Why these remain in the deployment target:
@@ -236,6 +224,9 @@ Why these remain in the deployment target:
 - `.inputrc`
   - readline defaults and vi-style history/search bindings
   - affects many shell-adjacent tools consistently
+- `.muttrc`
+  - portable base mutt/neomutt behavior plus a source line for local identity in `~/.local/share/mutt/private.rc`
+  - avoids fallback to `/var/mail/$USER` and provides a readable baseline mail UI
 - `.terminfo`
   - local terminal capability entries used by terminal/tmux/editor workflows
   - retained because terminal compatibility is part of the target environment
@@ -259,6 +250,22 @@ footprint and have been archived under `/.archive/`:
 Additional non-install-surface config has also been archived there, including
 desktop autostart entries, SSH host config, older desktop app configs, and
 service-specific integrations that are not part of `bootstrap.sh` today.
+
+Recently archived from the managed surface because they are too niche for the
+standard environment guarantee:
+
+- `octave`
+- `mpv`
+- `nix-init`
+- `nixpkgs`
+- `pistol`
+- `pulse`
+- `ranger`
+- `rtv`
+- `stig`
+- `tox`
+- `vifm`
+- `vimfx`
 
 ## Local templates
 
@@ -296,6 +303,7 @@ The current intended split is:
   - interactive mail client layer for reading/composing mail manually
   - should use `msmtp` as its sendmail path where possible
   - is not the primary transport abstraction for scripts
+  - the tracked `.muttrc` now supplies a base UI, local Maildir defaults, and a source line for `~/.local/share/mutt/private.rc`
 
 Suggested readiness checks after install:
 

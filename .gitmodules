@@ -16,9 +16,6 @@
 [submodule ".config/direnv/nix"]
 	path = .config/direnv/nix
 	url = git@github.com:nix-community/nix-direnv
-[submodule ".config/ranger/devicons"]
-	path = .config/ranger/devicons
-	url = git@github.com:alexanderjeurissen/ranger_devicons
 [submodule ".config/nvim/pack/filetype/opt/editorconfig/tests/plugin/spec/plugin_tests"]
 	path = .config/nvim/pack/filetype/opt/editorconfig/tests/plugin/spec/plugin_tests
 	url = git@github.com:editorconfig/editorconfig-plugin-tests.git
