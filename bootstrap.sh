@@ -41,7 +41,9 @@ PKG_CORE_EDITOR="zsh-autosuggestions zsh-syntax-highlighting neovim tmux"
 PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
 
 PKG_OPTIONAL_NALA="nala"
-PKG_OPTIONAL_MAIL="mutt msmtp isync"
+PKG_OPTIONAL_MAIL="neomutt msmtp isync notmuch"
+# Alias mutt -> neomutt for compatibility
+run ln -sf "$(command -v neomutt)" "$HOME_DIR/bin/mutt"
 PKG_OPTIONAL_FILE_MANAGER="lf"
 PKG_OPTIONAL_PRODUCTIVITY="taskwarrior"
 PKG_OPTIONAL_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
