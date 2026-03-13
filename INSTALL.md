@@ -34,6 +34,26 @@ Every bootstrap deployment guarantees this standard set:
 The default full profile adds:
 
 - **Package QoL**: nala
+- **Mail**: mutt, msmtp, isync
+- **File manager**: lf
+- **Productivity**: taskwarrior
+- **Secret manager CLI**: Bitwarden CLI (Vaultwarden-compatible)
+- **LSP defaults**: bashls, yamlls, texlab, jedi, html-ls, cssls, typescript-ls
+- **Extra shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
+
+## Guaranteed baseline environment
+
+Every bootstrap deployment guarantees this standard set:
+
+- **Shell/core CLI**: zsh, bash, git, less, curl
+- **Prompt/fonts**: fontconfig, MesloLGS NF, fonts-firacode, fonts-jetbrains-mono
+- **Navigation/search**: direnv, fzf, ripgrep, fd-find, jq, pv, p7zip-full, unzip
+- **Editor/terminal**: zsh-autosuggestions, zsh-syntax-highlighting, neovim, tmux
+- **System/storage**: cifs-utils, exfatprogs, nfs-common, fastfetch
+
+The default full profile adds:
+
+- **Package QoL**: nala
 - **Mail**: mutt, msmtp
 - **File manager**: lf
 - **Productivity**: taskwarrior
