@@ -20,6 +20,9 @@ if-shell '[[ $TERM =~ "rxvt" ]]' 'set -g -a terminal-overrides '"'"',*:Ss=\E[%p1
 # As explaind here: https://unix.stackexchange.com/a/383044/135796
 set -g focus-events on
 
+# Enable mouse support for scrolling within tmux
+set -g mouse on
+
 set-option -g update-environment "DIRENV_DIFF DIRENV_DIR DIRENV_WATCHES"
 set-environment -gu DIRENV_DIFF
 set-environment -gu DIRENV_DIR

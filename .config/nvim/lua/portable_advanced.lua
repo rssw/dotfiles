@@ -22,7 +22,7 @@ function M.attach_dap_repl()
 end
 
 local function buf_is_big(bufnr)
-  local max_filesize = 100 * 1024
+  local max_filesize = 1024 * 1024  -- 1MB threshold, aligned with init.vim
   local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
   return ok and stats and stats.size > max_filesize or false
 end
@@ -382,12 +382,17 @@ local function setup_colorizer()
 end
 
 function M.setup()
-  setup_dap()
-  setup_cmp_and_lsp()
-  setup_fzf()
-  setup_treesitter()
-  setup_lualine()
-  setup_colorizer()
+  local ok, err = pcall(function()
+    setup_dap()
+    setup_cmp_and_lsp()
+    setup_fzf()
+    setup_treesitter()
+    setup_lualine()
+    setup_colorizer()
+  end)
+  if not ok then
+    vim.notify('portable_advanced.lua setup error: ' .. tostring(err), vim.log.levels.WARN)
+  end
 end
 
 return M
