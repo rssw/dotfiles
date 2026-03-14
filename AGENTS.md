@@ -1,4 +1,18 @@
 # AGENTS.md - Dotfiles Repository Guidelines
+#
+# DONE:
+# - bootstrap --verify
+# - shell modularized (.zsh/rc/*)
+# - tmux modularized (.tmux/bindings/*)
+# - Neovim LSP defaults + lsp-install
+# - managed surface pruned
+# - Bitwarden/secret-mirror
+# - mutt base + mbsync hooks
+#
+# PENDING:
+# - bootstrap package docs
+# - LSP optional script
+# - mail inbox sync full docs
 
 This is a **dotfiles repository** containing personal configuration files for various tools (Zsh, Neovim, Tmux, Bash, etc.). It is not a traditional software project.
 

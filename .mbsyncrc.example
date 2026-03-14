@@ -9,7 +9,7 @@
 # IMAPStore remote
 # Host imap.example.com
 # User your.email@example.com
-# PassCmd ~/bin/shared/secret-read imap-password
+# PassCmd " ~/bin/shared/secret-read mail-password"
 # SSLType IMAPS
 #
 # MaildirStore local
@@ -17,7 +17,7 @@
 # Inbox ~/.local/share/mail/INBOX
 #
 # Channel inbox
-# Master :remote:
-# Slave :local:
+# Far :remote:
+# Near :local:
 # Create Both
 # SyncState *

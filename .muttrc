@@ -73,6 +73,13 @@ bind index,pager M save-message
 
 set wait_key = no
 
+# IMAP/mailbox sync hooks (requires isync/mbsync).
+startup-hook 'push "<shell-escape>~/bin/shared/mail-sync.sh<enter>"'
+timeout-hook 'push "<shell-escape>~/bin/shared/mail-sync.sh<enter>"'
+shutdown-hook 'push "<shell-escape>~/bin/shared/mail-sync.sh<enter>"'
+folder-hook . 'push "<shell-escape>~/bin/shared/mail-sync.sh<enter>"'
+bind index G imap-fetch-mail
+
 source ~/.local/share/mutt/private.rc
 
 folder-hook $trash 'set read_inc=1000'
