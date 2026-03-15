@@ -5,3 +5,10 @@
 #
 # Example:
 # smtp-password 00000000-0000-0000-0000-000000000000
+# Local secret mirror manifest.
+#
+# Copy is seeded to: ~/.local/share/secret-mirror/items
+# Format: <local-name> <bitwarden-item-id>
+#
+# Example:
+# mail-password 0f026cb5-c8cc-4ee9-8e66-53e7444f6bfe

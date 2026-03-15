@@ -75,12 +75,12 @@ set wait_key = no
 
 # IMAP/mailbox sync hooks (requires isync/mbsync).
 # These hooks are neomutt-specific and will cause errors in plain mutt.
-# Comment them out if using mutt instead of neomutt.
-startup-hook 'push "<shell-escape>~/bin/shared/mail-sync<enter>"'
-timeout-hook 'push "<shell-escape>~/bin/shared/mail-sync<enter>"'
-shutdown-hook 'push "<shell-escape>~/bin/shared/mail-sync<enter>"'
-folder-hook . 'push "<shell-escape>~/bin/shared/mail-sync<enter>"'
-bind index G imap-fetch-mail
+# Uncomment them only if using neomutt:
+# startup-hook 'push "<shell-escape>~/bin/shared/mail-sync<enter>"'
+# timeout-hook 'push "<shell-escape>~/bin/shared/mail-sync<enter>"'
+# shutdown-hook 'push "<shell-escape>~/bin/shared/mail-sync<enter>"'
+# folder-hook . 'push "<shell-escape>~/bin/shared/mail-sync<enter>"'
+# bind index G imap-fetch-mail
 
 source ~/.local/share/mutt/private.rc
 

@@ -1029,7 +1029,6 @@ create_mutt_alias() {
 }
 
 ensure_default_shell() {
-  [ "$DRY_RUN" -eq 0 ] || return 0
   [ -t 0 ] && [ -t 1 ] || return 0
   command -v zsh >/dev/null 2>&1 || return 0
   command -v getent >/dev/null 2>&1 || return 0
@@ -1042,7 +1041,11 @@ ensure_default_shell() {
   fi
 
   log "Setting default login shell to zsh"
-  run sudo chsh -s "$zsh_path" "$USER"
+  if [ "$DRY_RUN" -eq 0 ]; then
+    sudo chsh -s "$zsh_path" "$USER"
+  else
+    log "+ sudo chsh -s $zsh_path $USER"
+  fi
 }
 
 link_config() {

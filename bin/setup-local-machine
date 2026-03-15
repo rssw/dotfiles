@@ -65,6 +65,10 @@ write_git_config() {
   } > "$HOME_DIR/.local/share/git/config"
 
   printf 'Wrote %s\n' "$HOME_DIR/.local/share/git/config"
+  
+  # Export for use in later prompts
+  SETUP_GIT_EMAIL="$git_email"
+  SETUP_GIT_NAME="$git_name"
 }
 
 write_msmtp_config() {
@@ -72,9 +76,9 @@ write_msmtp_config() {
   ensure_dir "$HOME_DIR/.local/share/mailutils"
   smtp_host=$(prompt_required "SMTP host")
   smtp_port=$(prompt_default "SMTP port" "587")
-  smtp_from=$(prompt_required "SMTP from address")
+  smtp_from=$(prompt_default "SMTP from address" "${SETUP_GIT_EMAIL:-}")
   smtp_user=$(prompt_default "SMTP username" "$smtp_from")
-  smtp_secret_cmd=$(prompt_required "SMTP passwordeval / secret lookup command (example: ~/bin/shared/secret-read smtp-password)")
+  smtp_secret_cmd=$(prompt_default "SMTP passwordeval / secret lookup command" "~/bin/shared/secret-read mail-password")
 
   {
     printf 'defaults\n'
@@ -97,8 +101,8 @@ write_msmtp_config() {
 
 write_mutt_config() {
   ensure_dir "$HOME_DIR/.local/share/mutt"
-  realname=$(prompt_required "Mutt/neomutt real name")
-  from_addr=$(prompt_required "Mutt/neomutt from address")
+  realname=$(prompt_default "Mutt/neomutt real name" "${SETUP_GIT_NAME:-}")
+  from_addr=$(prompt_default "Mutt/neomutt from address" "${SETUP_GIT_EMAIL:-}")
 
   {
     printf 'set sendmail = "/usr/bin/msmtp"\n'

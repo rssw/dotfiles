@@ -33,6 +33,10 @@ bind-key -T copy-mode-vi PageDown send-keys -X halfpage-down
 bind-key -T copy-mode PageUp send-keys -X halfpage-up
 bind-key -T copy-mode PageDown send-keys -X halfpage-down
 
+# PageUp enters copy mode from normal mode, but PageDown does nothing
+# to avoid accidentally switching modes when already at bottom
+bind-key -T root PageUp copy-mode -e \; send-keys -X halfpage-up
+
 set-option -g update-environment "DIRENV_DIFF DIRENV_DIR DIRENV_WATCHES"
 set-environment -gu DIRENV_DIFF
 set-environment -gu DIRENV_DIR
