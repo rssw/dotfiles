@@ -1,5 +1,6 @@
 .zkbd
 .local/share/mailutils/rssw.env
+.local/share/secret-mirror/secrets/
 opencode-session.log
 .aider*
 .config/nvim/init.vim.bak
