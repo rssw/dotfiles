@@ -52,33 +52,41 @@ bw_email_default=${BW_EMAIL:-$(status_field userEmail)}
 
 login_raw() {
 	login_email=$1
+	
+	# Allow interactive prompts to display (don't redirect stderr during login)
 	if [ -n "$login_email" ]; then
-		if token=$(bw login "$login_email" --raw 2>/tmp/bw-session-login.err); then
-			printf '%s\n' "$token"
-			return 0
+		if token=$(bw login "$login_email" --raw 2>&1); then
+			# Check if we got a token (not an error message)
+			if echo "$token" | grep -q "already logged in"; then
+				# Already logged in, need to logout first
+				bw logout >/dev/null 2>&1 || true
+				token=$(bw login "$login_email" --raw)
+			elif echo "$token" | grep -qE "^[A-Za-z0-9+/=]+$"; then
+				# Valid token format
+				printf '%s\n' "$token"
+				return 0
+			else
+				# Error message
+				printf '%s\n' "$token" >&2
+				return 1
+			fi
 		fi
 	else
-		if token=$(bw login --raw 2>/tmp/bw-session-login.err); then
-			printf '%s\n' "$token"
-			return 0
+		if token=$(bw login --raw 2>&1); then
+			if echo "$token" | grep -q "already logged in"; then
+				bw logout >/dev/null 2>&1 || true
+				token=$(bw login --raw)
+			elif echo "$token" | grep -qE "^[A-Za-z0-9+/=]+$"; then
+				printf '%s\n' "$token"
+				return 0
+			else
+				printf '%s\n' "$token" >&2
+				return 1
+			fi
 		fi
 	fi
-
-	if grep -q 'already logged in' /tmp/bw-session-login.err 2>/dev/null; then
-		bw logout >/dev/null 2>&1 || true
-		if [ -n "$login_email" ]; then
-			token=$(bw login "$login_email" --raw)
-		else
-			token=$(bw login --raw)
-		fi
-		printf '%s\n' "$token"
-		rm -f /tmp/bw-session-login.err
-		return 0
-	fi
-
-	cat /tmp/bw-session-login.err >&2
-	rm -f /tmp/bw-session-login.err
-	return 1
+	
+	printf '%s\n' "$token"
 }
 
 cmd=${1:-unlock}
@@ -91,13 +99,40 @@ case "$cmd" in
 		save_session "$token"
 		;;
 	unlock)
-		if [ -n "$bw_email_default" ]; then
-			printf 'Requesting Bitwarden login session for %s\n' "$bw_email_default" >&2
-			token=$(login_raw "$bw_email_default")
-		else
-			printf 'Requesting Bitwarden login session\n' >&2
-			token=$(login_raw "")
-		fi
+		current_status=$(status_field status)
+		
+		case "$current_status" in
+			locked)
+				# Already logged in, just need to unlock
+				printf 'Unlocking Bitwarden vault (enter master password)\n' >&2
+				token=$(bw unlock --raw)
+				;;
+			unauthenticated)
+				# Need to login first
+				if [ -n "$bw_email_default" ]; then
+					printf 'Logging in to Bitwarden as %s\n' "$bw_email_default" >&2
+					token=$(login_raw "$bw_email_default")
+				else
+					printf 'Logging in to Bitwarden (you will be prompted for email and password)\n' >&2
+					token=$(login_raw "")
+				fi
+				;;
+			unlocked)
+				# Already unlocked, just update the session file
+				printf 'Already unlocked\n' >&2
+				if [ -n "${BW_SESSION:-}" ]; then
+					token="$BW_SESSION"
+				else
+					printf 'Warning: vault is unlocked but BW_SESSION not set. Run bw-session logout and try again.\n' >&2
+					exit 1
+				fi
+				;;
+			*)
+				printf 'Unknown status: %s\n' "$current_status" >&2
+				exit 1
+				;;
+		esac
+		
 		save_session "$token"
 		printf '\nTo use in current shell, run: source %s\n' "$session_file"
 		printf 'Or start a new shell (session auto-loads on startup)\n'
