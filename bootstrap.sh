@@ -84,6 +84,143 @@ PKG_CORE_EDITOR="zsh-autosuggestions zsh-syntax-highlighting neovim tmux"
 PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
 
 PKG_OPTIONAL_NALA="nala"
+#!/bin/bash
+
+# Portable bootstrap for this dotfiles repo.
+#
+# This script currently favors safe, non-destructive setup over complete
+# coverage. It installs packages, initializes submodules, and links only the
+# config paths that are already classified as portable enough for reuse.
+#
+# Common edits:
+# - package groups: edit the capability-based package variables below
+# - portable config coverage: edit `CONFIG_ENTRIES`
+# - root-level links: edit the list in `link_root_entries`
+# - machine/private setup: keep it out of this script until it is split cleanly
+
+set -eu
+
+DOTFILES_DIR=${DOTFILES_DIR:-$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)}
+HOME_DIR=${HOME:?HOME must be set}
+
+DRY_RUN=0
+INSTALL_PACKAGES=1
+INIT_SUBMODULES=1
+LINK_CONFIG=1
+VERIFY_ONLY=0
+MODE=full
+CONFLICT_MODE=skip
+
+WITH_NALA=1
+WITH_MAIL=1
+WITH_LF=1
+WITH_TASKWARRIOR=1
+WITH_EXTRA_SHELL=1
+WITH_BITWARDEN=1
+WITH_LSP_DEFAULT=1
+FASTFETCH_SOURCE_ADDED=0
+
+PKG_CORE_SHELL="zsh bash git less curl"
+PKG_CORE_PROMPT="fontconfig fonts-firacode fonts-jetbrains-mono"
+PKG_CORE_NAVIGATION="direnv fzf ripgrep fd-find jq pv p7zip-full unzip"
+PKG_CORE_EDITOR="zsh-autosuggestions zsh-syntax-highlighting neovim tmux"
+PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
+
+PKG_OPTIONAL_NALA="nala"
+#!/bin/bash
+
+# Portable bootstrap for this dotfiles repo.
+#
+# This script currently favors safe, non-destructive setup over complete
+# coverage. It installs packages, initializes submodules, and links only the
+# config paths that are already classified as portable enough for reuse.
+#
+# Common edits:
+# - package groups: edit the capability-based package variables below
+# - portable config coverage: edit `CONFIG_ENTRIES`
+# - root-level links: edit the list in `link_root_entries`
+# - machine/private setup: keep it out of this script until it is split cleanly
+
+set -eu
+
+DOTFILES_DIR=${DOTFILES_DIR:-$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)}
+HOME_DIR=${HOME:?HOME must be set}
+
+DRY_RUN=0
+INSTALL_PACKAGES=1
+INIT_SUBMODULES=1
+LINK_CONFIG=1
+VERIFY_ONLY=0
+MODE=full
+CONFLICT_MODE=skip
+
+WITH_NALA=1
+WITH_MAIL=1
+WITH_LF=1
+WITH_TASKWARRIOR=1
+WITH_EXTRA_SHELL=1
+WITH_BITWARDEN=1
+WITH_LSP_DEFAULT=1
+FASTFETCH_SOURCE_ADDED=0
+
+PKG_CORE_SHELL="zsh bash git less curl"
+PKG_CORE_PROMPT="fontconfig fonts-firacode fonts-jetbrains-mono"
+PKG_CORE_NAVIGATION="direnv fzf ripgrep fd-find jq pv p7zip-full unzip"
+PKG_CORE_EDITOR="zsh-autosuggestions zsh-syntax-highlighting neovim tmux"
+PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
+
+PKG_OPTIONAL_NALA="nala"
+PKG_OPTIONAL_MAIL="mutt msmtp isync notmuch"
+# Alias mutt -> neomutt for compatibility
+if command -v neomutt >/dev/null 2>&1; then
+  run ln -sf "$(command -v neomutt)" "$HOME_DIR/bin/mutt"
+fi
+PKG_OPTIONAL_FILE_MANAGER="lf"
+PKG_OPTIONAL_PRODUCTIVITY="taskwarrior"
+PKG_OPTIONAL_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
+#!/bin/bash
+
+# Portable bootstrap for this dotfiles repo.
+#
+# This script currently favors safe, non-destructive setup over complete
+# coverage. It installs packages, initializes submodules, and links only the
+# config paths that are already classified as portable enough for reuse.
+#
+# Common edits:
+# - package groups: edit the capability-based package variables below
+# - portable config coverage: edit `CONFIG_ENTRIES`
+# - root-level links: edit the list in `link_root_entries`
+# - machine/private setup: keep it out of this script until it is split cleanly
+
+set -eu
+
+DOTFILES_DIR=${DOTFILES_DIR:-$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)}
+HOME_DIR=${HOME:?HOME must be set}
+
+DRY_RUN=0
+INSTALL_PACKAGES=1
+INIT_SUBMODULES=1
+LINK_CONFIG=1
+VERIFY_ONLY=0
+MODE=full
+CONFLICT_MODE=skip
+
+WITH_NALA=1
+WITH_MAIL=1
+WITH_LF=1
+WITH_TASKWARRIOR=1
+WITH_EXTRA_SHELL=1
+WITH_BITWARDEN=1
+WITH_LSP_DEFAULT=1
+FASTFETCH_SOURCE_ADDED=0
+
+PKG_CORE_SHELL="zsh bash git less curl"
+PKG_CORE_PROMPT="fontconfig fonts-firacode fonts-jetbrains-mono"
+PKG_CORE_NAVIGATION="direnv fzf ripgrep fd-find jq pv p7zip-full unzip"
+PKG_CORE_EDITOR="zsh-autosuggestions zsh-syntax-highlighting neovim tmux"
+PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
+
+PKG_OPTIONAL_NALA="nala"
 PKG_OPTIONAL_MAIL="mutt msmtp isync notmuch"
 PKG_OPTIONAL_FILE_MANAGER="lf"
 PKG_OPTIONAL_PRODUCTIVITY="taskwarrior"
@@ -116,6 +253,396 @@ ROOT_LINK_ENTRIES=".bashrc .bin .config .infokey .inputrc .muttrc .p10k.zsh .pam
 
 log() {
   printf '%s\n' "$*"
+}
+
+warn() {
+  printf 'warning: %s\n' "$*" >&2
+}
+
+run() {
+  log "+ $*"
+  if [ "$DRY_RUN" -eq 0 ]; then
+    "$@"
+  fi
+}
+
+run_in_home() {
+  if [ "$DRY_RUN" -eq 0 ]; then
+    HOME=$HOME_DIR "$@"
+    return 0
+  fi
+
+  log "+ HOME=$HOME_DIR $*"
+}
+
+usage() {
+  cat <<'EOF'
+Usage: ./bootstrap.sh [options]
+
+Default behavior is a full install for Debian/Ubuntu-family systems:
+- install required packages and selected optional packages
+- initialize git submodules
+- link repo-managed config into HOME
+- prepare local state directories
+
+Capability groups:
+- core shell: zsh, bash, git, less, curl
+- prompt/fonts: fontconfig plus bundled prompt fonts and apt font packages
+- navigation/search: direnv, fzf, ripgrep, fd, jq, pv, unzip/7zip
+- editor/terminal: zsh plugins, Neovim, tmux
+- system/storage: cifs, exfat, nfs, fastfetch
+
+The current default full profile also includes `nala`, mail tooling (`mutt` and
+`msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
+
+Options:
+  --full                Enable the default full profile
+  --minimal             Install only required packages and core links
+  --with-nala           Include nala
+  --without-nala        Exclude nala
+  --with-mutt           Include mutt
+  --without-mutt        Exclude mutt
+  --with-lf             Include lf
+  --without-lf          Exclude lf
+  --with-taskwarrior    Include taskwarrior
+  --without-taskwarrior Exclude taskwarrior
+  --with-bitwarden      Include Bitwarden CLI
+  --without-bitwarden   Exclude Bitwarden CLI
+  --no-mail             Exclude mail-related optional packages
+  --no-extra-shell      Exclude extra shell integrations packages
+  --backup-existing     Backup conflicting existing paths before installing
+  --no-packages         Skip package installation
+  --no-submodules       Skip git submodule initialization
+  --no-link             Skip symlink creation
+  --verify              Check deployed managed paths against the selected profile
+  --dry-run             Print actions without making changes
+  --help                Show this help text
+EOF
+}
+
+append_packages() {
+  package_list=$1
+  shift
+
+  for package_name in "$@"; do
+    case " $package_list " in
+      *" $package_name "*) ;;
+      *) package_list="$package_list $package_name" ;;
+    esac
+  done
+
+  printf '%s\n' "$package_list"
+}
+
+package_is_selected() {
+  package_name=$1
+  package_list=$2
+
+  case " $package_list " in
+    *" $package_name "*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+package_is_available() {
+  package_name=$1
+
+  if [ "$package_name" = "fastfetch" ] && [ "$FASTFETCH_SOURCE_ADDED" -eq 1 ]; then
+    return 0
+  fi
+
+  apt-cache show "$package_name" >/dev/null 2>&1
+}
+
+ensure_fastfetch_repo() {
+  package_list=$1
+
+  if ! package_is_selected fastfetch "$package_list"; then
+    return 0
+  fi
+
+  if package_is_available fastfetch; then
+    return 0
+  fi
+
+  log "fastfetch is not available in the current apt sources; adding $FASTFETCH_PPA"
+
+  if ! command -v add-apt-repository >/dev/null 2>&1; then
+    run sudo apt-get install -y software-properties-common
+  fi
+
+  run sudo add-apt-repository -y "$FASTFETCH_PPA"
+  run sudo apt-get update
+  FASTFETCH_SOURCE_ADDED=1
+}
+
+filter_available_packages() {
+  package_list=$1
+  available_packages=""
+
+  for package_name in $package_list
+  do
+    if package_is_available "$package_name"; then
+      available_packages=$(append_packages "$available_packages" "$package_name")
+    else
+      warn "package not available in apt sources, skipping: $package_name"
+    fi
+  done
+
+  printf '%s\n' "$available_packages"
+}
+
+normalize_mode() {
+  if [ "$MODE" = "minimal" ]; then
+    WITH_NALA=0
+    WITH_MAIL=0
+    WITH_LF=0
+    WITH_TASKWARRIOR=0
+    WITH_EXTRA_SHELL=0
+    WITH_BITWARDEN=0
+    WITH_LSP_DEFAULT=0
+  fi
+}
+
+parse_args() {
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --full) MODE=full ;;
+      --minimal) MODE=minimal ;;
+      --with-nala) WITH_NALA=1 ;;
+      --without-nala) WITH_NALA=0 ;;
+      --with-mutt) WITH_MAIL=1 ;;
+      --without-mutt) WITH_MAIL=0 ;;
+      --with-lf) WITH_LF=1 ;;
+      --without-lf) WITH_LF=0 ;;
+      --with-taskwarrior) WITH_TASKWARRIOR=1 ;;
+      --without-taskwarrior) WITH_TASKWARRIOR=0 ;;
+      --with-bitwarden) WITH_BITWARDEN=1 ;;
+      --without-bitwarden) WITH_BITWARDEN=0 ;;
+      --no-mail) WITH_MAIL=0 ;;
+      --no-extra-shell) WITH_EXTRA_SHELL=0 ;;
+      --backup-existing) CONFLICT_MODE=backup ;;
+      --no-packages) INSTALL_PACKAGES=0 ;;
+      --no-submodules) INIT_SUBMODULES=0 ;;
+      --no-link) LINK_CONFIG=0 ;;
+      --verify) VERIFY_ONLY=1 ;;
+      --dry-run) DRY_RUN=1 ;;
+      --help)
+        usage
+        exit 0
+        ;;
+      *)
+        warn "unknown option: $1"
+        usage >&2
+        exit 1
+        ;;
+    esac
+    shift
+  done
+
+  normalize_mode
+
+  if [ "$VERIFY_ONLY" -eq 1 ]; then
+    INSTALL_PACKAGES=0
+    INIT_SUBMODULES=0
+    LINK_CONFIG=0
+    DRY_RUN=0
+  fi
+}
+
+warn() {
+  printf 'warning: %s\n' "$*" >&2
+}
+
+run() {
+  log "+ $*"
+  if [ "$DRY_RUN" -eq 0 ]; then
+    "$@"
+  fi
+}
+
+run_in_home() {
+  if [ "$DRY_RUN" -eq 0 ]; then
+    HOME=$HOME_DIR "$@"
+    return 0
+  fi
+
+  log "+ HOME=$HOME_DIR $*"
+}
+
+usage() {
+  cat <<'EOF'
+Usage: ./bootstrap.sh [options]
+
+Default behavior is a full install for Debian/Ubuntu-family systems:
+- install required packages and selected optional packages
+- initialize git submodules
+- link repo-managed config into HOME
+- prepare local state directories
+
+Capability groups:
+- core shell: zsh, bash, git, less, curl
+- prompt/fonts: fontconfig plus bundled prompt fonts and apt font packages
+- navigation/search: direnv, fzf, ripgrep, fd, jq, pv, unzip/7zip
+- editor/terminal: zsh plugins, Neovim, tmux
+- system/storage: cifs, exfat, nfs, fastfetch
+
+The current default full profile also includes `nala`, mail tooling (`mutt` and
+`msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
+
+Options:
+  --full                Enable the default full profile
+  --minimal             Install only required packages and core links
+  --with-nala           Include nala
+  --without-nala        Exclude nala
+  --with-mutt           Include mutt
+  --without-mutt        Exclude mutt
+  --with-lf             Include lf
+  --without-lf          Exclude lf
+  --with-taskwarrior    Include taskwarrior
+  --without-taskwarrior Exclude taskwarrior
+  --with-bitwarden      Include Bitwarden CLI
+  --without-bitwarden   Exclude Bitwarden CLI
+  --no-mail             Exclude mail-related optional packages
+  --no-extra-shell      Exclude extra shell integrations packages
+  --backup-existing     Backup conflicting existing paths before installing
+  --no-packages         Skip package installation
+  --no-submodules       Skip git submodule initialization
+  --no-link             Skip symlink creation
+  --verify              Check deployed managed paths against the selected profile
+  --dry-run             Print actions without making changes
+  --help                Show this help text
+EOF
+}
+
+append_packages() {
+  package_list=$1
+  shift
+
+  for package_name in "$@"; do
+    case " $package_list " in
+      *" $package_name "*) ;;
+      *) package_list="$package_list $package_name" ;;
+    esac
+  done
+
+  printf '%s\n' "$package_list"
+}
+
+package_is_selected() {
+  package_name=$1
+  package_list=$2
+
+  case " $package_list " in
+    *" $package_name "*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+package_is_available() {
+  package_name=$1
+
+  if [ "$package_name" = "fastfetch" ] && [ "$FASTFETCH_SOURCE_ADDED" -eq 1 ]; then
+    return 0
+  fi
+
+  apt-cache show "$package_name" >/dev/null 2>&1
+}
+
+ensure_fastfetch_repo() {
+  package_list=$1
+
+  if ! package_is_selected fastfetch "$package_list"; then
+    return 0
+  fi
+
+  if package_is_available fastfetch; then
+    return 0
+  fi
+
+  log "fastfetch is not available in the current apt sources; adding $FASTFETCH_PPA"
+
+  if ! command -v add-apt-repository >/dev/null 2>&1; then
+    run sudo apt-get install -y software-properties-common
+  fi
+
+  run sudo add-apt-repository -y "$FASTFETCH_PPA"
+  run sudo apt-get update
+  FASTFETCH_SOURCE_ADDED=1
+}
+
+filter_available_packages() {
+  package_list=$1
+  available_packages=""
+
+  for package_name in $package_list
+  do
+    if package_is_available "$package_name"; then
+      available_packages=$(append_packages "$available_packages" "$package_name")
+    else
+      warn "package not available in apt sources, skipping: $package_name"
+    fi
+  done
+
+  printf '%s\n' "$available_packages"
+}
+
+normalize_mode() {
+  if [ "$MODE" = "minimal" ]; then
+    WITH_NALA=0
+    WITH_MAIL=0
+    WITH_LF=0
+    WITH_TASKWARRIOR=0
+    WITH_EXTRA_SHELL=0
+    WITH_BITWARDEN=0
+    WITH_LSP_DEFAULT=0
+  fi
+}
+
+parse_args() {
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --full) MODE=full ;;
+      --minimal) MODE=minimal ;;
+      --with-nala) WITH_NALA=1 ;;
+      --without-nala) WITH_NALA=0 ;;
+      --with-mutt) WITH_MAIL=1 ;;
+      --without-mutt) WITH_MAIL=0 ;;
+      --with-lf) WITH_LF=1 ;;
+      --without-lf) WITH_LF=0 ;;
+      --with-taskwarrior) WITH_TASKWARRIOR=1 ;;
+      --without-taskwarrior) WITH_TASKWARRIOR=0 ;;
+      --with-bitwarden) WITH_BITWARDEN=1 ;;
+      --without-bitwarden) WITH_BITWARDEN=0 ;;
+      --no-mail) WITH_MAIL=0 ;;
+      --no-extra-shell) WITH_EXTRA_SHELL=0 ;;
+      --backup-existing) CONFLICT_MODE=backup ;;
+      --no-packages) INSTALL_PACKAGES=0 ;;
+      --no-submodules) INIT_SUBMODULES=0 ;;
+      --no-link) LINK_CONFIG=0 ;;
+      --verify) VERIFY_ONLY=1 ;;
+      --dry-run) DRY_RUN=1 ;;
+      --help)
+        usage
+        exit 0
+        ;;
+      *)
+        warn "unknown option: $1"
+        usage >&2
+        exit 1
+        ;;
+    esac
+    shift
+  done
+
+  normalize_mode
+
+  if [ "$VERIFY_ONLY" -eq 1 ]; then
+    INSTALL_PACKAGES=0
+    INIT_SUBMODULES=0
+    LINK_CONFIG=0
+    DRY_RUN=0
+  fi
 }
 
 warn() {
