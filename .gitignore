@@ -2,3 +2,4 @@
 .local/share/mailutils/rssw.env
 opencode-session.log
 .aider*
+.config/nvim/init.vim.bak

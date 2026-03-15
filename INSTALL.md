@@ -38,7 +38,7 @@ The default full profile adds:
 - **File manager**: lf
 - **Productivity**: taskwarrior
 - **Secret manager CLI**: Bitwarden CLI (Vaultwarden-compatible)
-- **LSP defaults**: bashls, yamlls, texlab, jedi, html-ls, cssls, typescript-ls
+- **LSP defaults**: bash-language-server, yaml-language-server, html-ls, css-ls, typescript-language-server, jedi-language-server (via npm/pip)
 - **Extra shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
 
 ## Guaranteed baseline environment
