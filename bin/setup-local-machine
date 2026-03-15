@@ -4,6 +4,10 @@ set -eu
 
 HOME_DIR=${HOME:?HOME must be set}
 
+# Determine dotfiles directory (script is in dotfiles/bin/)
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+DOTFILES=$(cd "$SCRIPT_DIR/.." && pwd)
+
 ensure_dir() {
   [ -d "$1" ] || mkdir -p "$1"
 }
