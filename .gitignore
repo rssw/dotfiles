@@ -3,3 +3,4 @@
 opencode-session.log
 .aider*
 .config/nvim/init.vim.bak
+.config/gh/hosts.yml
