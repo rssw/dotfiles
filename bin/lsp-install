@@ -1,33 +1,80 @@
 #!/bin/sh
 
-# Optional LSP server installer.
-# Usage: lsp-install [server]
+# Optional LSP server installer for language-specific development.
 #
-# Servers:
-# - clangd (apt)
+# The default bootstrap profile installs must-have LSP servers:
+# - bash-language-server (npm)
+# - yaml-language-server (npm)
+# - vscode-html-language-server (npm)
+# - vscode-css-language-server (npm)
+# - typescript-language-server (npm)
 # - jedi-language-server (pip)
-# - rls (rustup)
-# - svls (npm)
-# etc.
+#
+# This script installs additional optional servers for specific languages.
+#
+# Usage: lsp-install [server]
 
 set -eu
 
+if [ "$#" -ne 1 ]; then
+  cat <<'EOF'
+usage: lsp-install <server>
+
+Optional LSP servers:
+  gopls           Go (go install)
+  texlab          LaTeX (manual install from GitHub releases)
+  clangd          C/C++ (apt)
+  rust-analyzer   Rust (rustup)
+  svls            SystemVerilog (npm)
+  lua-language-server  Lua (manual install)
+
+Examples:
+  lsp-install gopls
+  lsp-install clangd
+  lsp-install rust-analyzer
+EOF
+  exit 1
+fi
+
 server=$1
 case "$server" in
+  gopls)
+    if ! command -v go >/dev/null 2>&1; then
+      printf 'go is not installed\n' >&2
+      exit 1
+    fi
+    go install golang.org/x/tools/gopls@latest
+    ;;
   clangd)
     sudo apt-get install -y clangd
     ;;
-  jedi-language-server)
-    pip3 install jedi-language-server
-    ;;
-  rls)
-    rustup component add rls rust-analysis rust-src
+  rust-analyzer)
+    if ! command -v rustup >/dev/null 2>&1; then
+      printf 'rustup is not installed\n' >&2
+      exit 1
+    fi
+    rustup component add rust-analyzer
     ;;
   svls)
+    if ! command -v npm >/dev/null 2>&1; then
+      printf 'npm is not installed\n' >&2
+      exit 1
+    fi
     npm install -g svls
     ;;
+  texlab)
+    printf 'texlab must be installed manually from GitHub releases:\n'
+    printf 'https://github.com/latex-lsp/texlab/releases\n'
+    exit 1
+    ;;
+  lua-language-server)
+    printf 'lua-language-server must be installed manually:\n'
+    printf 'https://github.com/LuaLS/lua-language-server/releases\n'
+    exit 1
+    ;;
   *)
-    printf 'usage: lsp-install [clangd|jedi-language-server|rls|svls|...]\n' >&2
+    printf 'unknown server: %s\n' "$server" >&2
+    printf 'run `lsp-install` without arguments for usage\n' >&2
     exit 1
     ;;
 esac

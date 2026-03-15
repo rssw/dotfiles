@@ -1186,11 +1186,6 @@ install_lsp_servers() {
   if command -v pip3 >/dev/null 2>&1; then
     run_in_home pip3 install jedi-language-server
   fi
-
-  # go-based (must-have for Go)
-  if command -v go >/dev/null 2>&1; then
-    run_in_home go install golang.org/x/tools/gopls@latest
-  fi
 }
 
 create_mutt_alias() {
@@ -1776,6 +1771,7 @@ normalize_mode() {
     WITH_TASKWARRIOR=0
     WITH_EXTRA_SHELL=0
     WITH_BITWARDEN=0
+    WITH_LSP_DEFAULT=0
   fi
 }
 
