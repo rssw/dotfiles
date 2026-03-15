@@ -99,6 +99,8 @@ case "$cmd" in
 			token=$(login_raw "")
 		fi
 		save_session "$token"
+		printf '\nTo use in current shell, run: source %s\n' "$session_file"
+		printf 'Or start a new shell (session auto-loads on startup)\n'
 		;;
 	status)
 		bw status
