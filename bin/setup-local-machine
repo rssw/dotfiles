@@ -123,7 +123,12 @@ write_msmtp_config() {
   smtp_port=$(prompt_default "SMTP port" "${existing_port:-587}")
   smtp_from=$(prompt_default "SMTP from address" "${existing_from:-${SETUP_GIT_EMAIL:-}}")
   smtp_user=$(prompt_default "SMTP username" "${existing_user:-$smtp_from}")
-  smtp_secret_cmd=$(prompt_default "SMTP passwordeval / secret lookup command" "${existing_password_cmd:-~/bin/shared/secret-read mail-password}")
+  smtp_secret_cmd=$(prompt_default "SMTP passwordeval command (or plain password)" "${existing_password_cmd:-~/bin/shared/secret-read mail-password}")
+
+  # Export for use by mbsync config
+  SETUP_SMTP_HOST="$smtp_host"
+  SETUP_SMTP_USER="$smtp_user"
+  SETUP_SMTP_PASS_CMD="$smtp_secret_cmd"
 
   {
     printf 'defaults\n'
@@ -137,7 +142,16 @@ write_msmtp_config() {
     printf '\tfrom %s\n' "$smtp_from"
     printf '\tuser %s\n' "$smtp_user"
     printf '\tauth plain\n'
-    printf '\tpasswordeval %s\n\n' "$smtp_secret_cmd"
+    # Check if it looks like a command (contains / or starts with known commands)
+    case "$smtp_secret_cmd" in
+      */*|secret-read*|bw-pass*)
+        printf '\tpasswordeval %s\n\n' "$smtp_secret_cmd"
+        ;;
+      *)
+        # Plain text password
+        printf '\tpassword %s\n\n' "$smtp_secret_cmd"
+        ;;
+    esac
     printf 'account default : primary\n'
   } > "$HOME_DIR/.config/msmtp/config"
 
@@ -223,19 +237,38 @@ write_mbsync_config() {
     existing_pass_cmd=$(grep '^PassCmd' "$mbsync_config" | head -1 | sed 's/^PassCmd "\(.*\)"/\1/' || true)
   fi
 
-  if [ -n "$existing_host" ]; then
-    imap_host=$(prompt_default "IMAP host" "$existing_host")
+  # Smart defaults from SMTP config if no existing mbsync config
+  default_imap_host="$existing_host"
+  default_imap_user="$existing_user"
+  default_imap_pass="${existing_pass_cmd:-}"
+  
+  if [ -z "$existing_host" ] && [ -n "${SETUP_SMTP_HOST:-}" ]; then
+    # Derive IMAP host from SMTP host (smtp.example.com -> imap.example.com)
+    default_imap_host=$(echo "$SETUP_SMTP_HOST" | sed 's/^smtp\./imap./')
+  fi
+  
+  if [ -z "$existing_user" ] && [ -n "${SETUP_SMTP_USER:-}" ]; then
+    default_imap_user="$SETUP_SMTP_USER"
+  fi
+  
+  if [ -z "$existing_pass_cmd" ] && [ -n "${SETUP_SMTP_PASS_CMD:-}" ]; then
+    # Replace smtp-password with imap-password in the command
+    default_imap_pass=$(echo "$SETUP_SMTP_PASS_CMD" | sed 's/smtp-password/imap-password/; s/mail-password/imap-password/')
+  fi
+
+  if [ -n "$default_imap_host" ]; then
+    imap_host=$(prompt_default "IMAP host" "$default_imap_host")
   else
     imap_host=$(prompt_required "IMAP host")
   fi
   
-  if [ -n "$existing_user" ]; then
-    imap_user=$(prompt_default "IMAP username" "$existing_user")
+  if [ -n "$default_imap_user" ]; then
+    imap_user=$(prompt_default "IMAP username" "$default_imap_user")
   else
     imap_user=$(prompt_required "IMAP username")
   fi
   
-  imap_secret_cmd=$(prompt_default "IMAP passwordeval command" "${existing_pass_cmd:-secret-read imap-password}")
+  imap_secret_cmd=$(prompt_default "IMAP passwordeval command (or plain password)" "${default_imap_pass:-secret-read imap-password}")
 
   {
     printf '# mbsync configuration\n'
@@ -243,7 +276,16 @@ write_mbsync_config() {
     printf 'IMAPAccount primary\n'
     printf 'Host %s\n' "$imap_host"
     printf 'User %s\n' "$imap_user"
-    printf 'PassCmd "%s"\n' "$imap_secret_cmd"
+    # Check if it looks like a command or plain password
+    case "$imap_secret_cmd" in
+      */*|secret-read*|bw-pass*)
+        printf 'PassCmd "%s"\n' "$imap_secret_cmd"
+        ;;
+      *)
+        # Plain text password
+        printf 'Pass %s\n' "$imap_secret_cmd"
+        ;;
+    esac
     printf 'SSLType IMAPS\n'
     printf 'CertificateFile /etc/ssl/certs/ca-certificates.crt\n\n'
     printf 'IMAPStore primary-remote\n'
