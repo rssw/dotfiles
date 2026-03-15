@@ -139,3 +139,6 @@ fi
 
 export MIBS=+ALL
 #snmptranslate -m ALL -IR mtxrWlRTabSignalStrength
+
+# uv
+export PATH="/home/jacques/.local/bin:$PATH"
