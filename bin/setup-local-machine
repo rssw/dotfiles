@@ -186,6 +186,8 @@ write_mutt_config() {
 
 write_notmuch_config() {
   notmuch_config="$HOME_DIR/.notmuch-config"
+  mail_dir="$HOME_DIR/.local/share/mail"
+  hooks_dir="$mail_dir/.notmuch/hooks"
   
   # Read existing config if present
   existing_name=""
@@ -202,25 +204,64 @@ write_notmuch_config() {
   notmuch_email=$(prompt_default "Notmuch primary email" "${existing_email:-${SETUP_GIT_EMAIL:-}}")
   notmuch_other=$(prompt_default "Notmuch other emails (comma-separated, optional)" "${existing_other:-}")
 
-  {
-    printf '[database]\n'
-    printf 'path=%s/.local/share/mail\n\n' "$HOME_DIR"
-    printf '[user]\n'
-    printf 'name=%s\n' "$notmuch_name"
-    printf 'primary_email=%s\n' "$notmuch_email"
+  # Copy tracked config as base, then update [user] section
+  if [ -f "$DOTFILES/.notmuch-config" ]; then
+    cp "$DOTFILES/.notmuch-config" "$notmuch_config"
+    
+    # Update [user] section using sed
+    sed -i "s/^name=.*/name=$notmuch_name/" "$notmuch_config"
+    sed -i "s/^primary_email=.*/primary_email=$notmuch_email/" "$notmuch_config"
     if [ -n "$notmuch_other" ]; then
-      printf 'other_email=%s\n' "$notmuch_other"
+      sed -i "s/^other_email=.*/other_email=$notmuch_other/" "$notmuch_config"
+    else
+      sed -i "s/^other_email=.*/other_email=/" "$notmuch_config"
     fi
-    printf '\n[new]\n'
-    printf 'tags=new\n'
-    printf 'ignore=.mbsync-state\n\n'
-    printf '[search]\n'
-    printf 'exclude_tags=deleted;spam\n\n'
-    printf '[maildir]\n'
-    printf 'synchronize_flags=true\n'
-  } > "$HOME_DIR/.notmuch-config"
+  else
+    # Fallback: generate config if tracked version missing
+    {
+      printf '[database]\n'
+      printf 'path=%s/.local/share/mail\n\n' "$HOME_DIR"
+      printf '[user]\n'
+      printf 'name=%s\n' "$notmuch_name"
+      printf 'primary_email=%s\n' "$notmuch_email"
+      if [ -n "$notmuch_other" ]; then
+        printf 'other_email=%s\n' "$notmuch_other"
+      fi
+      printf '\n[new]\n'
+      printf 'tags=new\n'
+      printf 'ignore=.mbsyncstate\n\n'
+      printf '[search]\n'
+      printf 'exclude_tags=deleted;spam\n\n'
+      printf '[maildir]\n'
+      printf 'synchronize_flags=true\n'
+    } > "$notmuch_config"
+  fi
 
-  printf 'Wrote %s\n' "$HOME_DIR/.notmuch-config"
+  printf 'Wrote %s\n' "$notmuch_config"
+  
+  # Set up notmuch hooks directory
+  mkdir -p "$hooks_dir"
+  
+  # Copy hooks from tracked dotfiles
+  if [ -f "$DOTFILES/.local/share/mail/.notmuch/hooks/pre-new" ]; then
+    cp "$DOTFILES/.local/share/mail/.notmuch/hooks/pre-new" "$hooks_dir/pre-new"
+    chmod +x "$hooks_dir/pre-new"
+    printf 'Installed pre-new hook\n'
+  fi
+  
+  if [ -f "$DOTFILES/.local/share/mail/.notmuch/hooks/post-new" ]; then
+    cp "$DOTFILES/.local/share/mail/.notmuch/hooks/post-new" "$hooks_dir/post-new"
+    chmod +x "$hooks_dir/post-new"
+    printf 'Installed post-new hook\n'
+  fi
+  
+  # Copy and customize tagmail.notmuch
+  if [ -f "$DOTFILES/.local/share/mail/tagmail.notmuch" ]; then
+    cp "$DOTFILES/.local/share/mail/tagmail.notmuch" "$mail_dir/tagmail.notmuch"
+    # Update email address in tagging rules
+    sed -i "s/your\.email@example\.com/$notmuch_email/g" "$mail_dir/tagmail.notmuch"
+    printf 'Installed tagmail.notmuch with your email\n'
+  fi
 }
 
 write_mbsync_config() {

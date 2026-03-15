@@ -1,0 +1,13 @@
+#!/bin/bash
+# Pre-new hook: runs before 'notmuch new' indexes mail
+#
+# This hook:
+# 1. Removes stale 'new' tags from messages still tagged as new
+# 2. Syncs mail from remote IMAP server using mbsync
+
+# Remove the new tag from messages that are still tagged as new
+notmuch tag -new tag:new
+
+# Sync mail messages from IMAP server
+# Using -q (quiet) to reduce output noise
+mbsync -qa 2>&1 | grep -v "^C: " | grep -v "^N: " | grep -v "^Maildir notice" || true

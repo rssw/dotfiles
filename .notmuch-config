@@ -1,0 +1,26 @@
+# ~/.notmuch-config
+#
+# Notmuch mail indexing configuration
+# This is a tracked file - changes here propagate to all installations.
+#
+# On new machine setup, setup-local-machine will:
+# - Update [user] section with your name/email
+# - Keep [database], [new], [search], [maildir] sections as-is
+#
+[database]
+path=~/.local/share/mail
+
+[user]
+name=Your Name
+primary_email=your.email@example.com
+other_email=
+
+[new]
+tags=new
+ignore=.mbsyncstate
+
+[search]
+exclude_tags=deleted;spam
+
+[maildir]
+synchronize_flags=true

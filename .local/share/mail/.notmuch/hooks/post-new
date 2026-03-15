@@ -1,0 +1,13 @@
+#!/bin/bash
+# Post-new hook: runs after 'notmuch new' indexes mail
+#
+# This hook applies custom tags to newly indexed messages
+# using the tagmail.notmuch rules file.
+
+# Check if tagmail.notmuch exists
+if [ -f "$HOME/.local/share/mail/tagmail.notmuch" ]; then
+  notmuch tag --input="$HOME/.local/share/mail/tagmail.notmuch"
+fi
+
+# Optional: Run afew for smart tagging (uncomment if installed)
+# afew -t -n

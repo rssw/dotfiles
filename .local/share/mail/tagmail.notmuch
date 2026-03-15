@@ -1,0 +1,19 @@
+# Notmuch bulk tagging rules
+# Applied by post-new hook after mail is indexed
+#
+# Syntax: +tag or -tag followed by search query
+# Lines starting with # are comments
+
+# Manage special folders - remove unread/new tags
+-unread -new folder:Trash
+-unread -new folder:Spam
+-unread -new folder:Sent
+
+# Tag mail sent from me
++sent from:your.email@example.com and tag:new and not tag:sent
+
+# Tag mail sent specifically to me (not CC or list mail)
++to-me to:your.email@example.com and tag:new and not tag:to-me
+
+# Remove the new tag from all processed messages
+-new tag:new
