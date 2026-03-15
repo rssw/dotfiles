@@ -53,38 +53,42 @@ bw_email_default=${BW_EMAIL:-$(status_field userEmail)}
 login_raw() {
 	login_email=$1
 	
-	# Allow interactive prompts to display (don't redirect stderr during login)
+	# Run bw login with interactive prompts going to terminal (not captured)
+	# We redirect stderr to /dev/tty so prompts display, but capture stdout (the token)
 	if [ -n "$login_email" ]; then
-		if token=$(bw login "$login_email" --raw 2>&1); then
-			# Check if we got a token (not an error message)
-			if echo "$token" | grep -q "already logged in"; then
-				# Already logged in, need to logout first
-				bw logout >/dev/null 2>&1 || true
-				token=$(bw login "$login_email" --raw)
-			elif echo "$token" | grep -qE "^[A-Za-z0-9+/=]+$"; then
-				# Valid token format
-				printf '%s\n' "$token"
-				return 0
-			else
-				# Error message
-				printf '%s\n' "$token" >&2
-				return 1
-			fi
+		# Try login, prompts go to terminal
+		if [ -t 0 ]; then
+			# Interactive terminal available
+			token=$(bw login "$login_email" --raw 2>/dev/tty)
+		else
+			# No terminal, use normal stderr
+			token=$(bw login "$login_email" --raw 2>&2)
 		fi
 	else
-		if token=$(bw login --raw 2>&1); then
-			if echo "$token" | grep -q "already logged in"; then
-				bw logout >/dev/null 2>&1 || true
-				token=$(bw login --raw)
-			elif echo "$token" | grep -qE "^[A-Za-z0-9+/=]+$"; then
-				printf '%s\n' "$token"
-				return 0
-			else
-				printf '%s\n' "$token" >&2
-				return 1
-			fi
+		if [ -t 0 ]; then
+			token=$(bw login --raw 2>/dev/tty)
+		else
+			token=$(bw login --raw 2>&2)
 		fi
 	fi
+	
+	# Check if we got a valid token
+	case "$token" in
+		*"already logged in"*)
+			# Already logged in, logout and retry
+			bw logout >/dev/null 2>&1 || true
+			if [ -n "$login_email" ]; then
+				token=$(bw login "$login_email" --raw 2>/dev/tty)
+			else
+				token=$(bw login --raw 2>/dev/tty)
+			fi
+			;;
+		"")
+			# Empty token means error
+			printf 'Failed to get session token\n' >&2
+			return 1
+			;;
+	esac
 	
 	printf '%s\n' "$token"
 }
@@ -105,7 +109,11 @@ case "$cmd" in
 			locked)
 				# Already logged in, just need to unlock
 				printf 'Unlocking Bitwarden vault (enter master password)\n' >&2
-				token=$(bw unlock --raw)
+				if [ -t 0 ]; then
+					token=$(bw unlock --raw 2>/dev/tty)
+				else
+					token=$(bw unlock --raw)
+				fi
 				;;
 			unauthenticated)
 				# Need to login first
