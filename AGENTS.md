@@ -20,9 +20,15 @@
 - LSP installation clarified in docs
 - aider/OpenRouter integration via secret-mirror
 - dotfiles-help updated with LSP and aider info
+- setup-local-machine: smart IMAP defaults from SMTP config
+- setup-local-machine: plain password support (not just passwordeval)
+- notmuch config tracked in repo (not just .example)
+- notmuch hooks: pre-new (mbsync), post-new (tagging)
+- tagmail.notmuch: bulk tagging automation
 
 **PENDING**:
 - LSP flag refinement (add --with-lsp/--without-lsp flags)
+- User testing of smart IMAP defaults on test platform
 
 ---
 
