@@ -188,6 +188,29 @@ write_mutt_config() {
   printf 'Wrote %s\n' "$HOME_DIR/.local/share/mutt/private.rc"
 }
 
+enable_neomutt_hooks() {
+  # Check if neomutt is installed
+  if ! command -v neomutt >/dev/null 2>&1; then
+    printf 'Neomutt not detected, skipping mail sync hooks\n'
+    return 0
+  fi
+  
+  muttrc="$HOME_DIR/.muttrc"
+  if [ ! -f "$muttrc" ]; then
+    printf 'Warning: .muttrc not found, cannot enable hooks\n'
+    return 0
+  fi
+  
+  # Uncomment the neomutt-specific hooks
+  sed -i 's/^# \(startup-hook\)/\1/' "$muttrc"
+  sed -i 's/^# \(timeout-hook\)/\1/' "$muttrc"
+  sed -i 's/^# \(shutdown-hook\)/\1/' "$muttrc"
+  sed -i 's/^# \(folder-hook \.\)/\1/' "$muttrc"
+  sed -i 's/^# \(bind index G\)/\1/' "$muttrc"
+  
+  printf 'Enabled neomutt mail sync hooks in .muttrc\n'
+}
+
 write_notmuch_config() {
   notmuch_config="$HOME_DIR/.notmuch-config"
   mail_dir="$HOME_DIR/.local/share/mail"
@@ -340,32 +363,32 @@ write_mbsync_config() {
     printf 'Inbox ~/.local/share/mail/INBOX\n'
     printf 'SubFolders Verbatim\n\n'
     printf 'Channel primary-inbox\n'
-    printf 'Master :primary-remote:INBOX\n'
-    printf 'Slave :primary-local:INBOX\n'
+    printf 'Far :primary-remote:INBOX\n'
+    printf 'Near :primary-local:INBOX\n'
     printf 'Create Both\n'
     printf 'Expunge Both\n'
     printf 'SyncState *\n\n'
     printf 'Channel primary-sent\n'
-    printf 'Master :primary-remote:"Sent"\n'
-    printf 'Slave :primary-local:Sent\n'
+    printf 'Far :primary-remote:"Sent"\n'
+    printf 'Near :primary-local:Sent\n'
     printf 'Create Both\n'
     printf 'Expunge Both\n'
     printf 'SyncState *\n\n'
     printf 'Channel primary-drafts\n'
-    printf 'Master :primary-remote:"Drafts"\n'
-    printf 'Slave :primary-local:Drafts\n'
+    printf 'Far :primary-remote:"Drafts"\n'
+    printf 'Near :primary-local:Drafts\n'
     printf 'Create Both\n'
     printf 'Expunge Both\n'
     printf 'SyncState *\n\n'
     printf 'Channel primary-archive\n'
-    printf 'Master :primary-remote:"Archive"\n'
-    printf 'Slave :primary-local:Archive\n'
+    printf 'Far :primary-remote:"Archive"\n'
+    printf 'Near :primary-local:Archive\n'
     printf 'Create Both\n'
     printf 'Expunge Both\n'
     printf 'SyncState *\n\n'
     printf 'Channel primary-trash\n'
-    printf 'Master :primary-remote:"Trash"\n'
-    printf 'Slave :primary-local:Trash\n'
+    printf 'Far :primary-remote:"Trash"\n'
+    printf 'Near :primary-local:Trash\n'
     printf 'Create Both\n'
     printf 'Expunge Both\n'
     printf 'SyncState *\n\n'
@@ -397,6 +420,10 @@ fi
 if [ "$(prompt_yes_no "Configure mbsync for IMAP mail sync" "yes")" = yes ]; then
   printf '\n'
   write_mbsync_config
+  
+  # Enable neomutt hooks if neomutt is installed
+  printf '\n'
+  enable_neomutt_hooks
   
   # Also offer notmuch config if mbsync is configured
   if [ "$(prompt_yes_no "Configure notmuch for mail indexing" "yes")" = yes ]; then
