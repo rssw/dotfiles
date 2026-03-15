@@ -114,6 +114,37 @@ write_mutt_config() {
   printf 'Wrote %s\n' "$HOME_DIR/.local/share/mutt/private.rc"
 }
 
+write_notmuch_config() {
+  if [ -f "$HOME_DIR/.notmuch-config" ]; then
+    printf 'notmuch config already exists at %s\n' "$HOME_DIR/.notmuch-config"
+    return 0
+  fi
+
+  notmuch_name=$(prompt_default "Notmuch user name" "${SETUP_GIT_NAME:-}")
+  notmuch_email=$(prompt_default "Notmuch primary email" "${SETUP_GIT_EMAIL:-}")
+  notmuch_other=$(prompt_default "Notmuch other emails (comma-separated, optional)" "")
+
+  {
+    printf '[database]\n'
+    printf 'path=%s/.local/share/mail\n\n' "$HOME_DIR"
+    printf '[user]\n'
+    printf 'name=%s\n' "$notmuch_name"
+    printf 'primary_email=%s\n' "$notmuch_email"
+    if [ -n "$notmuch_other" ]; then
+      printf 'other_email=%s\n' "$notmuch_other"
+    fi
+    printf '\n[new]\n'
+    printf 'tags=new\n'
+    printf 'ignore=.mbsync-state\n\n'
+    printf '[search]\n'
+    printf 'exclude_tags=deleted;spam\n\n'
+    printf '[maildir]\n'
+    printf 'synchronize_flags=true\n'
+  } > "$HOME_DIR/.notmuch-config"
+
+  printf 'Wrote %s\n' "$HOME_DIR/.notmuch-config"
+}
+
 write_mbsync_config() {
   if [ -f "$HOME_DIR/.mbsyncrc" ]; then
     printf 'mbsync config already exists at %s\n' "$HOME_DIR/.mbsyncrc"
@@ -197,6 +228,12 @@ fi
 if [ "$(prompt_yes_no "Configure mbsync for IMAP mail sync" "yes")" = yes ]; then
   printf '\n'
   write_mbsync_config
+  
+  # Also offer notmuch config if mbsync is configured
+  if [ "$(prompt_yes_no "Configure notmuch for mail indexing" "yes")" = yes ]; then
+    printf '\n'
+    write_notmuch_config
+  fi
 fi
 
 printf '\nNext steps\n'
