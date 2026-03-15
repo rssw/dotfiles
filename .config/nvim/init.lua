@@ -14,6 +14,12 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- {{{1 Terminal colors
+-- Enable true color support
+if vim.fn.has('termguicolors') == 1 then
+  vim.opt.termguicolors = true
+end
+
 -- {{{1 Uncategorized
 -- Make any buffer able to be hidden even if not saved
 vim.opt.hidden = true

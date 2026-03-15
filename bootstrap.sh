@@ -171,10 +171,6 @@ PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
 
 PKG_OPTIONAL_NALA="nala"
 PKG_OPTIONAL_MAIL="mutt msmtp isync notmuch"
-# Alias mutt -> neomutt for compatibility
-if command -v neomutt >/dev/null 2>&1; then
-  run ln -sf "$(command -v neomutt)" "$HOME_DIR/bin/mutt"
-fi
 PKG_OPTIONAL_FILE_MANAGER="lf"
 PKG_OPTIONAL_PRODUCTIVITY="taskwarrior"
 PKG_OPTIONAL_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
@@ -225,7 +221,7 @@ PKG_OPTIONAL_MAIL="mutt msmtp isync notmuch"
 PKG_OPTIONAL_FILE_MANAGER="lf"
 PKG_OPTIONAL_PRODUCTIVITY="taskwarrior"
 PKG_OPTIONAL_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
-PKG_OPTIONAL_LSP_DEFAULT="nodejs npm python3-pip golang-go texlab html-ls cssls typescript-language-server jedi-language-server"
+PKG_OPTIONAL_LSP_DEFAULT="nodejs npm python3-pip golang-go"
 
 
 PKG_REQUIRED_GROUPS="PKG_CORE_SHELL PKG_CORE_PROMPT PKG_CORE_NAVIGATION PKG_CORE_EDITOR PKG_CORE_SYSTEM"
@@ -1117,6 +1113,7 @@ prepare_local_state() {
   install_template_if_missing "$DOTFILES_DIR/.config/git/local.example" "$HOME_DIR/.local/share/git/config"
   ensure_dir "$HOME_DIR/.config/msmtp"
   install_template_if_missing "$DOTFILES_DIR/.config/msmtp/config.example" "$HOME_DIR/.config/msmtp/config"
+  install_template_if_missing "$DOTFILES_DIR/.config/mbsync/config.example" "$HOME_DIR/.mbsyncrc"
   install_template_if_missing "$DOTFILES_DIR/.config/secret-mirror/items.example" "$HOME_DIR/.local/share/secret-mirror/items"
   install_template_if_missing "$DOTFILES_DIR/.archive/.mutt/private.rc.example" "$HOME_DIR/.local/share/mutt/private.rc"
 }
@@ -1180,23 +1177,36 @@ install_lsp_servers() {
   ensure_dir "$HOME_DIR/bin"
   ensure_dir "$HOME_DIR/.local/share/nvim/lsp"
 
-  # npm-based LSP servers
+  # npm-based LSP servers (must-have for web/config work)
   if command -v npm >/dev/null 2>&1; then
     run_in_home npm install -g bash-language-server yaml-language-server vscode-html-language-server vscode-css-language-server typescript-language-server
   fi
 
-  # pip-based
+  # pip-based (must-have for Python)
   if command -v pip3 >/dev/null 2>&1; then
     run_in_home pip3 install jedi-language-server
   fi
 
-  # go-based
+  # go-based (must-have for Go)
   if command -v go >/dev/null 2>&1; then
     run_in_home go install golang.org/x/tools/gopls@latest
   fi
+}
 
-  # apt-based
-  run sudo apt-get install -y texlab
+create_mutt_alias() {
+  [ "$WITH_MAIL" -eq 1 ] || return 0
+  [ "$INSTALL_PACKAGES" -eq 1 ] || return 0
+  command -v neomutt >/dev/null 2>&1 || return 0
+
+  ensure_dir "$HOME_DIR/bin"
+  mutt_link=$HOME_DIR/bin/mutt
+
+  if [ -e "$mutt_link" ] && [ ! -L "$mutt_link" ]; then
+    return 0
+  fi
+
+  neomutt_path=$(command -v neomutt)
+  run ln -sf "$neomutt_path" "$mutt_link"
 }
 
 ensure_default_shell() {
@@ -1244,6 +1254,7 @@ main() {
   install_bitwarden_cli
   install_lsp_servers
   install_prompt_fonts
+  create_mutt_alias
   ensure_default_shell
 
   log "Bootstrap complete"

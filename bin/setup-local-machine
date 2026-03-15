@@ -110,6 +110,73 @@ write_mutt_config() {
   printf 'Wrote %s\n' "$HOME_DIR/.local/share/mutt/private.rc"
 }
 
+write_mbsync_config() {
+  if [ -f "$HOME_DIR/.mbsyncrc" ]; then
+    printf 'mbsync config already exists at %s\n' "$HOME_DIR/.mbsyncrc"
+    return 0
+  fi
+
+  imap_host=$(prompt_required "IMAP host")
+  imap_user=$(prompt_required "IMAP username")
+  imap_secret_cmd=$(prompt_default "IMAP passwordeval command" "secret-read imap-password")
+
+  {
+    printf '# mbsync configuration\n'
+    printf '# Standard folder mapping to ~/.local/share/mail/\n\n'
+    printf 'IMAPAccount primary\n'
+    printf 'Host %s\n' "$imap_host"
+    printf 'User %s\n' "$imap_user"
+    printf 'PassCmd "%s"\n' "$imap_secret_cmd"
+    printf 'SSLType IMAPS\n'
+    printf 'CertificateFile /etc/ssl/certs/ca-certificates.crt\n\n'
+    printf 'IMAPStore primary-remote\n'
+    printf 'Account primary\n\n'
+    printf 'MaildirStore primary-local\n'
+    printf 'Path ~/.local/share/mail/\n'
+    printf 'Inbox ~/.local/share/mail/INBOX\n'
+    printf 'SubFolders Verbatim\n\n'
+    printf 'Channel primary-inbox\n'
+    printf 'Master :primary-remote:INBOX\n'
+    printf 'Slave :primary-local:INBOX\n'
+    printf 'Create Both\n'
+    printf 'Expunge Both\n'
+    printf 'SyncState *\n\n'
+    printf 'Channel primary-sent\n'
+    printf 'Master :primary-remote:"Sent"\n'
+    printf 'Slave :primary-local:Sent\n'
+    printf 'Create Both\n'
+    printf 'Expunge Both\n'
+    printf 'SyncState *\n\n'
+    printf 'Channel primary-drafts\n'
+    printf 'Master :primary-remote:"Drafts"\n'
+    printf 'Slave :primary-local:Drafts\n'
+    printf 'Create Both\n'
+    printf 'Expunge Both\n'
+    printf 'SyncState *\n\n'
+    printf 'Channel primary-archive\n'
+    printf 'Master :primary-remote:"Archive"\n'
+    printf 'Slave :primary-local:Archive\n'
+    printf 'Create Both\n'
+    printf 'Expunge Both\n'
+    printf 'SyncState *\n\n'
+    printf 'Channel primary-trash\n'
+    printf 'Master :primary-remote:"Trash"\n'
+    printf 'Slave :primary-local:Trash\n'
+    printf 'Create Both\n'
+    printf 'Expunge Both\n'
+    printf 'SyncState *\n\n'
+    printf 'Group primary\n'
+    printf 'Channel primary-inbox\n'
+    printf 'Channel primary-sent\n'
+    printf 'Channel primary-drafts\n'
+    printf 'Channel primary-archive\n'
+    printf 'Channel primary-trash\n'
+  } > "$HOME_DIR/.mbsyncrc"
+
+  chmod 600 "$HOME_DIR/.mbsyncrc"
+  printf 'Wrote %s\n' "$HOME_DIR/.mbsyncrc"
+}
+
 printf 'Local machine setup\n\n'
 printf 'This helper writes machine-local config only.\n'
 printf 'It does not store secrets in the repo.\n\n'
@@ -121,6 +188,11 @@ write_msmtp_config
 if [ "$(prompt_yes_no "Configure mutt/neomutt local identity too" "yes")" = yes ]; then
   printf '\n'
   write_mutt_config
+fi
+
+if [ "$(prompt_yes_no "Configure mbsync for IMAP mail sync" "yes")" = yes ]; then
+  printf '\n'
+  write_mbsync_config
 fi
 
 printf '\nNext steps\n'

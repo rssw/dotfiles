@@ -1,0 +1,66 @@
+# mbsync configuration template
+# Copy to ~/.mbsyncrc and customize for your mail provider
+#
+# Standard folder mapping:
+# - INBOX → ~/.local/share/mail/INBOX
+# - Sent → ~/.local/share/mail/Sent
+# - Drafts → ~/.local/share/mail/Drafts
+# - Archive → ~/.local/share/mail/Archive
+# - Trash → ~/.local/share/mail/Trash
+
+IMAPAccount primary
+Host imap.example.com
+User your-email@example.com
+PassCmd "secret-read imap-password"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore primary-remote
+Account primary
+
+MaildirStore primary-local
+Path ~/.local/share/mail/
+Inbox ~/.local/share/mail/INBOX
+SubFolders Verbatim
+
+Channel primary-inbox
+Master :primary-remote:INBOX
+Slave :primary-local:INBOX
+Create Both
+Expunge Both
+SyncState *
+
+Channel primary-sent
+Master :primary-remote:"Sent"
+Slave :primary-local:Sent
+Create Both
+Expunge Both
+SyncState *
+
+Channel primary-drafts
+Master :primary-remote:"Drafts"
+Slave :primary-local:Drafts
+Create Both
+Expunge Both
+SyncState *
+
+Channel primary-archive
+Master :primary-remote:"Archive"
+Slave :primary-local:Archive
+Create Both
+Expunge Both
+SyncState *
+
+Channel primary-trash
+Master :primary-remote:"Trash"
+Slave :primary-local:Trash
+Create Both
+Expunge Both
+SyncState *
+
+Group primary
+Channel primary-inbox
+Channel primary-sent
+Channel primary-drafts
+Channel primary-archive
+Channel primary-trash
