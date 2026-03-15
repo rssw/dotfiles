@@ -23,6 +23,19 @@ set -g focus-events on
 # Enable mouse support for scrolling within tmux
 set -g mouse on
 
+# Make mouse wheel scroll enter copy mode and scroll the tmux buffer
+bind-key -T root WheelUpPane if-shell -F -t = "#{alternate_on}" "send-keys -M" "select-pane -t =; copy-mode -e; send-keys -M"
+bind-key -T root WheelDownPane if-shell -F -t = "#{alternate_on}" "send-keys -M" "select-pane -t =; send-keys -M"
+
+# PageUp/PageDown for half-page scrolling in copy mode
+bind-key -T copy-mode-vi PageUp send-keys -X halfpage-up
+bind-key -T copy-mode-vi PageDown send-keys -X halfpage-down
+bind-key -T copy-mode PageUp send-keys -X halfpage-up
+bind-key -T copy-mode PageDown send-keys -X halfpage-down
+
+# PageUp enters copy mode and scrolls up (works in normal and insert mode)
+bind-key -T root PageUp copy-mode -e \; send-keys -X halfpage-up
+
 set-option -g update-environment "DIRENV_DIFF DIRENV_DIR DIRENV_WATCHES"
 set-environment -gu DIRENV_DIFF
 set-environment -gu DIRENV_DIR

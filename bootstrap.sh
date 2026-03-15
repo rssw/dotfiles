@@ -1609,23 +1609,31 @@ install_lsp_servers() {
   ensure_dir "$HOME_DIR/bin"
   ensure_dir "$HOME_DIR/.local/share/nvim/lsp"
 
-  # npm-based LSP servers
+  # npm-based LSP servers (must-have for web/config work)
   if command -v npm >/dev/null 2>&1; then
     run_in_home npm install -g bash-language-server yaml-language-server vscode-html-language-server vscode-css-language-server typescript-language-server
   fi
 
-  # pip-based
+  # pip-based (must-have for Python)
   if command -v pip3 >/dev/null 2>&1; then
     run_in_home pip3 install jedi-language-server
   fi
+}
 
-  # go-based
-  if command -v go >/dev/null 2>&1; then
-    run_in_home go install golang.org/x/tools/gopls@latest
+create_mutt_alias() {
+  [ "$WITH_MAIL" -eq 1 ] || return 0
+  [ "$INSTALL_PACKAGES" -eq 1 ] || return 0
+  command -v neomutt >/dev/null 2>&1 || return 0
+
+  ensure_dir "$HOME_DIR/bin"
+  mutt_link=$HOME_DIR/bin/mutt
+
+  if [ -e "$mutt_link" ] && [ ! -L "$mutt_link" ]; then
+    return 0
   fi
 
-  # apt-based
-  run sudo apt-get install -y texlab
+  neomutt_path=$(command -v neomutt)
+  run ln -sf "$neomutt_path" "$mutt_link"
 }
 
 ensure_default_shell() {
@@ -1673,6 +1681,7 @@ main() {
   install_bitwarden_cli
   install_lsp_servers
   install_prompt_fonts
+  create_mutt_alias
   ensure_default_shell
 
   log "Bootstrap complete"
@@ -1686,30 +1695,6 @@ main() {
 }
 
 main "$@"
-
-log() {
-  printf '%s\n' "$*"
-}
-
-warn() {
-  printf 'warning: %s\n' "$*" >&2
-}
-
-run() {
-  log "+ $*"
-  if [ "$DRY_RUN" -eq 0 ]; then
-    "$@"
-  fi
-}
-
-run_in_home() {
-  if [ "$DRY_RUN" -eq 0 ]; then
-    HOME=$HOME_DIR "$@"
-    return 0
-  fi
-
-  log "+ HOME=$HOME_DIR $*"
-}
 
 append_packages() {
   package_list=$1
