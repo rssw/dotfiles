@@ -1,18 +1,32 @@
-# AGENTS.md - Dotfiles Repository Guidelines
-#
-# DONE:
-# - bootstrap --verify
-# - shell modularized (.zsh/rc/*)
-# - tmux modularized (.tmux/bindings/*)
-# - Neovim LSP defaults + lsp-install
-# - managed surface pruned
-# - Bitwarden/secret-mirror
-# - mutt base + mbsync hooks
-#
-# PENDING:
-# - bootstrap package docs
-# - LSP optional script
-# - mail inbox sync full docs
+# AGENTS.md - Coding Agent Guidelines
+
+**Purpose**: Code style, conventions, and development patterns for AI coding agents working on this repository.
+
+**For users**: See [INSTALL.md](INSTALL.md) for installation instructions and [PORTABLE_PLAN.md](PORTABLE_PLAN.md) for architecture/design decisions.
+
+---
+
+## Project Status
+
+**DONE**:
+- bootstrap --verify
+- shell modularized (.zsh/rc/*)
+- tmux modularized (.tmux/bindings/*)
+- Neovim LSP defaults + lsp-install
+- managed surface pruned
+- Bitwarden/secret-mirror (with Secure Note support)
+- mutt base + mbsync hooks
+- documentation cleanup and consistency
+- LSP installation clarified in docs
+- aider/OpenRouter integration via secret-mirror
+- dotfiles-help updated with LSP and aider info
+
+**PENDING**:
+- LSP flag refinement (add --with-lsp/--without-lsp flags)
+
+---
+
+## Project Overview
 
 This is a **dotfiles repository** containing personal configuration files for various tools (Zsh, Neovim, Tmux, Bash, etc.). It is not a traditional software project.
 
@@ -56,12 +70,13 @@ This is a **dotfiles repository** containing personal configuration files for va
 - Prefix private/internal functions with underscore: `_helper_func()`
 - Test for command existence before using: `if _command_exists cmd; then ...`
 
-### Neovim (Vim)
+### Neovim
 
-- Use vimscript (not Lua) for configuration in `init.vim`
-- Set options with `set option=value` or `set option`
-- Use `let g:variable_name = value` for global variables
-- Use `autocmd` for filetype-specific settings
+- Primary configuration in Lua (`init.lua`)
+- Use `vim.opt.option = value` for options
+- Use `vim.g.variable_name = value` for global variables
+- Use `vim.api.nvim_create_autocmd()` for autocommands
+- Vimscript still used in `plugin/*.vim` for specific functionality
 - Prefer native vim features over plugins when possible
 
 ### Tmux
@@ -93,7 +108,7 @@ This is a **dotfiles repository** containing personal configuration files for va
 Edit `.shell/<category>` (e.g., `.shell/git`) or create a new file in `.shell/`
 
 ### Adding a new Neovim setting
-Edit `.config/nvim/init.vim` in the appropriate section
+Edit `.config/nvim/init.lua` in the appropriate section, or add to `plugin/*.vim` for specific keymaps/features
 
 ### Adding a new Zsh setting
 Edit `.zshrc` in the appropriate section using fold markers

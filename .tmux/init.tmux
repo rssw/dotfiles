@@ -33,9 +33,12 @@ bind-key -T copy-mode-vi PageDown send-keys -X halfpage-down
 bind-key -T copy-mode PageUp send-keys -X halfpage-up
 bind-key -T copy-mode PageDown send-keys -X halfpage-down
 
-# PageUp enters copy mode from normal mode, but PageDown does nothing
-# to avoid accidentally switching modes when already at bottom
-bind-key -T root PageUp copy-mode -e \; send-keys -X halfpage-up
+# PageUp/PageDown behavior in normal mode:
+# - If alternate screen is on (vim/less/etc running): pass through to application
+# - Otherwise: PageUp enters copy mode for scrollback
+# This lets PageUp/PageDown work normally in Neovim insert mode
+bind-key -T root PageUp if-shell -F "#{alternate_on}" "send-keys PageUp" "copy-mode -e \; send-keys -X halfpage-up"
+bind-key -T root PageDown if-shell -F "#{alternate_on}" "send-keys PageDown" ""
 
 set-option -g update-environment "DIRENV_DIFF DIRENV_DIR DIRENV_WATCHES"
 set-environment -gu DIRENV_DIFF

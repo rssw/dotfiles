@@ -14,6 +14,7 @@ Shell
 - fzf helpers: Ctrl-z=fuzzy command history, fh=pick a past command into the prompt
 - filesystem helpers: md=create and enter a directory, extract=unpack common archive formats
 - secret helpers: bw-session manages the local Bitwarden session file; for this Vaultwarden setup, `bw-session unlock` is the normal way to obtain a usable session; secret-sync refreshes local mirrored secrets from Bitwarden; secret-read prints a cached mirrored secret; bw-pass remains available for direct item lookups; bw-session test checks whether the saved session still works
+- aider integration: if aider is installed, OpenRouter API key is automatically loaded from secret-mirror (add 'openrouter-aider' to ~/.local/share/secret-mirror/items and run secret-sync)
 - zsh vi mode: Esc enters normal mode, i/a return to insert mode
 - after install, select MesloLGS NF, FiraCode, or JetBrains Mono in the terminal profile
 - bootstrap attempts to switch the login shell to zsh automatically for the current user
@@ -81,7 +82,8 @@ Verification
 
 Packages
 - baseline everywhere: shell/core CLI, prompt fonts, search/navigation tools, Neovim, tmux, storage/network filesystem support
-- full profile adds: nala, mutt+msmtp, lf, taskwarrior, Bitwarden CLI, and extra shell integrations
+- full profile adds: nala, mutt+msmtp, lf, taskwarrior, Bitwarden CLI, LSP servers (bash, yaml, html, css, typescript, python, go, tex), and extra shell integrations
+- minimal profile: use --minimal to skip optional packages
 
 Scripts
 - local-only scripts belong in ~/bin

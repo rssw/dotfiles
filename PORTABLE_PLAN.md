@@ -1,8 +1,15 @@
 # Portable Dotfiles Plan
 
-Goal: turn the previous approach for this dotfiles repo into a portable, headless-first setup that can be installed on a new machine with one command, or a very small set of commands, while remaining easy to understand and edit by hand later.
+**Purpose**: Architecture decisions, design rationale, and implementation planning for this dotfiles repository.
 
-This file is the planning checkpoint for the session. It should hold enough context to resume planning or move into execution later without losing design intent.
+**For users**: See [INSTALL.md](INSTALL.md) for installation instructions.  
+**For developers**: See [AGENTS.md](AGENTS.md) for code style and conventions.
+
+---
+
+**Goal**: Turn the previous organic dotfiles setup into a portable, headless-first system that can be installed on new machines with one command, while remaining easy to understand and edit by hand.
+
+This file holds design decisions and context needed to resume development without losing intent.
 
 ## Current direction
 

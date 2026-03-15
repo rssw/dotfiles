@@ -1,8 +1,14 @@
-# Install
+# Install Guide
 
-This repo is being refactored into a portable, headless-first dotfiles setup.
+**Purpose**: Installation instructions and bootstrap usage for deploying this dotfiles configuration.
 
-The current bootstrap entrypoint is `./bootstrap.sh`.
+**For developers**: See [AGENTS.md](AGENTS.md) for code style and conventions. See [PORTABLE_PLAN.md](PORTABLE_PLAN.md) for design decisions and architecture.
+
+---
+
+This repo provides a portable, headless-first dotfiles setup for Debian/Ubuntu systems.
+
+The main entrypoint is `./bootstrap.sh`.
 
 ## Default behavior
 
@@ -21,9 +27,11 @@ Bootstrap groups packages by capability so the standard environment is easier to
  reason about everywhere: core shell, prompt/fonts, navigation/search, editor,
  system/storage support, and a small set of optional feature groups.
 
-## Guaranteed baseline environment
+## Package Profiles
 
-Every bootstrap deployment guarantees this standard set:
+### Minimal Profile (`--minimal`)
+
+The absolute minimum for a functional terminal environment:
 
 - **Shell/core CLI**: zsh, bash, git, less, curl
 - **Prompt/fonts**: fontconfig, MesloLGS NF, fonts-firacode, fonts-jetbrains-mono
@@ -31,72 +39,27 @@ Every bootstrap deployment guarantees this standard set:
 - **Editor/terminal**: zsh-autosuggestions, zsh-syntax-highlighting, neovim, tmux
 - **System/storage**: cifs-utils, exfatprogs, nfs-common, fastfetch
 
-The default full profile adds:
+### Full Profile (default)
 
-- **Package QoL**: nala
+Everything in minimal, plus:
+
+- **Package QoL**: nala (better apt frontend)
 - **Mail**: mutt, msmtp, isync, notmuch
-- **File manager**: lf
-- **Productivity**: taskwarrior
-- **Secret manager CLI**: Bitwarden CLI (Vaultwarden-compatible)
-- **LSP defaults**: bash-language-server, yaml-language-server, html-ls, css-ls, typescript-language-server, jedi-language-server (via npm/pip)
-- **Extra shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
+- **File manager**: lf (terminal file manager)
+- **Productivity**: taskwarrior (todo/task management)
+- **Secret manager**: Bitwarden CLI 2026.1.0 (Vaultwarden-compatible)
+- **LSP runtimes & servers**: nodejs, npm, python3-pip, golang-go, plus auto-installed language servers:
+  - bash-language-server (npm)
+  - yaml-language-server (npm)
+  - vscode-html-language-server (npm)
+  - vscode-css-language-server (npm)
+  - typescript-language-server (npm)
+  - jedi-language-server (pip3)
+  - gopls (go)
+  - texlab (apt)
+- **Shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
 
-## Guaranteed baseline environment
-
-Every bootstrap deployment guarantees this standard set:
-
-- **Shell/core CLI**: zsh, bash, git, less, curl
-- **Prompt/fonts**: fontconfig, MesloLGS NF, fonts-firacode, fonts-jetbrains-mono
-- **Navigation/search**: direnv, fzf, ripgrep, fd-find, jq, pv, p7zip-full, unzip
-- **Editor/terminal**: zsh-autosuggestions, zsh-syntax-highlighting, neovim, tmux
-- **System/storage**: cifs-utils, exfatprogs, nfs-common, fastfetch
-
-The default full profile adds:
-
-- **Package QoL**: nala
-- **Mail**: mutt, msmtp
-- **File manager**: lf
-- **Productivity**: taskwarrior
-- **Secret manager CLI**: Bitwarden CLI (Vaultwarden-compatible)
-- **Extra shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
-
-## Guaranteed baseline environment
-
-Every bootstrap deployment guarantees this standard set:
-
-- **Shell/core CLI**: zsh, bash, git, less, curl
-- **Prompt/fonts**: fontconfig, MesloLGS NF, fonts-firacode, fonts-jetbrains-mono
-- **Navigation/search**: direnv, fzf, ripgrep, fd-find, jq, pv, p7zip-full, unzip
-- **Editor/terminal**: zsh-autosuggestions, zsh-syntax-highlighting, neovim, tmux
-- **System/storage**: cifs-utils, exfatprogs, nfs-common, fastfetch
-
-The default full profile adds:
-
-- **Package QoL**: nala
-- **Mail**: mutt, msmtp
-- **File manager**: lf
-- **Productivity**: taskwarrior
-- **Secret manager CLI**: Bitwarden CLI (Vaultwarden-compatible)
-- **Extra shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
-
-## Standard environment
-
-The baseline environment that bootstrap tries to make available everywhere is:
-
-- shell/core CLI: `zsh`, `bash`, `git`, `less`, `curl`
-- prompt/fonts: `fontconfig`, MesloLGS NF download, `fonts-firacode`, `fonts-jetbrains-mono`
-- navigation/search: `direnv`, `fzf`, `ripgrep`, `fd-find`, `jq`, `pv`, `p7zip-full`, `unzip`
-- editor/terminal: `zsh-autosuggestions`, `zsh-syntax-highlighting`, `neovim`, `tmux`
-- system/storage support: `cifs-utils`, `exfatprogs`, `nfs-common`, `fastfetch`
-
-The default full profile adds:
-
-- package QoL: `nala`
-- mail: `mutt`, `msmtp`
-- file manager: `lf`
-- productivity: `taskwarrior`
-- secret manager CLI: pinned Bitwarden CLI configured for the hosted Vaultwarden server
-- extra shell integrations: `wl-clipboard`, `xclip`, `xsel`, `gpg`, `pinentry-curses`
+**Note on LSP**: LSP servers are auto-installed in full profile. To skip LSP installation, use `--minimal` or add a `--without-lsp` flag (not yet implemented). For additional language servers, use `bin/lsp-install` after bootstrap.
 
 Existing target paths are skipped by default. Use `--backup-existing` to move
 conflicting files aside before linking or templating.
@@ -123,6 +86,8 @@ Example full install without mail extras:
 
 ## Verification
 
+### Before Modifying Bootstrap
+
 Run the lightweight verification harness before changing the bootstrap logic:
 
 ```sh
@@ -134,6 +99,8 @@ against throwaway `HOME` directories so the current machine is not modified.
 Checks that depend on optional tools such as `zsh`, `nvim`, or `tmux` are
 skipped with a note when those commands are not installed yet.
 
+### After Bootstrap Install
+
 To check whether the current machine's managed deployment still matches what
 bootstrap would link for the selected profile, run:
 
@@ -144,6 +111,31 @@ bootstrap would link for the selected profile, run:
 This compares repo-managed linked paths only. It stays quiet for matches and
 prints diffs or missing-path notices for mismatches. Machine-local seeded files
 such as Git identity and mail templates are intentionally excluded.
+
+### Quick Post-Install Checks
+
+After running bootstrap on a new machine, verify the installation:
+
+```sh
+# Check shell changed to zsh
+getent passwd "$USER" | cut -d: -f7
+
+# Check core commands are available
+zsh --version
+nvim --version
+tmux -V
+
+# If full profile: check LSP servers installed
+which bash-language-server
+which yaml-language-server
+which gopls
+
+# Test a new shell loads without errors
+zsh -l -c 'echo "Shell loaded successfully"'
+
+# Run the dotfiles help command
+dotfiles-help
+```
 
 ## Post-install follow-up
 
@@ -230,7 +222,7 @@ session when you launched it from another interactive shell.
 - `msmtp` is the intended backend mail transport for scripts and server notifications
 - `mutt`/`neomutt` is the optional interactive mail client layer on top of that transport
 - the default full profile installs Bitwarden CLI `2026.1.0` from GitHub because newer releases are not currently compatible with the hosted Vaultwarden deployment
-- language-server binaries are not installed by bootstrap today; Neovim enables LSP clients only when the matching server executable is already present on the machine
+- language-server binaries are auto-installed in the full profile; Neovim enables LSP clients when the matching server executable is present
 - bootstrap seeds local mail templates when missing:
   - `~/.config/msmtp/config` from `.config/msmtp/config.example`
   - `~/.local/share/mutt/private.rc` from `.archive/.mutt/private.rc.example`
@@ -346,22 +338,154 @@ These are intended for identity, account settings, and secret lookup commands.
 They are not linked from the repo and should be customized per machine.
 You can either edit them manually or generate them with `setup-local-machine`.
 
-## Mail model
+## Mail Workflow
 
-The current intended split is:
+The mail system has three layers:
 
-- `msmtp`
-  - backend transport for scripts, alerts, and server-side notification workflows
-  - should be configured first
-  - secrets should stay in local secret lookup or local config only
-  - do not rely on a Bitwarden session token alone for unattended scheduled jobs;
-    use a non-interactive local secret source if mail must continue working after
-    session expiry or restart
-- `mutt` or `neomutt`
-  - interactive mail client layer for reading/composing mail manually
-  - should use `msmtp` as its sendmail path where possible
-  - is not the primary transport abstraction for scripts
-  - the tracked `.muttrc` now supplies a base UI, local Maildir defaults, and a source line for `~/.local/share/mutt/private.rc`
+### 1. **msmtp** - Outgoing Mail (SMTP)
+
+Backend transport for sending mail from scripts, alerts, and notifications.
+
+**Configuration**:
+- Template: `.config/msmtp/config.example`
+- Local config: `~/.config/msmtp/config`
+- Bootstrap seeds the template automatically
+
+**Example configuration**:
+```
+account default
+host smtp.example.com
+port 587
+from your-email@example.com
+user your-email@example.com
+passwordeval secret-read smtp-password
+tls on
+tls_starttls on
+```
+
+**Secret management**:
+- Preferred: `passwordeval secret-read smtp-password` (uses local mirror)
+- Alternative: `passwordeval bw-pass ITEM_ID` (requires active Bitwarden session)
+- For unattended jobs: Use secret-mirror to avoid session expiry issues
+
+### 2. **mbsync (isync)** - Incoming Mail (IMAP)
+
+Syncs IMAP folders to local Maildir for offline reading.
+
+**Configuration**:
+- Template: `.config/mbsync/config.example` (comprehensive)
+- Alternative: `.mbsyncrc.example` (simple single-folder)
+- Local config: `~/.mbsyncrc`
+
+**Example workflow**:
+```bash
+# Copy template
+cp ~/src/dotfiles/.config/mbsync/config.example ~/.mbsyncrc
+
+# Edit with your IMAP details
+vi ~/.mbsyncrc
+# - Host: imap.example.com
+# - User: your-email@example.com
+# - PassCmd: "secret-read imap-password"
+
+# Add IMAP password to secret-mirror
+echo "imap-password YOUR-BITWARDEN-ITEM-ID" >> ~/.local/share/secret-mirror/items
+bw-session unlock
+secret-sync
+
+# Test sync
+mbsync -a
+
+# Run periodically (manual or via cron/systemd timer)
+```
+
+**Local mail storage**: `~/.local/share/mail/`
+- INBOX/, Sent/, Drafts/, Archive/, Trash/
+
+### 3. **notmuch** - Mail Indexing & Search
+
+Fast full-text search and tagging for local Maildir.
+
+**Configuration**:
+- Template: `.notmuch-config.example`
+- Local config: `~/.notmuch-config`
+
+**Example workflow**:
+```bash
+# Copy template
+cp ~/src/dotfiles/.notmuch-config.example ~/.notmuch-config
+
+# Edit with your details
+vi ~/.notmuch-config
+# - path: ~/.local/share/mail
+# - name/email
+
+# Initial index (run after first mbsync)
+notmuch new
+
+# Search examples
+notmuch search from:user@example.com
+notmuch search subject:meeting
+notmuch tag +important -- subject:urgent
+```
+
+### 4. **mutt/neomutt** - Interactive Mail Client
+
+Terminal UI for reading and composing mail.
+
+**Configuration**:
+- Portable base: `.muttrc` (tracked, linked by bootstrap)
+- Local identity: `~/.local/share/mutt/private.rc`
+
+**The tracked `.muttrc` provides**:
+- Sensible defaults for Maildir navigation
+- Vi-style keybindings
+- Source line for local private config
+
+**Local identity should set**:
+```
+set from = "your-email@example.com"
+set realname = "Your Name"
+set sendmail = "/usr/bin/msmtp"
+```
+
+**Bootstrap seeds**: `.archive/.mutt/private.rc.example` → `~/.local/share/mutt/private.rc`
+
+### Complete Setup Example
+
+```bash
+# 1. Configure outbound mail (msmtp)
+cp ~/src/dotfiles/.config/msmtp/config.example ~/.config/msmtp/config
+vi ~/.config/msmtp/config
+
+# 2. Configure inbound mail (mbsync)
+cp ~/src/dotfiles/.config/mbsync/config.example ~/.mbsyncrc
+vi ~/.mbsyncrc
+
+# 3. Add mail secrets to Bitwarden and sync
+echo "smtp-password SMTP-ITEM-ID" >> ~/.local/share/secret-mirror/items
+echo "imap-password IMAP-ITEM-ID" >> ~/.local/share/secret-mirror/items
+bw-session unlock
+secret-sync
+
+# 4. Test outbound
+echo "Test mail" | msmtp recipient@example.com
+
+# 5. Sync inbound mail
+mbsync -a
+
+# 6. Index mail with notmuch (optional)
+cp ~/src/dotfiles/.notmuch-config.example ~/.notmuch-config
+vi ~/.notmuch-config
+notmuch new
+
+# 7. Configure mutt identity
+vi ~/.local/share/mutt/private.rc
+# Add: set from, realname, sendmail
+
+# 8. Launch mutt
+mutt
+```
 
 Suggested readiness checks after install:
 

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Aider AI coding assistant configuration
+#
+# This file configures aider to use OpenRouter with Claude models.
+# Only loaded when aider is installed.
+#
+# API key is loaded from local secret mirror:
+#   - Add to Bitwarden with name "openrouter-aider"
+#   - Run `secret-sync` to cache locally
+#   - Key is read from ~/.local/share/secrets/openrouter-aider
+
+if ! _command_exists aider; then
+	return 0
+fi
+
+# Load OpenRouter API key from secret mirror
+_secret_file="${SECRET_STORE_DIR:-$HOME/.local/share/secrets}/openrouter-aider"
+if [ -f "$_secret_file" ]; then
+	export OPENAI_API_KEY=$(cat "$_secret_file")
+else
+	# Fallback warning if secret is not synced yet
+	if [ -z "${OPENAI_API_KEY:-}" ]; then
+		printf 'warning: openrouter-aider secret not found; run `secret-sync` first\n' >&2
+	fi
+fi
+unset _secret_file
+
+# OpenRouter API configuration
+export OPENAI_BASE_URL="https://openrouter.ai/api/v1"
+
+# OpenRouter site identification
+export OPENROUTER_SITE_URL="https://github.com/rssw"
+export OPENROUTER_APP_NAME="aider"
+
+# Aider model configuration
+# Main model: Claude Sonnet 4.5 - latest and most capable for complex coding
+# Editor model: Claude Haiku 3.5 - faster and cheaper for quick edits/refactors
+export AIDER_MODEL="openrouter/anthropic/claude-4.5-sonnet"
+export AIDER_EDITOR_MODEL="openrouter/anthropic/claude-3.5-haiku"
