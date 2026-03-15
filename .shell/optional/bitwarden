@@ -16,6 +16,25 @@ bw-ready() {
 	[ -n "${BW_SESSION:-}" ]
 }
 
+# Wrapper for bw-session that auto-sources session.env after login/unlock
+bw-session() {
+	command bw-session "$@"
+	session_result=$?
+	
+	# Auto-source session.env after successful login or unlock
+	case "${1:-unlock}" in
+		login|unlock)
+			if [ $session_result -eq 0 ] && [ -f "$BW_SESSION_FILE" ]; then
+				# shellcheck disable=SC1090
+				. "$BW_SESSION_FILE"
+				printf 'Auto-loaded BW_SESSION into current shell\n'
+			fi
+			;;
+	esac
+	
+	return $session_result
+}
+
 _secret_mirror_missing() {
 	[ -f "$SECRET_MIRROR_FILE" ] || return 1
 

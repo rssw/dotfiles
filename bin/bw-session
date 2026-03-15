@@ -101,6 +101,8 @@ case "$cmd" in
 		bw_email=${1:-$bw_email_default}
 		token=$(login_raw "$bw_email")
 		save_session "$token"
+		printf '\nSession saved and will be auto-loaded in new shells\n'
+		printf 'Note: Shell wrapper function auto-sources in current shell\n'
 		;;
 	unlock)
 		current_status=$(status_field status)
@@ -142,8 +144,8 @@ case "$cmd" in
 		esac
 		
 		save_session "$token"
-		printf '\nTo use in current shell, run: source %s\n' "$session_file"
-		printf 'Or start a new shell (session auto-loads on startup)\n'
+		printf '\nSession saved and will be auto-loaded in new shells\n'
+		printf 'Note: Shell wrapper function auto-sources in current shell\n'
 		;;
 	status)
 		bw status

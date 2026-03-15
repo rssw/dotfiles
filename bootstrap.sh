@@ -41,7 +41,7 @@ PKG_CORE_EDITOR="zsh-autosuggestions zsh-syntax-highlighting neovim tmux"
 PKG_CORE_SYSTEM="cifs-utils exfatprogs nfs-common fastfetch"
 
 PKG_OPTIONAL_NALA="nala"
-PKG_OPTIONAL_MAIL="mutt msmtp isync notmuch"
+PKG_OPTIONAL_MAIL="neomutt msmtp isync notmuch"
 PKG_OPTIONAL_FILE_MANAGER="lf"
 PKG_OPTIONAL_PRODUCTIVITY="taskwarrior"
 PKG_OPTIONAL_EXTRA_SHELL="wl-clipboard xclip xsel gpg pinentry-curses"
@@ -112,16 +112,16 @@ Capability groups:
 - editor/terminal: zsh plugins, Neovim, tmux
 - system/storage: cifs, exfat, nfs, fastfetch
 
-The current default full profile also includes `nala`, mail tooling (`mutt` and
-`msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
+The current default full profile also includes `nala`, mail tooling (`neomutt` and
+ `msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
 
 Options:
   --full                Enable the default full profile
   --minimal             Install only required packages and core links
   --with-nala           Include nala
   --without-nala        Exclude nala
-  --with-mutt           Include mutt
-  --without-mutt        Exclude mutt
+  --with-mutt           Include neomutt (kept for compatibility)
+  --without-mutt        Exclude neomutt
   --with-lf             Include lf
   --without-lf          Exclude lf
   --with-taskwarrior    Include taskwarrior
@@ -307,16 +307,16 @@ Capability groups:
 - editor/terminal: zsh plugins, Neovim, tmux
 - system/storage: cifs, exfat, nfs, fastfetch
 
-The current default full profile also includes `nala`, mail tooling (`mutt` and
-`msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
+The current default full profile also includes `nala`, mail tooling (`neomutt` and
+ `msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
 
 Options:
   --full                Enable the default full profile
   --minimal             Install only required packages and core links
   --with-nala           Include nala
   --without-nala        Exclude nala
-  --with-mutt           Include mutt
-  --without-mutt        Exclude mutt
+  --with-mutt           Include neomutt (kept for compatibility)
+  --without-mutt        Exclude neomutt
   --with-lf             Include lf
   --without-lf          Exclude lf
   --with-taskwarrior    Include taskwarrior
@@ -502,16 +502,16 @@ Capability groups:
 - editor/terminal: zsh plugins, Neovim, tmux
 - system/storage: cifs, exfat, nfs, fastfetch
 
-The current default full profile also includes `nala`, mail tooling (`mutt` and
-`msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
+The current default full profile also includes `nala`, mail tooling (`neomutt` and
+ `msmtp`), `lf`, `taskwarrior`, Bitwarden CLI, and extra shell integrations.
 
 Options:
   --full                Enable the default full profile
   --minimal             Install only required packages and core links
   --with-nala           Include nala
   --without-nala        Exclude nala
-  --with-mutt           Include mutt
-  --without-mutt        Exclude mutt
+  --with-mutt           Include neomutt (kept for compatibility)
+  --without-mutt        Exclude neomutt
   --with-lf             Include lf
   --without-lf          Exclude lf
   --with-taskwarrior    Include taskwarrior
