@@ -1,0 +1,13 @@
+# Disable mouse tracking before each prompt
+# This prevents escape sequences from appearing when applications
+# fail to properly disable mouse tracking on exit
+
+_disable_mouse_tracking_precmd() {
+	# Disable all common mouse tracking modes
+	# Only send these codes if we're in a terminal that supports them
+	if [[ -t 1 ]]; then
+		printf '\033[?1000l\033[?1002l\033[?1003l\033[?1006l' >/dev/tty 2>/dev/null
+	fi
+}
+
+precmd_functions+=(_disable_mouse_tracking_precmd)

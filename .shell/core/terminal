@@ -1,0 +1,18 @@
+#!/bin/sh
+# Terminal utilities and fixes
+
+# Fix mouse tracking stuck on
+# Sometimes applications enable mouse tracking and don't disable it on exit
+# This causes escape sequences like "35;140;64M" to appear when moving the mouse
+fix-mouse() {
+	# Disable all common mouse tracking modes
+	# 1000 = X10 mouse reporting
+	# 1002 = Button event tracking
+	# 1003 = Any event tracking
+	# 1006 = SGR extended mouse mode
+	printf '\033[?1000l\033[?1002l\033[?1003l\033[?1006l'
+	printf 'Mouse tracking disabled\n'
+}
+
+# Alias for convenience
+alias fixmouse='fix-mouse'

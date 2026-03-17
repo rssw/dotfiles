@@ -30,6 +30,13 @@ shopt -s checkwinsize
 # Keep Ctrl-s available for tmux prefix instead of XON/XOFF flow control.
 [[ -t 0 ]] && stty -ixon 2>/dev/null
 
+# Disable mouse tracking before each prompt to prevent escape sequences
+# from appearing when applications fail to properly reset terminal state
+_disable_mouse_tracking() {
+	[[ -t 1 ]] && printf '\033[?1000l\033[?1002l\033[?1003l\033[?1006l' >/dev/tty 2>/dev/null
+}
+PROMPT_COMMAND="_disable_mouse_tracking${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+
 if [ -z "$DOTFILES_DIR" ]; then
 	# Prefer an editable source checkout when present; otherwise assume the files
 	# are installed into HOME via symlinks.
