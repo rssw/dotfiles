@@ -38,5 +38,9 @@ This directory contains the tmux layer of the portable terminal workflow.
 ## Testing
 
 - reload tmux with the bound reload key or run `tmux source-file ~/.tmux.conf`
-- open Neovim inside tmux and verify `Ctrl-h/j/k/l`, `Alt-h/l`, and `Alt-Arrow`
-  still behave as the documented house policy expects
+- open Neovim inside tmux and verify `Ctrl-h/j/k/l` still crosses cleanly between
+  Neovim splits and tmux panes
+- verify tmux house bindings still match policy:
+  - `Alt-h/j/k/l` resize panes
+  - `Alt-Left/Right` switch windows
+  - `Ctrl-h/j/k/l` move between panes (and through Neovim when applicable)

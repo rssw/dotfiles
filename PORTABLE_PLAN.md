@@ -100,16 +100,16 @@ The main design constraint is that Neovim frequently runs inside tmux. Shortcuts
 ### House rules
 
 - `Ctrl-h/j/k/l` means move focus to the adjacent pane or split
-- `Alt-h/l` means move to the previous or next higher-level container
-- `Alt-Arrow` means resize the current pane or split directionally
+- `Alt-Left/Right` means move to the previous or next higher-level container in tmux
+- `Alt-h/j/k/l` means resize the current pane directionally in tmux
 - native fallback commands remain available and documented
 
 ### Concrete mapping policy
 
 - `tmux`
   - `Ctrl-h/j/k/l`: move between panes
-  - `Alt-h/l`: previous/next window
-  - `Alt-Arrow`: resize pane
+  - `Alt-Left/Right`: previous/next window
+  - `Alt-h/j/k/l`: resize pane
 - `Neovim`
   - `Ctrl-h/j/k/l`: move between splits
   - `Alt-h/l`: previous/next buffer
@@ -125,7 +125,7 @@ The main design constraint is that Neovim frequently runs inside tmux. Shortcuts
 ### Rationale and comparison to the previous approach
 
 - the previous approach already aligned `tmux` and Neovim for adjacent pane/split movement with `Ctrl-h/j/k/l`
-- the previous approach already used `Alt-h/l` for tmux window switching and `Alt-Arrow` for tmux pane resizing
+- the current tmux approach uses `Alt-Left/Right` for window switching and `Alt-h/j/k/l` for pane resizing because modified arrows are not equally portable across terminals
 - the previous approach did not extend that same higher-level navigation model into Neovim buffers, so part of the new policy is an intentional completion of an existing design direction rather than a reversal
 - likely reasons the previous approach stopped there:
   - adjacent pane/split movement is the highest-frequency pain point when Neovim runs inside tmux
@@ -278,8 +278,8 @@ The install system should support both package-level flags and group-level flags
 ## Planned tmux architecture
 
 - retain existing pane navigation with `Ctrl-h/j/k/l`
-- retain existing window navigation with `Alt-h/l`
-- retain resize with `Alt-Arrow`
+- retain window navigation with `Alt-Left/Right`
+- retain resize with `Alt-h/j/k/l`
 - document the current custom workflow clearly:
   - prefix key
   - split creation

@@ -26,11 +26,15 @@ unbind-key M-Up
 unbind-key M-Down
 unbind-key M-Left
 unbind-key M-Right
+unbind-key M-h
+unbind-key M-j
+unbind-key M-k
+unbind-key M-l
 
-bind-key -n M-Right resize-pane -R
-bind-key -n M-Left resize-pane -L
-bind-key -n M-Down resize-pane -D
-bind-key -n M-Up resize-pane -U
+bind-key -n M-h resize-pane -L
+bind-key -n M-j resize-pane -D
+bind-key -n M-k resize-pane -U
+bind-key -n M-l resize-pane -R
 bind-key | resize-pane -x 200
 bind-key _ resize-pane -y 200
 

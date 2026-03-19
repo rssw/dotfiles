@@ -6,8 +6,8 @@ bind-key p previous-window
 bind-key n next-window
 bind-key -n C-PageUp previous-window
 bind-key -n C-PageDown next-window
-bind-key -n M-h previous-window
-bind-key -n M-l next-window
+bind-key -n M-Left previous-window
+bind-key -n M-Right next-window
 
 unbind-key M-p
 unbind-key M-n
