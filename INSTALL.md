@@ -44,17 +44,17 @@ The absolute minimum for a functional terminal environment:
 Everything in minimal, plus:
 
 - **Package QoL**: nala (better apt frontend)
-- **Mail**: mutt, msmtp, isync, notmuch
+- **Mail**: neomutt, msmtp, isync, notmuch
 - **File manager**: lf (terminal file manager)
 - **Productivity**: taskwarrior (todo/task management)
 - **Secret manager**: Bitwarden CLI 2026.1.0 (Vaultwarden-compatible)
-- **LSP runtimes & servers**: nodejs, npm, python3-pip, golang-go, plus auto-installed language servers:
+- **LSP runtimes & servers**: nodejs, npm, python3-pip, python3-venv, pipx, golang-go, plus auto-installed language servers:
   - bash-language-server (npm)
   - yaml-language-server (npm)
   - vscode-html-language-server (npm)
   - vscode-css-language-server (npm)
   - typescript-language-server (npm)
-  - jedi-language-server (pip3)
+  - jedi-language-server (pipx, with local venv fallback)
   - gopls (go)
   - texlab (apt)
 - **Shell integrations**: wl-clipboard, xclip, xsel, gpg, pinentry-curses
