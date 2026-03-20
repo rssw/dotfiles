@@ -13,7 +13,7 @@ set rfc2047_parameters = yes
 
 # Avoid falling back to /var/mail/$USER when no local mailbox layout exists yet.
 set folder = "~/.local/share/mail"
-set spoolfile = ""
+set spoolfile = "+INBOX"
 set record = "+Sent"
 set postponed = "+Drafts"
 set mbox = "+Archive"
