@@ -349,6 +349,10 @@ ensure_dir() {
   if [ -d "$target_dir" ]; then
     return 0
   fi
+  if [ -e "$target_dir" ] || [ -L "$target_dir" ]; then
+    warn "path exists but is not a directory: $target_dir"
+    return 1
+  fi
   run mkdir -p "$target_dir"
 }
 
@@ -521,7 +525,6 @@ verify_deployment() {
 prepare_local_state() {
   ensure_dir "$HOME_DIR/.cache"
   ensure_dir "$HOME_DIR/.cache/mutt"
-  ensure_dir "$HOME_DIR/.cache/mutt/header"
   ensure_dir "$HOME_DIR/.cache/mutt/messages"
   ensure_dir "$HOME_DIR/.cache/mutt/compositions"
   ensure_dir "$HOME_DIR/.zkbd"
